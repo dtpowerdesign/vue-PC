@@ -27,6 +27,8 @@ export default {
     color: black;
   }
 }
-
+.el-table--striped .el-table__body tr.el-table__row--striped td{
+  background: rgb(236, 241, 246);
+}
 
 </style>
