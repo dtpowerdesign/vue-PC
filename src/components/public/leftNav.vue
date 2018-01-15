@@ -12,8 +12,8 @@
           <span>个人资料</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="person-perAchi">个人业绩</el-menu-item>
-          <el-menu-item index="person-register">注册信息</el-menu-item>
+          <el-menu-item index="/person-perAchi">个人业绩</el-menu-item>
+          <el-menu-item index="/person-register">注册信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
      <el-submenu index="PM">
@@ -22,8 +22,8 @@
           <span>项目管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="PM-new">发布新项目</el-menu-item>
-          <el-menu-item index="PM-sumary">项目汇总</el-menu-item>
+          <el-menu-item index="/PM-new">发布新项目</el-menu-item>
+          <el-menu-item index="/PM-sumary">项目汇总</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
         <el-submenu index="statistics">
@@ -32,9 +32,9 @@
           <span>统计信息</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="statistics-time">时间统计</el-menu-item>
-          <el-menu-item index="statistics-discuss">洽谈统计</el-menu-item>
-          <el-menu-item index="statistics-credit">资信统计</el-menu-item>
+          <el-menu-item index="/statistics-time">时间统计</el-menu-item>
+          <el-menu-item index="/statistics-discuss">洽谈统计</el-menu-item>
+          <el-menu-item index="/statistics-credit">资信统计</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>

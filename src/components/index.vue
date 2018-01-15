@@ -5,8 +5,8 @@
        <logo></logo>
        <leftNav></leftNav>
      </el-col>
-     <el-col :span="20">
-       <Info></Info>
+     <el-col :span="20" :offset="4" style="background-color:#ebeef5;">
+        <Info style="background-color:white"></Info>
        	<router-view></router-view>
      </el-col>
    </el-row>
@@ -35,8 +35,9 @@ export default {
 .left{
   background-color:#4d83e7;
   height:100%;
+  position:fixed;
 }
 .leftNav{
-  margin-top:10rem;
+  margin-top:5rem;
 }
 </style>
