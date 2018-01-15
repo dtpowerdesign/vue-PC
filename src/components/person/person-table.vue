@@ -1,9 +1,9 @@
  
  <template>
-  <div>
+  <div class="person-table">
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|发布中</span>
+        <span style="font-size:1.5rem;color:#4d83e7;margin-left:2rem">业绩统计管理表</span>
           <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button  type="success">打印</el-button>
@@ -12,8 +12,6 @@
       <el-table :data="tableData" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="number" label="序号" sortable>
-        </el-table-column>
-        <el-table-column prop="company"  label="招标公司">
         </el-table-column>
         <el-table-column  prop="name" label="项目名称" >
         </el-table-column>
@@ -25,13 +23,19 @@
         </el-table-column>
         <el-table-column  prop="voltage" label="电压等级" sortable>
         </el-table-column>
-        <el-table-column  prop="amount" label="预计金额" sortable>
+        <el-table-column  prop="stage" label="设计阶段" sortable>
         </el-table-column>
-        <el-table-column  prop="date" label="发布日期" sortable>
+        <el-table-column  prop="domain" label="涉及专业" >
+        </el-table-column>
+        <el-table-column  prop="amount" label="工程投资" sortable>
+        </el-table-column>
+        <el-table-column  prop="date" label="完成时间" sortable>
+        </el-table-column>
+        <el-table-column  prop="state" label="状态" >
         </el-table-column>
         <el-table-column   label="操作">
           <template slot-scope="adasd">
-            <el-button @click="$router.push('/PM-sumary/informat')" type="primary" size="small">查看详情</el-button>
+            <i class="icon iconfont icon-iconfonticonfontjixieqimo"></i><i class="icon iconfont icon-cha"></i>
           </template>
         </el-table-column>
         
@@ -45,11 +49,12 @@ export default {
     return {
       downloadLoading: false,
       tableData: [
-        {number: 1, company: '华北电力公司', name: '二校区网站建设', address: '保定', class: '水处理', type: '规划', voltage: 'MW', amount: '一百万', date: '2018年2月'},
-        {number: 2, company: '中国科技集团', name: '量子物理电路', address: '北京', class: '水电', type: '规划', voltage: 'KW', amount: '一千万', date: '2018年1月'},
-        {number: 3, company: '中国科技集团', name: '量子物理电路', address: '北京', class: '水电', type: '规划', voltage: 'KW', amount: '一千万', date: '2018年1月'},
-        {number: 4, company: '中国科技集团', name: '量子物理电路', address: '北京', class: '水电', type: '规划', voltage: 'KW', amount: '一千万', date: '2018年1月'},
-        {number: 5, company: '中国科技集团', name: '量子物理电路', address: '北京', class: '水电', type: '规划', voltage: 'KW', amount: '一千万', date: '2018年1月'}
+        {number: 1, name: '二校区网站建设', address: '保定', class: '水处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '初期'},
+        {number: 2, name: '二校区网站建设', address: '北京', class: '电处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '中期'},
+        {number: 3, name: '二校区网站建设', address: '河北', class: '风处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '后期'},
+        {number: 4, name: '二校区网站建设', address: '江苏', class: '水处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '初期'},
+        {number: 5, name: '二校区网站建设', address: '安徽', class: '电处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '初期'},
+        {number: 6, name: '二校区网站建设', address: '浙江', class: '风处理', type: '规划', voltage: 'MW', stage: '施工图设计', domain: '计算机系', amount: '一百万', date: '2018年2月', state: '初期'}
       ],
       multipleSelection: []
     }
@@ -68,15 +73,15 @@ export default {
   },
   methods: {
     handleDownload () {
-      if (this.multipleSelection !== 0) {
+      if (this.multipleSelection.length !== 0) {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
-          const tHeader = ['序号', '招标公司', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '发布日期']
-          const filterVal = ['number', 'company', 'name', 'address', 'class', 'type', 'voltage', 'amount', 'date']
+          const tHeader = ['序号', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '设计阶段', '涉及专业', '发布日期', '状态']
+          const filterVal = ['number', 'name', 'address', 'class', 'type', 'voltage', 'stage', 'domain', 'amount', 'date', 'state']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
-          export_json_to_excel(tHeader, data, '项目信息excel')
+          export_json_to_excel(tHeader, data, '业绩统计管理表excel')
           this.downloadLoading = false
         })
       } else {
@@ -99,5 +104,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.icon{
+    font-size:1rem;
+    margin-left:1rem;
+}
 </style>

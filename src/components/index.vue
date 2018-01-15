@@ -40,4 +40,5 @@ export default {
 .leftNav{
   margin-top:5rem;
 }
+
 </style>

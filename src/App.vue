@@ -27,8 +27,15 @@ export default {
     color: black;
   }
 }
-.el-table--striped .el-table__body tr.el-table__row--striped td{
+.PM-sumary{
+  .el-table--striped .el-table__body tr.el-table__row--striped td{
   background: rgb(236, 241, 246);
+}
+}
+.person-register{
+ .el-table--striped .el-table__body tr.el-table__row--striped td{
+    background-color:#cedbe7;
+}
 }
 
 </style>
