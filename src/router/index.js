@@ -6,8 +6,7 @@ import perAchi from '@/components/person/person-perAchi'
 import register from '@/components/person/person-register'
 import Pnew from '@/components/PM/PM-new'
 import sumary from '@/components/PM/PM-sumary'
-import sumaryT from '@/components/PM/PM-sumary-table'
-import sumaryInformat from '@/components/PM/PM-sumary-information'
+import combo from '@/components/PM/PM-combo'
 import time from '@/components/statistics/statistics-time'
 import discuss from '@/components/statistics/statistics-discuss'
 import credit from '@/components/statistics/statistics-credit'
@@ -25,7 +24,8 @@ export default new Router({
       { path: '/person-register', component: register },
       { path: '/person-register', component: register },
       { path: '/PM-new', component: Pnew }, // eslint-disable-next-line
-      { path: '/PM-sumary', component: sumary, children: [{ path: '', component: sumaryT }, { path: 'informat', component: sumaryInformat }] }, // eslint-disable-next-line
+      { path: '/PM-sumary', component: sumary }, // eslint-disable-next-line
+      { path: '/PM-combo', component: combo }, // eslint-disable-next-line
       { path: '/statistics-time', component: time },
       { path: '/statistics-discuss', component: discuss },
       { path: '/statistics-credit', component: credit },

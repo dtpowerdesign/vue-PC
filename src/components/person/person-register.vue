@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import store from '@/vuex/store'
+
 export default {
   data () {
     return {
@@ -94,13 +94,22 @@ export default {
       areas: []
     }
   },
-  store,
+  created () {},
   mounted () {
     this.Ages = []
     for (let i = 18; i < 80; i++) {
       this.Ages.push({value: i, label: i})
     }
-    this.provs = this.$store.state.place
+    this.$http.get('http://localhost:3030/vue-project/prov-city-area.php').then(res => {
+      console.log(res)
+      this.provs = res.data
+    }).catch(err => {
+      console.log(err)
+      this.$message({showClose: true,
+        message: '网络连接错误',
+        type: 'error'
+      })
+    })
   },
   methods: {
     getProv (prov) {

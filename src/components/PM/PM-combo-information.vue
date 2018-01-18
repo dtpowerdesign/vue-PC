@@ -43,15 +43,16 @@
         </el-row>
       </el-col>
       <el-col :span="8" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">投标人信息</span><br>
-        <p class="font1" style="text-align:left">{{info}}</p>
+        <span style="font-size:0.8rem;float:left;clear:left;">我邀请的人</span><br>
+        <p class="font1" style="text-align:left;color:#409EFF"><span v-for="i in info">{{i}} </span><i class="icon iconfont icon-jiahaoyou"></i></p>
       </el-col>
     </el-row>
+    <el-button type="success" style="margin-top:5rem" @click="accept()">接受洽谈</el-button>
   </div>
   <div v-else>
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|发布中</span>
+        <span style="font-size:1.5rem;color:#4d83e7">|我的请求</span>
           <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button  type="success">打印</el-button>
@@ -61,21 +62,15 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="number" label="序号" sortable>
         </el-table-column>
-        <el-table-column prop="company"  label="招标公司">
+        <el-table-column prop="initiator"  label="发起人">
         </el-table-column>
-        <el-table-column  prop="name" label="项目名称" >
+        <el-table-column  prop="project" label="投标项目" >
         </el-table-column>
-        <el-table-column  prop="address" label="地点">
+        <el-table-column  prop="type" label="项目类型">
         </el-table-column>
-        <el-table-column  prop="class" label="类别">
+        <el-table-column  prop="domain" label="专业类别">
         </el-table-column>
-        <el-table-column  prop="type" label="类型">
-        </el-table-column>
-        <el-table-column  prop="voltage" label="电压等级" sortable>
-        </el-table-column>
-        <el-table-column  prop="amount" label="预计金额" sortable>
-        </el-table-column>
-        <el-table-column  prop="date" label="发布日期" sortable>
+        <el-table-column  prop="time" label="请求时间">
         </el-table-column>
         <el-table-column   label="操作">
           <template slot-scope="adasd">
@@ -107,13 +102,13 @@ export default {
       classes: '',
       voltage: '',
       domain: '',
-      info: ''
+      info: []
     }
   },
   created () {
-    this.$http.get('http://localhost:3030/vue-project/PM-sumary-table.php').then(res => {
+    this.$http.get('http://localhost:3030//vue-project/PM-combo-table.php').then(res => {
       console.log(res)
-      this.tableData = res.data[1].one
+      this.tableData = res.data
     }).catch(err => {
       console.log(err)
       this.$message({showClose: true,
@@ -123,18 +118,18 @@ export default {
     })
     this.$http.get('http://localhost:3030/vue-project/PM-summary-information.php').then((res) => {
       console.log(res)
-      this.name = res.data[0].name
-      this.company = res.data[0].company
-      this.place = res.data[0].place
-      this.date = res.data[0].date
-      this.shejiyuan = res.data[0].shejiyuan
-      this.price = res.data[0].price
-      this.result = res.data[0].result
-      this.type = res.data[0].type
-      this.classes = res.data[0].classes
-      this.voltage = res.data[0].voltage
-      this.domain = res.data[0].domain
-      this.info = res.data[0].info
+      this.name = res.data[1].name
+      this.company = res.data[1].company
+      this.place = res.data[1].place
+      this.date = res.data[1].date
+      this.shejiyuan = res.data[1].shejiyuan
+      this.price = res.data[1].price
+      this.result = res.data[1].result
+      this.type = res.data[1].type
+      this.classes = res.data[1].classes
+      this.voltage = res.data[1].voltage
+      this.domain = res.data[1].domain
+      this.info = res.data[1].info
     }).catch((err) => {
       console.log(err)
       this.$message({
@@ -150,8 +145,8 @@ export default {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
-          const tHeader = ['序号', '招标公司', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '发布日期']
-          const filterVal = ['number', 'company', 'name', 'address', 'class', 'type', 'voltage', 'amount', 'date']
+          const tHeader = ['序号', '发起人', '投标项目', '项目类型', '专业类别', '请求时间']
+          const filterVal = ['number', 'initiator', 'project', 'type', 'domain', 'time']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '项目信息excel')
@@ -170,6 +165,12 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    accept () {
+      this.$message({
+        message: '恭喜你，接受成功',
+        type: 'success'
+      })
     }
   }
 }

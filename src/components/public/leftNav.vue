@@ -24,6 +24,7 @@
         <el-menu-item-group>
           <el-menu-item index="/PM-new">发布新项目</el-menu-item>
           <el-menu-item index="/PM-sumary">项目汇总</el-menu-item>
+          <el-menu-item index="/PM-combo">联合体</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
         <el-submenu index="statistics">

@@ -23,12 +23,27 @@
 export default {
   data () {
     return {
-      classes: ['火电', '水电', '风电', '光热', '电气处理', '储能'],
-      type: ['发电输电', '规划', '变电', '配电自动化', '配电', '智能', '常规'],
-      stage: ['项目建议书', '可行性研究', '初步设计', '施工图设计'],
-      voltage: ['MW', 'KW', 'KVA'],
-      domain: ['管道', '锅炉', '电力', '计算机', '气机轮']
+      classes: [],
+      type: [],
+      stage: [],
+      voltage: [],
+      domain: []
     }
+  },
+  created () {
+    this.$http.get('http://localhost:3030/vue-project/person-classify.php').then((res) => {
+      this.classes = res.data[0].classes
+      this.type = res.data[1].type
+      this.stage = res.data[2].stage
+      this.voltage = res.data[3].voltage
+      this.domain = res.data[4].domain
+    }).catch((err) => {
+      console.log(err)
+      this.$message({showClose: true,
+        message: '网络连接错误',
+        type: 'error'
+      })
+    })
   }
 }
 </script>

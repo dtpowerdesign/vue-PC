@@ -51,7 +51,7 @@
   <div v-else>
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|发布中</span>
+        <span style="font-size:1.5rem;color:#4d83e7">|洽谈中</span>
           <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button  type="success">打印</el-button>
@@ -113,7 +113,7 @@ export default {
   created () {
     this.$http.get('http://localhost:3030/vue-project/PM-sumary-table.php').then(res => {
       console.log(res)
-      this.tableData = res.data[1].one
+      this.tableData = res.data[3].three
     }).catch(err => {
       console.log(err)
       this.$message({showClose: true,

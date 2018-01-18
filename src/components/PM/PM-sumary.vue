@@ -3,22 +3,29 @@
    <div class="title"><span>项目信息<i class="icon iconfont icon-iconfontquestion"></i></span></div>
    <div class="clearfix"></div>
    <el-tabs type="border-card">
-    <el-tab-pane label="项目汇总">项目汇总</el-tab-pane>
+    <el-tab-pane label="项目汇总"><InforAll></InforAll></el-tab-pane>
     <el-tab-pane label="发布中">
-      <router-view></router-view>
-      
+      <Infor></Infor>
     </el-tab-pane>
-    <el-tab-pane label="投标中">投标中</el-tab-pane>
-    <el-tab-pane label="洽谈中">洽谈中</el-tab-pane>
-    <el-tab-pane label="投标洽谈">投标洽谈</el-tab-pane>
-    <el-tab-pane label="合同执行中">合同执行中</el-tab-pane>
-    <el-tab-pane label="合同终止">合同终止</el-tab-pane>
+    <el-tab-pane label="投标中"><Infor2></Infor2></el-tab-pane>
+    <el-tab-pane label="洽谈中"><Infor3></Infor3></el-tab-pane>
+    <el-tab-pane label="投标洽谈"><Infor4></Infor4></el-tab-pane>
+    <el-tab-pane label="合同执行中"><Infor5></Infor5></el-tab-pane>
+    <el-tab-pane label="合同终止"><Infor6></Infor6></el-tab-pane>
    </el-tabs>
   </div>
 </template>
 
 <script>
+import Infor from '@/components/PM/PM-sumary-information'
+import Infor2 from '@/components/PM/PM-sumary-information2'
+import Infor3 from '@/components/PM/PM-sumary-information3'
+import Infor4 from '@/components/PM/PM-sumary-information4'
+import Infor5 from '@/components/PM/PM-sumary-information5'
+import Infor6 from '@/components/PM/PM-sumary-information6'
+import InforAll from '@/components/PM/PM-sumary-informationAll'
 export default {
+  components: {Infor, Infor2, Infor3, Infor4, Infor5, Infor6, InforAll},
   data () {
     return {}
   }
