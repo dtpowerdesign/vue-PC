@@ -1,42 +1,45 @@
 <template>
   <div class="person-classify">
    <div class="div1">
-     <span class="font1">类别:</span><template v-for="i in classes"><span class="font2">{{i}}</span></template>
+     <span class="font1">类别:</span><template v-for="i in classes"><span class="font2"  @click="add1($event)">{{i}}</span></template>
    </div>
    <div class="div1">
-     <span class="font1">类型:</span><template v-for="i in type"><span class="font2">{{i}}</span></template>
+     <span class="font1">类型:</span><template v-for="i in type"><span class="font2" @click="add2($event)">{{i}}</span></template>
    </div>
    <div class="div1">
-     <span class="font1">设计阶段:</span><template v-for="i in stage"><span class="font2">{{i}}</span></template>
+     <span class="font1">设计阶段:</span><template v-for="i in stage"><span class="font2" @click="add3($event)">{{i}}</span></template>
    </div>
    <div class="div1">
-     <span class="font1"规模容量:</span><template v-for="i in voltage"><span class="font2">{{i}}</span></template>
+     <span class="font1">规模容量:</span><template v-for="i in voltage"><span class="font2" @click="add4($event)">{{i}}</span></template>
    </div>
    <div class="div1">
-     <span class="font1">涉及专业:</span><template v-for="i in domain"><span class="font2">{{i}}</span></template>
+     <span class="font1">涉及专业:</span><template v-for="i in domain"><span class="font2" @click="add5($event)">{{i}}</span></template>
    </div>
    <div class="clearfix"></div>
   </div>
 </template>
 
 <script>
+import store from '@/vuex/tag.js'
 export default {
+  store,
   data () {
     return {
       classes: [],
       type: [],
       stage: [],
       voltage: [],
-      domain: []
+      domain: [],
+      tags: []
     }
   },
   created () {
-    this.$http.get('http://localhost:3030/vue-project/person-classify.php').then((res) => {
-      this.classes = res.data[0].classes
-      this.type = res.data[1].type
-      this.stage = res.data[2].stage
-      this.voltage = res.data[3].voltage
-      this.domain = res.data[4].domain
+    this.$http.get('http://10.14.4.138:8080/electric-design/getTypeMajors').then((res) => {
+      this.classes = res.data.categorys
+      this.type = res.data.types
+      this.stage = res.data.designProcess
+      this.voltage = res.data.sizeAndCapacitys
+      this.domain = res.data.majors
     }).catch((err) => {
       console.log(err)
       this.$message({showClose: true,
@@ -44,6 +47,89 @@ export default {
         type: 'error'
       })
     })
+    this.tags = this.$store.state.tags
+    this.tag1 = this.$store.state.tag1
+    this.tag2 = this.$store.state.tag2
+    this.tag3 = this.$store.state.tag3
+    this.tag4 = this.$store.state.tag4
+    this.tag5 = this.$store.state.tag5
+  },
+  methods: {
+    add1 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag1.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: '我让你点了吗',
+          type: 'warning'
+        })
+      }
+    },
+    add2 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag2.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: '我让你点了吗',
+          type: 'warning'
+        })
+      }
+    },
+    add3 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag3.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: '我让你点了吗',
+          type: 'warning'
+        })
+      }
+    },
+    add4 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag4.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: '我让你点了吗',
+          type: 'warning'
+        })
+      }
+    },
+    add5 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag5.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: '我让你点了吗',
+          type: 'warning'
+        })
+      }
+    }
+  },
+  watch: {
+    tags () {
+      var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+      this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions', formData)
+      .then(res => {
+        console.log(res.data)
+        this.$store.state.table.number = res.data.code
+        this.$store.state.table.name = res.data.name
+        this.$store.state.table.address = res.data.address
+        this.$store.state.table.class = res.data.category
+        this.$store.state.table.type = res.data.type
+        this.$store.state.table.voltage = res.data.voltagelevel
+        this.$store.state.table.stage = res.data.designProcess
+        this.$store.state.table.domain = res.data.major
+        this.$store.state.table.amount = res.data.sourceAccount
+        this.$store.state.table.date = res.data.endTime.month + '月' + res.data.endTime.day + '日'
+        this.$store.state.table.state = res.data.designProcess
+      }).catch(err => { console.log(err) })
+    }
   }
 }
 </script>
@@ -65,5 +151,6 @@ export default {
 .font2{
     color:#4d83e7;
     margin-left:0.5rem;
+    cursor:pointer;
 }
 </style>

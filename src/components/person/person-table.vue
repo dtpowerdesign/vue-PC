@@ -2,12 +2,12 @@
  <template>
   <div class="person-table">
    
-  <div style="display:flex; align-items:center; justify-content: space-between">
+      <div style="display:flex; align-items:center; justify-content: space-between;width:95%;height:4rem;margin-left:auto;margin-right:auto">
         <span style="font-size:1.5rem;color:#4d83e7;margin-left:2rem">业绩统计管理表</span>
-          <div>
+        <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
-            <el-button  type="success">打印</el-button>
-          </div>
+            <el-button type="success">打印</el-button>
+        </div>
       </div>
       <el-table :data="tableData" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
@@ -44,7 +44,9 @@
 </template>
 
 <script>
+import store from '@/vuex/tag.js'
 export default {
+  store,
   data () {
     return {
       downloadLoading: false,
@@ -53,16 +55,16 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://localhost:3030/vue-project/person-table.php').then(res => {
-      console.log(res)
-      this.tableData = res.data
-    }).catch(err => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
-      })
-    })
+    // this.$http.get('http://localhost:3030/vue-project/person-table.php').then(res => {
+    //   this.tableData = res.data
+    // }).catch(err => {
+    //   console.log(err)
+    //   this.$message({showClose: true,
+    //     message: '网络连接错误',
+    //     type: 'error'
+    //   })
+    // })
+    this.tableData = this.$store.state.table
   },
   methods: {
     handleDownload () {

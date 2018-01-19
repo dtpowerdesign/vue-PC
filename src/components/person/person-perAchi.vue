@@ -2,6 +2,7 @@
   <div class="person-register">
    <div class="title"><span style="font-size:2rem">个人业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <myClassify></myClassify>
+   <myTag></myTag>
    <myTable></myTable>
   </div>
 </template>
@@ -9,8 +10,9 @@
 <script>
 import myTable from '@/components/person/person-table'
 import myClassify from '@/components/person/person-classify'
+import myTag from '@/components/person/person-tag'
 export default {
-  components: {myTable, myClassify},
+  components: {myTable, myClassify, myTag},
   data () {
     return {}
   }
@@ -32,6 +34,10 @@ export default {
 }
 .person-classify{
    background-color:white;
+}
+.person-tag{
+  background-color:white;
+  margin-top:1rem;
 }
 .person-table{
   margin-top:1rem;

@@ -100,8 +100,7 @@ export default {
     for (let i = 18; i < 80; i++) {
       this.Ages.push({value: i, label: i})
     }
-    this.$http.get('http://localhost:3030/vue-project/prov-city-area.php').then(res => {
-      console.log(res)
+    this.$http.get('http://10.14.4.138:8080/electric-design/getAreasOfChina').then(res => {
       this.provs = res.data
     }).catch(err => {
       console.log(err)
@@ -117,7 +116,6 @@ export default {
       for (var val of this.provs) {
         if (prov === val.name) {
           this.cities = val.cityList
-          console.log(this.cities)
           this.prov = val.name
         }
       }
@@ -132,7 +130,6 @@ export default {
       }
     },
     submit () {
-      console.log(this.ruleForm)
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)
