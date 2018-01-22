@@ -111,18 +111,32 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://localhost:3030/vue-project/PM-sumary-table.php').then(res => {
-      console.log(res)
-      this.tableData = res.data[2].two
-    }).catch(err => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
-      })
-    })
+    this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions',
+     {conditions: {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'toAccounts': {'searchMethod': 'values', 'values': ['123']}}})
+        .then((res) => {
+          console.log(res.data)
+          res.data.forEach((el, index) => {
+            var obj = {
+              number: el.code,
+              company: el.sourceAccount,
+              name: el.name,
+              address: el.address,
+              class: el.category.concat().join(','),
+              type: el.type.concat().join(','),
+              voltage: el.sizeAndCapacity.concat().join(','),
+              amount: el.highestBidPrice,
+              date: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/')
+            }
+            this.tableData.push(obj)
+          })
+        }).catch((err) => {
+          console.log(err)
+          this.$message({showClose: true,
+            message: '网络连接错误',
+            type: 'error'
+          })
+        })
     this.$http.get('http://localhost:3030/vue-project/PM-summary-information.php').then((res) => {
-      console.log(res)
       this.name = res.data[0].name
       this.company = res.data[0].company
       this.place = res.data[0].place

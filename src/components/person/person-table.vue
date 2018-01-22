@@ -9,27 +9,27 @@
             <el-button type="success">打印</el-button>
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
+      <el-table :data="table"  stripe fit :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="number" label="序号" sortable>
+        <el-table-column prop="code" label="序号" sortable>
         </el-table-column>
         <el-table-column  prop="name" label="项目名称" >
         </el-table-column>
         <el-table-column  prop="address" label="地点">
         </el-table-column>
-        <el-table-column  prop="class" label="类别">
+        <el-table-column  prop="category" label="类别">
         </el-table-column>
         <el-table-column  prop="type" label="类型">
         </el-table-column>
-        <el-table-column  prop="voltage" label="电压等级" sortable>
+        <el-table-column  prop="voltagelevel" label="电压等级" sortable>
         </el-table-column>
-        <el-table-column  prop="stage" label="设计阶段" sortable>
+        <el-table-column  prop="designProcess" label="设计阶段" sortable>
         </el-table-column>
-        <el-table-column  prop="domain" label="涉及专业" >
+        <el-table-column  prop="major" label="涉及专业" >
         </el-table-column>
-        <el-table-column  prop="amount" label="工程投资" sortable>
+        <el-table-column  prop="amountOfInvestment" label="工程投资" sortable>
         </el-table-column>
-        <el-table-column  prop="date" label="完成时间" sortable>
+        <el-table-column  prop="endTime" label="完成时间" sortable>
         </el-table-column>
         <el-table-column  prop="state" label="状态" >
         </el-table-column>
@@ -45,6 +45,7 @@
 
 <script>
 import store from '@/vuex/tag.js'
+import { mapState } from 'vuex'
 export default {
   store,
   data () {
@@ -55,17 +56,8 @@ export default {
     }
   },
   created () {
-    // this.$http.get('http://localhost:3030/vue-project/person-table.php').then(res => {
-    //   this.tableData = res.data
-    // }).catch(err => {
-    //   console.log(err)
-    //   this.$message({showClose: true,
-    //     message: '网络连接错误',
-    //     type: 'error'
-    //   })
-    // })
-    this.tableData = this.$store.state.table
   },
+  computed: mapState(['table']),
   methods: {
     handleDownload () {
       if (this.multipleSelection.length !== 0) {
@@ -73,7 +65,7 @@ export default {
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
           const tHeader = ['序号', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '设计阶段', '涉及专业', '发布日期', '状态']
-          const filterVal = ['number', 'name', 'address', 'class', 'type', 'voltage', 'stage', 'domain', 'amount', 'date', 'state']
+          const filterVal = ['code', 'name', 'address', 'category', 'type', 'voltagelevel', 'designProcess', 'major', 'amountOfInvestment', 'endTime', 'state']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '业绩统计管理表excel')
@@ -94,7 +86,7 @@ export default {
       this.multipleSelection = val
     },
     myDelete (i) {
-      this.tableData = this.tableData.filter(o => o.number !== i.number)
+      this.table = this.table.filter(o => o.code !== i.code)
     }
   }
 }
@@ -102,6 +94,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.person-table{
+  box-shadow: .2rem .2rem .2rem #888888;
+border-radius:.3rem;
+}
 .icon{
     font-size:1rem;
     margin-left:1rem;

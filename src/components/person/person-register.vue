@@ -5,7 +5,7 @@
       <p style="text-align:left">填写真实的资料更方便大家了解你，以下信息将显示在个人资料页。</p>
       <p style="text-align:left">(请不要在资料里留电话，QQ等联系方式，会导致您的资料无法通过审核)</p>
     </div>
-    <el-row style="margin-top:3rem">
+    <el-row style="margin-top:2rem">
       <el-col :span="11">
         <el-form :label-position="labelPosition" label-width="80px" :model="ruleForm">
           <el-form-item label="姓名"  prop="name">
@@ -15,27 +15,30 @@
             <el-radio-group v-model="ruleForm.sex">
               <el-radio label="男"></el-radio>
               <el-radio label="女"></el-radio>
+              <el-radio label="">保密</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
-            <el-select v-model="ruleForm.age" placeholder="请选择年龄">
+            <el-col :span="24">
+              <el-select v-model="ruleForm.age" placeholder="请选择年龄" style="width:100%">
               <el-option v-for="item in Ages" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
+            </el-col>
           </el-form-item>
           <el-form-item label="电话" prop="telephone">
-            <el-input v-model="ruleForm.telephone" style="width:70%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
+            <el-input v-model="ruleForm.telephone" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email" style="width:70%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
+            <el-input v-model="ruleForm.email" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
           </el-form-item>
           <el-form-item label="所在地" prop="place">
-            <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:7rem">
+            <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:8rem;margin-right:0.6rem;">
               <el-option v-for="item in provs" :key="item.name" :label="item.name" :value="item.name"></el-option>
             </el-select>
-            <el-select v-model="ruleForm.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:7rem">
+            <el-select v-model="ruleForm.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:8rem;margin-right:0.6rem;">
               <el-option v-for="item in cities" :key="item.name" :label="item.name" :value="item.name"></el-option>
             </el-select>
-            <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:7rem">
+            <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:8rem">
               <el-option v-for="item in areas" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
@@ -45,23 +48,23 @@
       <el-col :span="11" :offset="2">
         <div class="uploading">
           <p style="text-align:left;font-size:1.5rem">账号完整度</p>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="50" status="exception" style="margin-top:2rem"></el-progress>
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="complete" :status="status" style="margin-top:2rem"></el-progress>
           <p style="text-align:left;font-size:1rem;margin-top:3rem;">您目前的账号完整度较低，建议通过以下方式完善你的信息，可有效提高投标成功率</p>
           <div class="div1-style">
             <span>上传学位证明等教育背景信息</span>
-            <el-upload class="upload-demo" action="" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="http://10.14.4.138:8080/electric-design/uploadPublicProjects" :data="{'account':123}" multiple name="project" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传有效身份证件，提高账号安全度</span>
-            <el-upload class="upload-demo" action="" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传职称或工作证明等工作信息</span>
-            <el-upload class="upload-demo" action="" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -77,6 +80,8 @@
 export default {
   data () {
     return {
+      complete: 100,
+      status: 'success',
       Ages: [],
       labelPosition: 'right',
       ruleForm: {
@@ -94,7 +99,20 @@ export default {
       areas: []
     }
   },
-  created () {},
+  created () {
+    this.$http.post('http://10.14.4.138:8080/electric-design/getPuserByAccount', {'account': '123464854'}).then((res) => {
+      this.ruleForm.name = res.data.name
+      this.ruleForm.sex = res.data.sex
+      this.ruleForm.age = res.data.age
+      this.ruleForm.telephone = res.data.telephone
+      this.ruleForm.email = res.data.email
+      this.ruleForm.prov = res.data.birthAddress.province
+      this.ruleForm.city = res.data.birthAddress.city
+      this.ruleForm.area = res.data.birthAddress.area
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
   mounted () {
     this.Ages = []
     for (let i = 18; i < 80; i++) {
@@ -130,6 +148,31 @@ export default {
       }
     },
     submit () {
+      this.$http.post('http://10.14.4.138:8080/electric-design/changePuserByAccount',
+        {
+          'account': '123464854',
+          'data': {
+            'account': '123464854',
+            'name': this.ruleForm.name,
+            'sex': this.ruleForm.sex,
+            'age': this.ruleForm.age,
+            'telephone': this.ruleForm.telephone,
+            'email': this.ruleForm.email,
+            'birthAddress': {
+              'province': this.ruleForm.prov,
+              'city': this.ruleForm.city,
+              'area': this.ruleForm.area
+            }}
+        })
+      .then((res) => {
+        console.log('修改成功')
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    success (response, file, fileList) {
+      this.complete = response.data
+      alert(response)
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)
@@ -146,7 +189,7 @@ export default {
 <style scoped>
 .person-register{
   width:90%;
-  margin: 3rem auto;
+  margin: 1rem auto;
   background-color:#ebeef5;
 }
 .title{
@@ -174,5 +217,12 @@ export default {
 }
 .upload-demo{
 
+}
+.el-col,.el-input,.el-select{
+  box-shadow: .2rem .2rem .2rem #888888;
+border-radius:.3rem;
+}
+.el-button{
+  box-shadow: .2rem .2rem .2rem #888888;
 }
 </style>

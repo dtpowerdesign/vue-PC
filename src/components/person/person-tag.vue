@@ -1,6 +1,6 @@
 <template>
   <div class="person-tag">
-   <span style="float:left;font-size:2rem;line-height:2rem;color:#409EFF;">已选:</span>
+   <span style="float:left;font-size:2rem;line-height:2rem;color:#409EFF;margin-left:2rem;">已选:</span>
    <el-tag v-for="tag in tags" :key="tag.name" closable :type="tag.type" @close="close(tag)">
      {{tag}}
    </el-tag>
@@ -47,6 +47,8 @@ export default {
 <style scoped>
 .person-tag{
 height:2rem;
+box-shadow: .2rem .2rem .2rem #888888;
+border-radius:0 0 .3rem .3rem;
 }
 .el-tag{
     float:left;

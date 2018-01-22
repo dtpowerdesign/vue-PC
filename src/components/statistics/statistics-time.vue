@@ -208,7 +208,7 @@ export default {
 <style scoped>
 .statistics-time{
    width:90%;
-  margin: 3rem auto;
+  margin: 3rem auto 0 auto;
   background-color:#ebeef5;
 }
 .title{
@@ -257,7 +257,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 6rem;
+  height: 4rem;
 }
 .div-thing{
 border-bottom:2px solid gray;

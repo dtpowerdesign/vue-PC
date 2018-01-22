@@ -5,7 +5,8 @@
       router
       class="el-menu-vertical-demo"
       background-color="#4d83e7"
-      text-color="#fff">
+      text-color="#fff"
+      unique-opened>
       <el-submenu index="person">
         <template slot="title">
           <i class="icon iconfont icon-gerenziliao"></i>

@@ -1,11 +1,11 @@
 <template>
   <div>
    <el-row>
-     <el-col :span="4" class="left">
+     <el-col :span="3" class="left">
        <logo></logo>
        <leftNav></leftNav>
      </el-col>
-     <el-col :span="20" :offset="4" style="background-color:#ebeef5;">
+     <el-col :span="21" :offset="3" style="background-color:#ebeef5;" class="right">
         <Info style="background-color:white"></Info>
        	<router-view></router-view>
      </el-col>
@@ -23,9 +23,11 @@ export default {
     return {}
   },
   mounted () {
-    var dd = document.getElementsByClassName('left')[0]
+    var ld = document.getElementsByClassName('left')[0]
+    var rd = document.getElementsByClassName('right')[0]
     var H = document.body.clientHeight
-    dd.style.height = H + 'px'
+    ld.style.height = H + 'px'
+    rd.style.height = H + 'px'
   }
 }
 </script>

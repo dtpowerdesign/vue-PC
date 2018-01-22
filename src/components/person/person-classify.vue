@@ -21,6 +21,7 @@
 
 <script>
 import store from '@/vuex/tag.js'
+import {mapState, mapMutations} from 'vuex'
 export default {
   store,
   data () {
@@ -33,8 +34,9 @@ export default {
       tags: []
     }
   },
+  computed: mapState(['table']),
   created () {
-    this.$http.get('http://10.14.4.138:8080/electric-design/getTypeMajors').then((res) => {
+    this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
       this.classes = res.data.categorys
       this.type = res.data.types
       this.stage = res.data.designProcess
@@ -55,6 +57,9 @@ export default {
     this.tag5 = this.$store.state.tag5
   },
   methods: {
+    ...mapMutations([
+      'add'
+    ]),
     add1 (e) {
       if (this.tags.length < 3) {
         this.tags.push(e.target.innerText)
@@ -114,20 +119,13 @@ export default {
   watch: {
     tags () {
       var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-      this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions', formData)
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions', formData)
       .then(res => {
         console.log(res.data)
-        this.$store.state.table.number = res.data.code
-        this.$store.state.table.name = res.data.name
-        this.$store.state.table.address = res.data.address
-        this.$store.state.table.class = res.data.category
-        this.$store.state.table.type = res.data.type
-        this.$store.state.table.voltage = res.data.voltagelevel
-        this.$store.state.table.stage = res.data.designProcess
-        this.$store.state.table.domain = res.data.major
-        this.$store.state.table.amount = res.data.sourceAccount
-        this.$store.state.table.date = res.data.endTime.month + '月' + res.data.endTime.day + '日'
-        this.$store.state.table.state = res.data.designProcess
+        this.$store.commit('init')
+        res.data.forEach((el, index) => {
+          this.$store.commit('add', el)
+        })
       }).catch(err => { console.log(err) })
     }
   }
@@ -138,6 +136,9 @@ export default {
 <style scoped>
 .person-classify{
     text-align:left;
+    box-shadow: .2rem .2rem .2rem #888888;
+    border-radius:.3rem .3rem 0 0;
+
 }
 .div1{float:left;}
 .clearfix{

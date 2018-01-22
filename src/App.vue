@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    
     <router-view/>
   </div>
 </template>
@@ -23,8 +22,15 @@ export default {
   .el-submenu__title i{
     color:#fff;
 }
+  .el-menu{
+    border-right:0;
+  }
   .el-menu-item.is-active{
     color: black;
+    font-size: 1.1rem
+  }
+  .el-submenu .el-menu-item{
+    min-width:auto;
   }
 }
 .PM-sumary{
@@ -37,5 +43,17 @@ export default {
     background-color:#cedbe7;
 }
 }
-
+.PM-new-step2{
+.el-date-editor.el-input, .el-date-editor.el-input__inner{
+  width:100%;
+}
+}
+.Info{
+  .el-submenu .el-menu-item{
+    min-width:auto;
+  }
+}
+.el-table td{
+  text-align:left;
+}
 </style>
