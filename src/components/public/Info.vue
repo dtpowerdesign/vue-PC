@@ -2,7 +2,12 @@
   <div class="Info">
     <div style="margin-left:2rem">
       <i class="icon iconfont icon-liebiao" @click="show()"></i>
-      <span style="width:40rem;" class="nav"><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">平台概况</span><span style="color:#4d83e7">个人门户</span><span>企业门户</span></span>
+      <span style="width:40rem;" class="nav">
+        <span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">平台首页</span>
+        <span onclick="window.location.href='https://githubzhangshuai.github.io/staticSome/'">平台概况</span>
+        <span style="color:#4d83e7">个人门户</span>
+        <span>企业门户</span>
+      </span>
     </div>
     <div>
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">

@@ -6,7 +6,7 @@
       <el-tab-pane label="我的请求">
         <infor></infor>
       </el-tab-pane>
-      <el-tab-pane label="投标中">投标中</el-tab-pane>
+      <el-tab-pane label="投标中"><inforing></inforing></el-tab-pane>
   </el-tabs>
   </div>
   
@@ -15,8 +15,9 @@
 <script>
 import Rinfor from '@/components/PM/PM-combo-Rinformation.vue'
 import infor from '@/components/PM/PM-combo-information.vue'
+import inforing from '@/components/PM/PM-combo-inforing.vue'
 export default {
-  components: {Rinfor, infor},
+  components: {Rinfor, infor, inforing},
   data () {
     return {}
   }

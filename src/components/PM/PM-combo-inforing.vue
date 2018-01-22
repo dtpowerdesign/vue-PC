@@ -43,15 +43,16 @@
         </el-row>
       </el-col>
       <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">投标人信息</span><br>
-        <p class="font1" style="text-align:left">{{info}}</p>
+        <span style="font-size:0.8rem;float:left;clear:left;">收到请求</span><br>
+        <p class="font1" style="text-align:left;color:#409EFF"><span v-for="i in info"> {{i}} </span></p>
       </el-col>
     </el-row>
-  </div>
+    <el-button type="success" style="margin-top:5rem" @click="accept()">接受洽谈</el-button>
+  </div>  
   <div v-else>
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|项目汇总</span>
+        <span style="font-size:1.5rem;color:#4d83e7">|投标中</span>
           <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button  type="success">打印</el-button>
@@ -61,21 +62,15 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="number" label="序号" sortable>
         </el-table-column>
-        <el-table-column prop="company"  label="招标公司">
+        <el-table-column prop="initiator"  label="发起人">
         </el-table-column>
-        <el-table-column  prop="name" label="项目名称" >
+        <el-table-column  prop="project" label="投标项目" >
         </el-table-column>
-        <el-table-column  prop="address" label="地点">
+        <el-table-column  prop="type" label="项目类型">
         </el-table-column>
-        <el-table-column  prop="class" label="类别">
+        <el-table-column  prop="domain" label="专业类别">
         </el-table-column>
-        <el-table-column  prop="type" label="类型">
-        </el-table-column>
-        <el-table-column  prop="voltage" label="电压等级" sortable>
-        </el-table-column>
-        <el-table-column  prop="amount" label="预计金额" sortable>
-        </el-table-column>
-        <el-table-column  prop="date" label="发布日期" sortable>
+        <el-table-column  prop="time" label="请求时间">
         </el-table-column>
         <el-table-column   label="操作">
           <template slot-scope="adasd">
@@ -117,28 +112,30 @@ export default {
       classes: '',
       voltage: '',
       domain: '',
-      info: ''
+      info: []
     }
   },
   created () {
     this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions',
-     {conditions: {'toAccounts': {'searchMethod': 'values', 'values': ['123']}}})
+     {conditions: {'jointReleaseAccount': {'searchMethod': 'values', 'values': ['123']}}})
         .then((res) => {
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {
                 number: el.code,
-                company: el.sourceAccount,
-                name: el.name,
+                initiator: el.sourceAccount,
+                project: el.name,
+                type: el.type.concat().join(','),
+                domain: el.major.concat().join(','),
                 address: el.address,
                 class: el.category.concat().join(','),
-                type: el.type.concat().join(','),
-                voltage: el.voltagelevel,
-                amount: el.amountOfInvestment,
-                date: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
+                time: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
                 state: el.state,
                 category: el.category.concat().join(','),
-                major: el.major.concat().join(',')
+                major: el.major.concat().join(','),
+                voltage: el.voltagelevel,
+                amount: el.amountOfInvestment,
+                company: el.sourceAccount
               }
               this.tableData.push(obj)
             })
@@ -154,7 +151,7 @@ export default {
   methods: {
     detail (row) {
       this.show = true
-      this.name = row.name
+      this.name = row.project
       this.company = row.company
       this.place = row.address
       this.date = row.date
@@ -181,8 +178,8 @@ export default {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
-          const tHeader = ['序号', '招标公司', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '发布日期']
-          const filterVal = ['number', 'company', 'name', 'address', 'class', 'type', 'voltage', 'amount', 'date']
+          const tHeader = ['序号', '发起人', '投标项目', '项目类型', '专业类别', '请求时间']
+          const filterVal = ['number', 'initiator', 'project', 'type', 'domain', 'time']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '项目信息excel')
@@ -202,6 +199,12 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     }
+  },
+  accept () {
+    this.$message({
+      message: '恭喜你，接受成功',
+      type: 'success'
+    })
   }
 }
 </script>

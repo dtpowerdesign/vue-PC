@@ -9,7 +9,7 @@
             <el-button type="success">打印</el-button>
         </div>
       </div>
-      <el-table :data="table"  stripe fit :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
+      <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)"  stripe fit :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="code" label="序号" sortable>
         </el-table-column>
@@ -40,6 +40,15 @@
         </el-table-column>
         
       </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[3, 5, 10, 20]"
+      :page-size="5"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="length">
+    </el-pagination>
   </div>
 </template>
 
@@ -52,13 +61,21 @@ export default {
     return {
       downloadLoading: false,
       tableData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      currentPage: 1,
+      pagesize: 5
     }
   },
   created () {
   },
-  computed: mapState(['table']),
+  computed: mapState(['table', 'length']),
   methods: {
+    handleSizeChange (size) {
+      this.pagesize = size
+    },
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+    },
     handleDownload () {
       if (this.multipleSelection.length !== 0) {
         this.downloadLoading = true

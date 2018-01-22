@@ -121,11 +121,11 @@ export default {
       var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
       this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions', formData)
       .then(res => {
-        console.log(res.data)
         this.$store.commit('init')
         res.data.forEach((el, index) => {
           this.$store.commit('add', el)
         })
+        this.$store.state.length = res.data.length
       }).catch(err => { console.log(err) })
     }
   }

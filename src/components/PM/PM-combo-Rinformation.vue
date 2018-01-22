@@ -31,7 +31,7 @@
       </el-col>
     </el-row>
     <el-row style="margin-top:3rem">
-      <el-col :span="10" :offset="2">
+      <el-col :span="14" :offset="2">
         <span style="font-size:0.8rem;float:left;clear:left;">其他信息</span><br>
         <el-row>
           <el-col :span="12" ><span class="font1" style="float:left;clear:left;">类别:{{classes}}</span></el-col>
@@ -42,7 +42,7 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{domain}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="8" :offset="2">
+      <el-col :span="4" :offset="2">
         <span style="font-size:0.8rem;float:left;clear:left;">收到请求</span><br>
         <p class="font1" style="text-align:left;color:#409EFF"><span v-for="i in info"> {{i}} </span></p>
       </el-col>
@@ -52,13 +52,13 @@
   <div v-else>
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|我的请求</span>
+        <span style="font-size:1.5rem;color:#4d83e7">|收到请求</span>
           <div>
             <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button  type="success">打印</el-button>
           </div>
       </div>
-      <el-table :data="tableData" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
+      <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="number" label="序号" sortable>
         </el-table-column>
@@ -74,11 +74,19 @@
         </el-table-column>
         <el-table-column   label="操作">
           <template slot-scope="adasd">
-            <el-button @click="show=true" type="primary" size="small">查看详情</el-button>
+            <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
           </template>
         </el-table-column>
-        
       </el-table>
+      <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[1, 2, 5, 10, 20]"
+      :page-size="5"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="tableData.length">
+      </el-pagination>
   </div>
   </div>
 </template>
@@ -87,6 +95,8 @@
 export default {
   data () {
     return {
+      currentPage: 1,
+      pagesize: 5,
       downloadLoading: false,
       tableData: [],
       multipleSelection: [],
@@ -106,40 +116,62 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://localhost:3030//vue-project/PM-combo-table.php').then(res => {
-      console.log(res)
-      this.tableData = res.data
-    }).catch(err => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
-      })
-    })
-    this.$http.get('http://localhost:3030/vue-project/PM-summary-information.php').then((res) => {
-      console.log(res)
-      this.name = res.data[2].name
-      this.company = res.data[2].company
-      this.place = res.data[2].place
-      this.date = res.data[2].date
-      this.shejiyuan = res.data[2].shejiyuan
-      this.price = res.data[2].price
-      this.result = res.data[2].result
-      this.type = res.data[2].type
-      this.classes = res.data[2].classes
-      this.voltage = res.data[2].voltage
-      this.domain = res.data[2].domain
-      this.info = res.data[2].info
-    }).catch((err) => {
-      console.log(err)
-      this.$message({
-        showClose: true,
-        message: '你还未选择哦',
-        type: 'warning'
-      })
-    })
+    this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions',
+     {conditions: {'invitatingAccounts': {'searchMethod': 'values', 'values': []}}})
+        .then((res) => {
+          if (res.data !== 0) {
+            res.data.forEach((el, index) => {
+              var obj = {
+                number: el.code,
+                initiator: el.sourceAccount,
+                project: el.name,
+                type: el.type.concat().join(','),
+                domain: el.major.concat().join(','),
+                address: el.address,
+                class: el.category.concat().join(','),
+                time: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
+                state: el.state,
+                category: el.category.concat().join(','),
+                major: el.major.concat().join(','),
+                voltage: el.voltagelevel,
+                amount: el.amountOfInvestment,
+                company: el.sourceAccount
+              }
+              this.tableData.push(obj)
+            })
+          }
+        }).catch((err) => {
+          console.log(err)
+          this.$message({showClose: true,
+            message: '网络连接错误',
+            type: 'error'
+          })
+        })
   },
   methods: {
+    detail (row) {
+      this.show = true
+      this.name = row.project
+      this.company = row.company
+      this.place = row.address
+      this.date = row.date
+      this.price = row.amount
+      this.result = row.state
+      this.type = row.type
+      this.classes = row.category
+      this.voltage = row.voltage
+      this.domain = row.major
+      this.$http.post('http://10.14.4.138:8080/electric-design/getCuserByAccount', {'desAccounts': ['1111']}).then((res) => {
+        this.shejiyuan = res.data[0].companyType
+      }).catch((err) => { console.log(err) })
+      this.info = ''
+    },
+    handleSizeChange (size) {
+      this.pagesize = size
+    },
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+    },
     handleDownload () {
       if (this.multipleSelection.length !== 0) {
         this.downloadLoading = true

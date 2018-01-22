@@ -8,7 +8,8 @@ const state = {
   tag3: [],
   tag4: [],
   tag5: [],
-  table: []
+  table: [],
+  length: 1
 }
 
 const mutations = {
@@ -22,12 +23,12 @@ const mutations = {
     obj.address = el.address
     obj.category = el.category.concat().join(',')
     obj.type = el.type.concat().join(',')
-    obj.voltagelevel = el.sizeAndCapacity.concat().join(',')
+    obj.voltagelevel = el.voltagelevel
     obj.designProcess = el.designProcess
     obj.major = el.major.concat().join(',')
-    obj.amountOfInvestment = el.highestBidPrice
+    obj.amountOfInvestment = el.amountOfInvestment
     obj.endTime = [].concat((el.endTime.year + 1900), (el.endTime.month + 1), el.endTime.date).join('/')
-    obj.state = el.state.concat().join(',')
+    obj.state = el.state
     state.table.push(obj)
   }
 }
