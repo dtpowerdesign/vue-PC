@@ -1,7 +1,7 @@
 <template>
   <div class="statistics-time">
     <div class="title"><span style="font-size:2rem">时间统计</span><i class="icon iconfont icon-iconfontquestion"></i><span class="date">{{year}}年{{month}}月{{day}}日</span></div>
-    <el-tabs type="border-card" style="position:relative">
+    <el-tabs type="border-card" style="position:relative" class="tab">
       <el-tab-pane label="周">
         <div style="display:flex;justify-content:space-between"><span style="font-size:1.5rem;color:#4d83e7">{{year}}年{{month}}月{{week}}周</span><span><i class="icon iconfont icon-shang" @click="lastWeek()"></i><i class="icon iconfont icon-xia" @click="nextWeek()"></i></span></div>
         <ul class="time">
@@ -209,7 +209,6 @@ export default {
 .statistics-time{
    width:90%;
   margin: 3rem auto 0 auto;
-  background-color:#ebeef5;
 }
 .title{
   text-align:left;
@@ -303,5 +302,11 @@ display: flex;
   list-style-type:none;
   float:left;
   margin-top:-13rem;
+}
+.tab{
+  border-radius:.3rem;
+  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
 </style>

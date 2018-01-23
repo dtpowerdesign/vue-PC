@@ -1,5 +1,5 @@
 <template>
-  <div class="leftNav">
+  <div class="comleftNav">
      <el-menu
       default-active="/"
       router
@@ -7,26 +7,26 @@
       background-color="#4d83e7"
       text-color="#fff"
       active-background-color="#409EFF"
-      :default-openeds="['person', 'PM', 'statistics']">
-      <el-submenu index="person">
+      :default-openeds="['company', 'CM', 'statistics']">
+      <el-submenu index="company">
         <template slot="title">
           <i class="icon iconfont icon-gerenziliao"></i>
-          <span class="fontBig">个人资料</span>
+          <span class="fontBig">企业资料</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/per/person-perAchi">个人业绩</el-menu-item>
-          <el-menu-item index="/per/person-register">注册信息</el-menu-item>
+          <el-menu-item index="/com/company-comAchi">企业业绩</el-menu-item>
+          <el-menu-item index="/com/company-register">企业信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-     <el-submenu index="PM">
+     <el-submenu index="CM">
         <template slot="title">
           <i class="icon iconfont icon-guanli"></i>
           <span class="fontBig">项目管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/per/PM-new">发布新项目</el-menu-item>
-          <el-menu-item index="/per/PM-sumary">项目汇总</el-menu-item>
-          <el-menu-item index="/per/PM-combo">联合体</el-menu-item>
+          <el-menu-item index="/com/CM-new">发布新项目</el-menu-item>
+          <el-menu-item index="/com/CM-sumary">项目汇总</el-menu-item>
+          <el-menu-item index="/com/CM-combo">联合体</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
         <el-submenu index="statistics">
@@ -35,9 +35,9 @@
           <span class="fontBig">统计信息</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/per/statistics-time">时间统计</el-menu-item>
-          <el-menu-item index="/per/statistics-discuss">洽谈统计</el-menu-item>
-          <el-menu-item index="/per/statistics-credit">资信统计</el-menu-item>
+          <el-menu-item index="/com/Cstatistics-time">时间统计</el-menu-item>
+          <el-menu-item index="/com/Cstatistics-discuss">洽谈统计</el-menu-item>
+          <el-menu-item index="/com/Cstatistics-credit">资信统计</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>

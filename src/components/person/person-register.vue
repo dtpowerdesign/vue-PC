@@ -6,7 +6,7 @@
       <p style="text-align:left">(请不要在资料里留电话，QQ等联系方式，会导致您的资料无法通过审核)</p>
     </div>
     <el-row style="margin-top:2rem">
-      <el-col :span="11">
+      <el-col :span="11" class="shadow">
         <el-form :label-position="labelPosition" label-width="80px" :model="ruleForm">
           <el-form-item label="姓名"  prop="name">
             <el-input v-model="ruleForm.name"></el-input>
@@ -45,7 +45,7 @@
           <el-form-item><el-button type="primary" @click="submit()">保存</el-button></el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="11" :offset="2">
+      <el-col :span="11" :offset="2" class="shadow">
         <div class="uploading">
           <p style="text-align:left;font-size:1.5rem">账号完整度</p>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="complete" :status="status" style="margin-top:2rem"></el-progress>
@@ -190,7 +190,6 @@ export default {
 .person-register{
   width:90%;
   margin: 1rem auto;
-  background-color:#ebeef5;
 }
 .title{
   border-bottom:1px solid black;
@@ -218,11 +217,13 @@ export default {
 .upload-demo{
 
 }
-.el-col,.el-input,.el-select{
-  box-shadow: .2rem .2rem .2rem #888888;
-border-radius:.3rem;
-}
-.el-button{
-  box-shadow: .2rem .2rem .2rem #888888;
+
+.shadow{
+ 
+  border-radius:.3rem;
+  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
 }
 </style>

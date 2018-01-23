@@ -1,12 +1,12 @@
 <template>
-  <div class="Info">
+  <div class="comInfo">
     <div style="margin-left:2rem">
       <i class="icon iconfont icon-liebiao" @click="show()"></i>
       <span style="width:40rem;" class="nav">
         <span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">平台首页</span>
         <span onclick="window.location.href='https://githubzhangshuai.github.io/staticSome/'">平台概况</span>
-        <span style="color:#4d83e7">个人门户</span>
-        <span @click="$router.push('/com')">企业门户</span>
+        <span @click="$router.push('/per')">个人门户</span>
+        <span style="color:#4d83e7">企业门户</span>
       </span>
     </div>
     <div>
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     show () {
-      $('.Info>div>.nav').fadeToggle(1000)
+      $('.comInfo>div>.nav').fadeToggle(1000)
     }
   }
 }
@@ -43,7 +43,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.Info{
+.comInfo{
   display:flex;
   justify-content:space-between;
   font-size:1.5rem;
@@ -52,7 +52,7 @@ export default {
 .icon{
   font-size:1.5rem;
 }
-.Info>div{
+.comInfo>div{
   margin-right:1rem;
 }
 .nav{

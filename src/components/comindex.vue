@@ -1,12 +1,12 @@
 <template>
-  <div class="index">
+  <div class="comindex">
    <el-row>
      <el-col :span="3" id="left">
        <logo></logo>
-       <leftNav></leftNav>
+       <comleftNav></comleftNav>
      </el-col>
      <el-col :span="21" :offset="3"  id="right">
-        <Info style="background-color:white"></Info>
+        <comInfo style="background-color:white"></comInfo>
        	<router-view></router-view>
      </el-col>
    </el-row>
@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import leftNav from '@/components/public/leftNav'
+import comleftNav from '@/components/public/comleftNav'
 import logo from '@/components/public/logo'
-import Info from '@/components/public/Info'
+import comInfo from '@/components/public/comInfo'
 export default {
-  components: {leftNav, logo, Info},
+  components: {comleftNav, logo, comInfo},
   data () {
     return {}
   },
@@ -32,7 +32,7 @@ export default {
   background-color:#4d83e7;
   position:fixed;
 }
-.leftNav{
+.comleftNav{
   margin-top:5rem;
 }
 

@@ -21,16 +21,18 @@ export default {
 #left, #right{
   height:100%
 }
-.leftNav{
+.leftNav, .comleftNav{
   .el-submenu__title i{
     color:#fff;
 }
   .el-menu{
     border-right:0;
   }
+
   .el-menu-item.is-active{
-    color: black;
-    font-size: 1.1rem
+    color: yellow;
+    font-size: 1.1rem;
+    background-color:gray;
   }
   .el-submenu .el-menu-item{
     min-width:auto;
@@ -51,7 +53,7 @@ export default {
   width:100%;
 }
 }
-.Info{
+.Info, .comInfo{
   .el-submenu .el-menu-item{
     min-width:auto;
   }
