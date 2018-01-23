@@ -35,7 +35,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .PM-sumary{
-  padding:1rem 1rem 0 1rem;
+  padding:1rem 4rem 0 4rem;
 
 }
 .title{

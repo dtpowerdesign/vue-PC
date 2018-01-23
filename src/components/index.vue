@@ -1,11 +1,11 @@
 <template>
   <div>
    <el-row>
-     <el-col :span="3" class="left">
+     <el-col :span="3" id="left">
        <logo></logo>
        <leftNav></leftNav>
      </el-col>
-     <el-col :span="21" :offset="3" style="background-color:#ebeef5;" class="right">
+     <el-col :span="21" :offset="3" style="background-color:#ebeef5;" id="right">
         <Info style="background-color:white"></Info>
        	<router-view></router-view>
      </el-col>
@@ -22,21 +22,14 @@ export default {
   data () {
     return {}
   },
-  mounted () {
-    var ld = document.getElementsByClassName('left')[0]
-    var rd = document.getElementsByClassName('right')[0]
-    var H = document.body.clientHeight
-    ld.style.height = H + 'px'
-    rd.style.height = H + 'px'
-  }
+  mounted () {}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.left{
+#left{
   background-color:#4d83e7;
-  height:100%;
   position:fixed;
 }
 .leftNav{

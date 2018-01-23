@@ -18,6 +18,9 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+#left, #right{
+  height:100%
+}
 .leftNav{
   .el-submenu__title i{
     color:#fff;

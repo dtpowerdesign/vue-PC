@@ -28,11 +28,12 @@ export default {
 <style scoped>
 .PM-combo{
   width:90%;
-  margin: 3rem auto;
+  margin: 1rem auto 0 auto;
   background-color:#ebeef5;
 }
 .title{
   text-align:left;
+  margin-bottom:2rem;
 }
 .icon{
   font-size:2rem;

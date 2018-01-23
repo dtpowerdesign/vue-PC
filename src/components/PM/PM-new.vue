@@ -34,6 +34,7 @@ export default {
 }
 .title{
   text-align:left;
+  margin-bottom:2rem;
 }
 .icon{
   font-size:2rem;
