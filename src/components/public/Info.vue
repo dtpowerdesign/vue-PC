@@ -7,6 +7,7 @@
         <span onclick="window.location.href='https://githubzhangshuai.github.io/staticSome/'">平台概况</span>
         <span style="color:#4d83e7">个人门户</span>
         <span @click="$router.push('/com')">企业门户</span>
+        <span @click="$router.push('/archive')">项目归档</span>
       </span>
     </div>
     <div>

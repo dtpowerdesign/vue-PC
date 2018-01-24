@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import comIndex from '@/components/comindex'
+import archive from '@/components/archive'
 import Error from '@/views/Error/404'
 import perAchi from '@/components/person/person-perAchi'
 import comAchi from '@/components/company/company-comAchi'
@@ -60,6 +61,9 @@ export default new Router({
       { path: 'Cstatistics-credit', component: Ccredit },
       { path: '*', component: Error }
     ]
+  }, {
+    path: '/archive',
+    component: archive
   }, {
     path: '/1',
     redirect: '/404',

@@ -61,4 +61,11 @@ export default {
 .el-table td{
   text-align:left;
 }
+
+.archive{
+.el-input--prefix .el-input__inner{
+    padding-left: 3rem;
+    background-color:#DCDFE6;
+}
+}
 </style>

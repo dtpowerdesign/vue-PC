@@ -20,12 +20,12 @@
         <li class="style1">日</li>
         </ul>
         <ul class="ul1">
-          <li v-for="i in Week[week-1]">
-            <div class="div1" @click="funn($event)">{{i.date}}</div>
-            <div class="div-thing">{{i.content}}</div>
-            <div class="div-thing"></div>
-            <div class="div-thing">{{i.content}}</div>
-            <div class="div-thing">{{i.content}}</div>
+          <li v-for="i in weekday">
+            <div class="div1" @click="funn($event)">{{i.dayOfMonth}}</div>
+            <div class="div-thing">{{i.time1}}</div>
+            <div class="div-thing">{{i.time2}}</div>
+            <div class="div-thing">{{i.time3}}</div>
+            <div class="div-thing">{{i.time4}}</div>
           </li>
         </ul>
       </el-tab-pane>
@@ -41,20 +41,20 @@
         <li class="style1">日</li>
         </ul>
         <ul class="ul1" id="func">
-          <li v-for="i in data">
-            <div class="div1" @click="funn($event)">{{i.date}}</div>
-            <div class="div2">{{i.content}}</div>
+          <li v-for="i in monthday">
+            <div class="div1" @click="funn($event)">{{i.dayCode}}</div>
+            <div class="div2"><ul style="list-style-type:none"><li v-for="k in i.content">{{k}}</li></ul></div>
           </li>
         </ul>
       </el-tab-pane>
       <el-tab-pane label="年">
         <div style="display:flex;justify-content:space-between"><span style="font-size:1.5rem;color:#4d83e7">{{year}}年</span><span><i class="icon iconfont icon-shang" @click="lastYear()"></i><i class="icon iconfont icon-xia" @click="nextYear()"></i></span></div>
         <ul class="ul-month">
-          <li v-for="i in test">
-            <span style="font-size:1.5rem;color:#da6363;" >{{i}}月</span>
+          <li v-for="i in yearday">
+            <span style="font-size:1.5rem;color:#da6363;" >{{i.mon}}月</span>
             <ul class="ul-day">
-              <li v-for="j in data" :class="{qiatanLine: j.date===1||j.date===6,kaigongLine: j.date===12,jiezhiLine: j.date===20}">
-               <span>{{j.date}}</span>
+              <li v-for="j in i.days" :class="{qiatanLine: j.eventCode===1,kaigongLine: j.eventCode===2,jiezhiLine: j.eventCode===3}">
+               <span>{{j.dayCode}}</span>
               </li>
             </ul>
           </li>
@@ -73,132 +73,213 @@
 export default {
   data () {
     return {
+      weekday: [],
+      monthday: [],
+      yearday: [],
       test: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
-      week: '1',
-      data: [
-        {'date': 1, 'content': '开始施工'},
-        {'date': 2, 'content': '开始施工'},
-        {'date': 3, 'content': '开始施工'},
-        {'date': 4, 'content': '开始施工'},
-        {'date': 5, 'content': '开始施工'},
-        {'date': 6, 'content': '开始施工'},
-        {'date': 7, 'content': '开始施工'},
-        {'date': 8, 'content': '开始施工'},
-        {'date': 9, 'content': '开始施工'},
-        {'date': 10, 'content': '开始施工'},
-        {'date': 11, 'content': '开始施工'},
-        {'date': 12, 'content': '开始施工'},
-        {'date': 13, 'content': '开始施工'},
-        {'date': 14, 'content': '开始施工'},
-        {'date': 15, 'content': '开始施工'},
-        {'date': 16, 'content': '开始施工'},
-        {'date': 17, 'content': '开始施工'},
-        {'date': 18, 'content': '开始施工'},
-        {'date': 19, 'content': '开始施工'},
-        {'date': 20, 'content': '开始施工'},
-        {'date': 21, 'content': '开始施工'},
-        {'date': 22, 'content': '开始施工'},
-        {'date': 23, 'content': '开始施工'},
-        {'date': 24, 'content': '开始施工'},
-        {'date': 25, 'content': '开始施工'},
-        {'date': 26, 'content': '开始施工'},
-        {'date': 27, 'content': '开始施工'},
-        {'date': 28, 'content': '开始施工'},
-        {'date': 29, 'content': '开始施工'},
-        {'date': 30, 'content': '开始施工'},
-        {'date': 31, 'content': '开始施工'}
-      ],
-      Week: [[], [], [], [], []]
+      week: Math.ceil((new Date().getDate() + 6 - new Date().getDay()) / 7)
     }
   },
   created () {
   },
   mounted () {
-    this.week = ~~((this.day - 1) / 7) + 1
-    for (let i = 0; i < this.data.length; i++) {
-      if (i <= 6) {
-        this.Week[0].push(this.data[i])
-      } else if (i <= 13) {
-        this.Week[1].push(this.data[i])
-      } else if (i <= 20) {
-        this.Week[2].push(this.data[i])
-      } else if (i <= 27) {
-        this.Week[3].push(this.data[i])
-      } else if (i <= this.data.length) {
-        this.Week[4].push(this.data[i])
-      }
-    }
+    this.initData()
   },
   methods: {
+    initData () {
+      this.initWeek()
+      this.initMonth()
+      this.initYear()
+    },
+    initWeek () {
+      this.weekday = []
+      this.$http.post('http://39.106.34.156:8080/electric-design/getEventsAndDatesByweek', {
+        'sourceUserAccount': '1', 'year': this.year, 'month': this.month, 'week': this.week
+      }).then((res) => {
+        res.data.forEach((el, index) => {
+          var obj = {}
+          obj.dayOfMonth = el.dayOfMonth
+          for (let i = 0; i <= 5; i++) {
+            if (el.hours[i].events) {
+              obj.time1 = el.hours[i].events[0].name
+            }
+          }
+          for (let i = 6; i <= 11; i++) {
+            if (el.hours[i].events) {
+              obj.time2 = el.hours[i].events[0].name
+            }
+          }
+          for (let i = 12; i <= 17; i++) {
+            if (el.hours[i].events) {
+              obj.time3 = el.hours[i].events[0].name
+            }
+          }
+          for (let i = 18; i <= 23; i++) {
+            if (el.hours[i].events) {
+              obj.time4 = el.hours[i].events[0].name
+            }
+          }
+          this.weekday.push(obj)
+        })
+      }).catch((err) => { console.log(err) })
+    },
+    initMonth () {
+      this.monthday = []
+      this.$http.post('http://39.106.34.156:8080/electric-design/getEventsAndDatesByMonth', {
+        'sourceUserAccount': '1', 'year': this.year, 'month': this.month
+      }).then((res) => {
+        for (let i = 1; i < res.data[0].dayOfWeek; i++) {
+          let obj = {}
+          obj.dayCode = ''
+          obj.content = []
+          this.monthday.push(obj)
+        }
+        res.data.forEach((el, index) => {
+          var obj = {}
+          obj.dayCode = el.dayCode
+          obj.content = []
+          for (let i = 0; i <= 23; i++) {
+            if (el.hours[i].events) {
+              el.hours[i].events.forEach((a) => {
+                obj.content.push(a.name)
+              })
+            }
+          }
+          this.monthday.push(obj)
+        })
+      }).catch((err) => { console.log(err) })
+    },
+    initYear () {
+      this.yearday = []
+      this.$http.post('http://39.106.34.156:8080/electric-design/getEventsByUserAccountAndYear', {
+        'sourceUserAccount': '1', 'year': this.year
+      }).then((res) => {
+        console.log(res.data)
+        res.data.forEach((el, index) => {
+          var obj = {}
+          obj.mon = el.monthCode
+          obj.days = el.days
+          obj.days.forEach((ell, index) => {
+            if (ell.events) {
+              ell.events.forEach((elll, index) => {
+                if (elll.eventCode <= 10 && elll.eventCode >= 5) {
+                  ell.eventCode = 1
+                }
+                if (elll.eventCode <= 13 && elll.eventCode >= 11) {
+                  ell.eventCode = 2
+                }
+                if (elll.eventCode <= 4 && elll.eventCode >= 1) {
+                  ell.eventCode = 3
+                }
+              })
+            }
+          })
+          this.yearday.push(obj)
+        })
+      }).catch((err) => { console.log(err) })
+    },
+    maxDate (y, m) {
+      if ((y % 400 === 0) || ((y % 4 === 0) && (y % 100 !== 0))) {
+        switch (m) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+            return 31
+          case 2:
+            return 29
+          default :
+            return 30
+        }
+      } else {
+        switch (m) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+            return 31
+          case 2:
+            return 28
+          default :
+            return 30
+        }
+      }
+    },
     funn (e) {
       $(e.target).addClass('active').parent().siblings().find('.div1').removeClass('active')
-      this.date = '2018' + '年' + '1' + '月' + e.target.innerText + '日'
-      console.log($(e.target))
-    },
-    lastYear () {
-      if (this.year === 2010) {
-        this.$message({
-          message: '我让你减了吗',
-          type: 'warning'
-        })
-      } else {
-        this.year--
-      }
-    },
-    nextYear () {
-      if (this.year === new Date().getFullYear()) {
-        this.$message({
-          message: '没有下一年了',
-          type: 'warning'
-        })
-      } else {
-        this.year++
-      }
-    },
-    lastMonth () {
-      if (this.month === 1) {
-        this.year--
-        this.month = 12
-      } else {
-        this.month--
-      }
-    },
-    nextMonth () {
-      if (this.year === new Date().getFullYear() && this.month === (new Date().getMonth() + 1)) {
-        this.$message({
-          message: '没有下一个月了哦',
-          type: 'warning'
-        })
-      } else if (this.month === 12) {
-        this.year++
-        this.month = 1
-      } else {
-        this.month++
-      }
+      this.day = e.target.innerText
+      console.log(e.target.innerText)
     },
     lastWeek () {
+      this.subWeek()
+      this.initWeek()
+    },
+    nextWeek () {
+      this.addWeek()
+      this.initWeek()
+    },
+    lastMonth () {
+      this.subMonth()
+      this.initMonth()
+    },
+    nextMonth () {
+      this.addMonth()
+      this.initMonth()
+    },
+    lastYear () {
+      this.subYear()
+      this.initYear()
+    },
+    nextYear () {
+      this.addYear()
+      this.initYear()
+    },
+    subWeek () {
       if (this.week === 1) {
-        this.lastMonth()
-        this.week = 5
+        this.subMonth()
+        this.week = Math.ceil((this.maxDate(this.year, this.month) + 6 - new Date(this.year, this.month, this.maxDate(this.year, this.month)).getDay()) / 7)
       } else {
         this.week--
       }
     },
-    nextWeek () {
-      if (this.year === new Date().getFullYear() && this.month === (new Date().getMonth() + 1) && this.week === (~~((new Date().getDate() - 1) / 7) + 1)) {
-        this.$message({
-          message: '这已经是最新一周了哦',
-          type: 'warning'
-        })
-      } else if (this.week === 5) {
+    addWeek () {
+      if (this.week === Math.ceil((this.maxDate(this.year, this.month) + 6 - new Date(this.year, this.month, this.maxDate(this.year, this.month)).getDay()) / 7)) {
+        this.addMonth()
         this.week = 1
-        this.nextMonth()
       } else {
         this.week++
       }
+    },
+    subMonth () {
+      if (this.month === 1) {
+        this.month = 12
+        this.year--
+      } else {
+        this.month--
+      }
+    },
+    addMonth () {
+      if (this.month === 12) {
+        this.month = 1
+        this.year++
+      } else {
+        this.month++
+      }
+    },
+    subYear () {
+      this.year--
+    },
+    addYear () {
+      this.year++
     }
   }
 }
@@ -256,7 +337,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4rem;
+  height: 8rem;
 }
 .div-thing{
 border-bottom:2px solid gray;
