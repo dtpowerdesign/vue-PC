@@ -1,7 +1,7 @@
 <template>
   <div class="perregister">
    <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span>南瑞美思</span><span>|</span><span>个人注册</span></div>
+   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>个人注册</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
@@ -193,7 +193,18 @@ export default {
               'checkMsg': this.Form.check,
               'company': this.Form.company
             }).then((res) => {
-              console.log(res.data)
+              if (res.data.result && res.data.result !== 'false') {
+                this.$message({
+                  message: '恭喜您,注册成功',
+                  type: 'success'
+                })
+                this.$router.push('/login')
+              } else {
+                this.$message({
+                  message: `注册失败,原因${res.data.reason}`,
+                  type: 'warning'
+                })
+              }
             }).catch((err) => {
               console.log(err)
             })
@@ -222,7 +233,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .perregister{
-    background-image:url(../../../static/perregister.png);
+    background-image:url(../../assets/perregister.png);
     height:100%;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -264,7 +275,7 @@ export default {
 }
 .el-form{
     margin-top:4%;
-    padding:2rem;
+    padding:2rem 2rem 0 2rem;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;

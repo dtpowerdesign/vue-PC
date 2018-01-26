@@ -100,7 +100,7 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getPuserByAccount', {'account': '123'}).then((res) => {
+    this.$http.post('http://39.106.34.156:8080/electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
       this.ruleForm.name = res.data.name
       this.ruleForm.sex = res.data.sex
       this.ruleForm.age = res.data.age
@@ -150,9 +150,9 @@ export default {
     submit () {
       this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
         {
-          'account': '123464854',
+          'account': this.cookie.get('user'),
           'data': {
-            'account': '123464854',
+            'account': this.cookie.get('user'),
             'name': this.ruleForm.name,
             'sex': this.ruleForm.sex,
             'age': this.ruleForm.age,

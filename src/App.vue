@@ -71,4 +71,9 @@ export default {
 span{
   cursor:pointer;
 }
+.perregister>.el-form-item__label, .comregister>.el-form-item__label{
+  font-size:1.3rem;
+  font-weight:400;
+  color:black;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span>南瑞美思</span><span>|</span><span>项目归档</span></div>
+   <div class="top-left"><img src="../../../static/logo.png" alt=""><span @click="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>项目归档</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
 </template>

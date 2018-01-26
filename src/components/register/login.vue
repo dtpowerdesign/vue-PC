@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="top">
-      <div class="top-left"><img src="../../../static/logo.png" alt=""><span>南瑞美思</span><span>|</span><span>登录</span></div>
+      <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>登录</span></div>
       <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
     </div>
     <el-form :model="Form" status-icon :rules="rules"  label-width="100px">
@@ -22,7 +22,7 @@
         </div>
       </el-form-item>
       <el-form-item style="margin-left:-100px">
-        <el-button type="primary" style="width:100%">登录</el-button>
+        <el-button type="primary" style="width:100%" @click="login()">登录</el-button>
       </el-form-item>
       <el-form-item style="margin-left:-100px">
         <div style="display:flex;justify-content:flex-start;align-items:center">
@@ -67,6 +67,46 @@ export default {
             { validator: validatePass, trigger: 'blur' }
         ]}
     }
+  },
+  methods: {
+    login () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/PLogin', {
+        'account': this.Form.user,
+        'password': this.Form.pass
+      }).then((res) => {
+        if (res.data.result && res.data.result !== 'false') {
+          this.$message({
+            message: '登录成功',
+            type: 'success'
+          })
+          this.set('user', this.Form.user)
+          this.set('pass', this.Form.pass)
+          this.$router.push('/per')
+        } else {
+          this.$message({
+            message: `登录失败:${res.data.reason}`,
+            type: 'warning'
+          })
+        }
+      }).catch((err) => { console.log(err) })
+    },
+    set: function (name, value, days) {
+      var d = new Date()
+
+      d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
+
+      window.document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString()
+    },
+
+    get: function (name) {
+      var v = window.document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
+
+      return v ? v[2] : null
+    },
+
+    delete: function (name) {
+      this.set(name, '', -1)
+    }
   }
 }
 </script>
@@ -74,7 +114,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .login{
-    background-image:url(../../../static/login.png);
+    background-image:url(../../assets/login.png);
     height:100%;
     background-size: 100% 100%;
     background-repeat: no-repeat;

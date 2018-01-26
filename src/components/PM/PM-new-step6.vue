@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     publish () {
-      var data = {'sourceAccount': '123',
+      var data = {'sourceAccount': this.cookie.get('user'),
         'name': this.form.name,
         'state': this.form.state,
         'sizeAndCapacity': this.form.sizeAndCapacitys,

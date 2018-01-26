@@ -7,8 +7,10 @@ import ElementUI from 'element-ui'
 import Axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import domain from './domain.js'
+import cookie from 'vue-cookie'
+Vue.use(cookie)
 Vue.prototype.domain = domain
-
+Vue.prototype.cookie = cookie
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.prototype.$http = Axios

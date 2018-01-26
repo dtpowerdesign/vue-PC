@@ -97,7 +97,7 @@ export default {
     initWeek () {
       this.weekday = []
       this.$http.post('http://39.106.34.156:8080/electric-design/getEventsAndDatesByweek', {
-        'sourceUserAccount': '1', 'year': this.year, 'month': this.month, 'week': this.week
+        'sourceUserAccount': this.cookie.get('user'), 'year': this.year, 'month': this.month, 'week': this.week
       }).then((res) => {
         res.data.forEach((el, index) => {
           var obj = {}
@@ -129,7 +129,7 @@ export default {
     initMonth () {
       this.monthday = []
       this.$http.post('http://39.106.34.156:8080/electric-design/getEventsAndDatesByMonth', {
-        'sourceUserAccount': '1', 'year': this.year, 'month': this.month
+        'sourceUserAccount': this.cookie.get('user'), 'year': this.year, 'month': this.month
       }).then((res) => {
         for (let i = 1; i < res.data[0].dayOfWeek; i++) {
           let obj = {}
@@ -155,7 +155,7 @@ export default {
     initYear () {
       this.yearday = []
       this.$http.post('http://39.106.34.156:8080/electric-design/getEventsByUserAccountAndYear', {
-        'sourceUserAccount': '1', 'year': this.year
+        'sourceUserAccount': this.cookie.get('user'), 'year': this.year
       }).then((res) => {
         console.log(res.data)
         res.data.forEach((el, index) => {

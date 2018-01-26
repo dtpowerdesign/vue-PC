@@ -1,26 +1,29 @@
 <template>
   <div class="comregister">
    <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span>南瑞美思</span><span>|</span><span>企业注册</span></div>
+   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>企业注册</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
   <el-col :span="8" :offset="2">
-  <el-form :model="Form" status-icon label-position="left":rules="rules" ref="perregister" label-width="100px">
+  <el-form :model="Form" status-icon label-position="left":rules="rules" ref="comregister" label-width="100px">
   <el-form-item label="账号" prop="user">
     <el-input type="text" v-model="Form.user" auto-complete="off"></el-input>
   </el-form-item>
-  <el-form-item label="公司" prop="company">
+  <el-form-item label="联系人" prop="name">
+    <el-input type="text" v-model="Form.name" auto-complete="off"></el-input>
+  </el-form-item>
+  <el-form-item label="企业名称" prop="company">
     <el-input type="text" v-model="Form.company" auto-complete="off"></el-input>
+  </el-form-item>
+  <el-form-item label="网站" prop="website">
+    <el-input type="text" v-model="Form.website" auto-complete="off"></el-input>
   </el-form-item>
   <el-form-item label="密码" prop="pass">
     <el-input type="password" v-model="Form.pass" auto-complete="off"></el-input>
   </el-form-item>
   <el-form-item label="确认密码" prop="checkPass">
     <el-input type="password" v-model="Form.checkPass" auto-complete="off"></el-input>
-  </el-form-item>
-  <el-form-item label="年龄" prop="age">
-    <el-input v-model.number="Form.age"></el-input>
   </el-form-item>
   <el-form-item label="手机号" prop="phonenumber">
     <el-input type="text" v-model.number="Form.phonenumber" auto-complete="off"></el-input>
@@ -57,7 +60,7 @@ export default {
     }
     var validateCompany = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('公司不能为空'))
+        return callback(new Error('企业名称不能为空'))
       } else {
         callback()
       }
@@ -83,7 +86,7 @@ export default {
         callback(new Error('请输入密码'))
       } else {
         if (this.Form.checkPass !== '') {
-          this.$refs.perregister.validateField('checkPass')
+          this.$refs.comregister.validateField('checkPass')
         }
         callback()
       }
@@ -118,16 +121,36 @@ export default {
         callback()
       }
     }
+    var validateName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('联系人不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var checkWebsite = (rule, value, callback) => {
+      var re = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/
+      if (!value) {
+        return callback(new Error('网站不能为空'))
+      } else if (!re.test(value)) {
+        return callback(new Error('网站格式不正确'))
+      } else {
+        callback()
+      }
+    }
     return {
+      checked: true,
       Form: {
         user: '',
         comapny: '',
         pass: '',
+        name: '',
+        website: '',
         checkPass: '',
         age: '',
         phonenumber: '',
         check: '',
-        returnCheck: '1111'
+        returnCheck: '123456'
       },
       rules: {
         user: [
@@ -135,6 +158,9 @@ export default {
         ],
         company: [
             { validator: validateCompany, trigger: 'blur' }
+        ],
+        name: [
+            { validator: validateName, trigger: 'blur' }
         ],
         pass: [
             { validator: validatePass, trigger: 'blur' }
@@ -150,6 +176,9 @@ export default {
         ],
         check: [
             { validator: checkCheck, trigger: 'blur' }
+        ],
+        website: [
+            { validator: checkWebsite, trigger: 'blur' }
         ]
       }
     }
@@ -157,32 +186,60 @@ export default {
   methods: {
     check () {
       this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.phonenumber}).then((res) => {
-        console.log(res.data)
         this.Form.returnCheck = res.data.checkMsg
       }).catch((err) => {
         console.log(err)
       })
     },
     submitForm (formName) {
-      this.$refs.perregister.validate((valid) => {
-        if (valid) {
-          alert('submit!')
-          this.$http.post('', {}).then((res) => {
-            console.log(res.data)
-          }).catch((err) => {
-            console.log(err)
-          })
-        } else {
-          this.$message({
-            message: '请确保所填信息符合要求',
-            type: 'warning'
-          })
-          return false
-        }
-      })
+      if (!this.checked) {
+        this.$message({
+          message: '您还未同意条款哦',
+          type: 'warning'
+        })
+      } else {
+        this.$refs.comregister.validate((valid) => {
+          if (valid) {
+            this.$http.post('http://39.106.34.156:8080/electric-design/CRegister', {
+              'account': this.Form.user,
+              'password': this.Form.pass,
+              'contacter': this.Form.name,
+              'name': this.Form.company,
+              'checkMsg': this.Form.check,
+              'website': this.Form.website
+            }).then((res) => {
+              if (res.data.result && res.data.result !== 'false') {
+                this.$message({
+                  message: '恭喜您,注册成功',
+                  type: 'success'
+                })
+                this.$router.push('/login')
+              } else {
+                this.$message({
+                  message: `注册失败,原因${res.data.reason}`,
+                  type: 'warning'
+                })
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+          } else {
+            this.$message({
+              message: '请确保所填信息符合要求',
+              type: 'warning'
+            })
+            return false
+          }
+        })
+      }
     },
     resetForm (formName) {
-      this.$refs.perregister.resetFields()
+      this.$refs.comregister.resetFields()
+    }
+  },
+  watch: {
+    checked () {
+      console.log(this.checked)
     }
   }
 }
@@ -191,7 +248,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .comregister{
-    background-image:url(../../../static/comregister.png);
+    background-image:url(../../assets/comregister.png);
     height:100%;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -233,7 +290,7 @@ export default {
 }
 .el-form{
     margin-top:4%;
-    padding:2rem;
+    padding:2rem 2rem 0 2rem;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
