@@ -14,14 +14,14 @@
         </el-form-item>
         <el-form-item label="目标状态">
           <el-col :span="4">
-            <el-select v-model="form.state" placeholder="请选择活动区域" >
+            <el-select v-model="form.state" multiple placeholder="请选择目标状态" >
             <el-option v-for="(i,j) in states" :key="j" :label="i" :value="i"></el-option>
           </el-select>
           </el-col>
           <el-col class="line" :span="1">规模</el-col>
           <el-col :span="4">
-            <el-select v-model="form.state" placeholder="请选择活动区域" >
-            <el-option v-for="(i,j) in states" :key="j" :label="i" :value="i"></el-option>
+            <el-select v-model="form.sizeAndCapacitys" multiple placeholder="请选择规模" >
+            <el-option v-for="(i,j) in sizeAndCapacitys" :key="j" :label="i" :value="i"></el-option>
           </el-select>
           </el-col>
           <el-col :offset="6":span="1">付款</el-col>
@@ -31,14 +31,14 @@
         </el-form-item>
         <el-form-item label="类型">
           <el-col :span="4">
-            <el-select v-model="form.state" placeholder="请选择活动区域" >
-            <el-option v-for="(i,j) in states" :key="j" :label="i" :value="i"></el-option>
+            <el-select v-model="form.type" multiple placeholder="请选择类型" >
+            <el-option v-for="(i,j) in type" :key="j" :label="i" :value="i"></el-option>
           </el-select>
           </el-col>
           <el-col class="line" :span="1">类别</el-col>
           <el-col :span="4">
-            <el-select v-model="form.state" placeholder="请选择活动区域" >
-            <el-option v-for="(i,j) in states" :key="j" :label="i" :value="i"></el-option>
+            <el-select v-model="form.categorys" multiple placeholder="请选择类别" >
+            <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
           </el-select>
           </el-col>
           <el-col :offset="5":span="2">涉及专业</el-col>
@@ -48,7 +48,7 @@
         </el-form-item>
         <el-form-item label="电压等级">
           <el-col :span="9">
-            <el-input v-model="form.v"></el-input>
+            <el-input v-model="form.voltagelevel"></el-input>
           </el-col>
           <el-col :offset="5":span="2">开始时间</el-col>
           <el-col :span="8">
@@ -67,8 +67,8 @@
       </el-form>
     </div>
     <div class="skip">
-      <div style="margin-left:2rem" @click="$router.push('/PM-new')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
-      <div style="margin-right:2rem" @click="$router.push('/PM-new/3')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
+      <div style="margin-left:2rem" @click="$router.push('/per/PM-new')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
+      <div style="margin-right:2rem" @click="$router.push('/per/PM-new/3')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
     </div>
   </div>
 </template>
@@ -79,22 +79,10 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   store,
   computed: {
-    ...mapState(['step'])
+    ...mapState(['step', 'form', 'states', 'type', 'categorys', 'sizeAndCapacitys'])
   },
   data () {
-    return {
-      states: ['前期', '中期', '后期'],
-      form: {
-        company: 'aaa',
-        name: 'bbb',
-        state: '',
-        v: '',
-        pro: '',
-        major: '',
-        startTime: '',
-        endTime: ''
-      }
-    }
+    return {}
   },
   methods: {
     ...mapMutations(['init2'])

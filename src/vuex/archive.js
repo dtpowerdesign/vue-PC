@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 Vue.use(Vuex)
 const state = {
   tags: [],
@@ -8,28 +9,23 @@ const state = {
   tag3: [],
   tag4: [],
   tag5: [],
-  table: [],
+  data: [],
   length: 1
 }
 
 const mutations = {
   init(state) {
-    state.table = []
+    state.data = []
   },
   add(state, el) {
     var obj = {}
-    obj.code = el.code
+    obj.mainImgPath = 'http://39.106.34.156:8080/' + el.mainImgPath
     obj.name = el.name
-    obj.address = el.address
-    obj.category = el.category.concat().join(',')
-    obj.type = el.type.concat().join(',')
-    obj.voltagelevel = el.voltagelevel
-    obj.designProcess = el.designProcess
-    obj.major = el.major.concat().join(',')
-    obj.amountOfInvestment = el.amountOfInvestment
     obj.endTime = [].concat((el.endTime.year + 1900), (el.endTime.month + 1), el.endTime.date).join('/')
-    obj.state = el.state
-    state.table.push(obj)
+    axios.post('http://39.106.34.156:8080/electric-design/getCuserByAccount', { "account": el.sourceAccount }).then((res) => {
+      Vue.set(obj, 'company', res.data.name)
+    }).catch((err) => { console.log(err) })
+    state.data.push(obj)
   }
 }
 export default new Vuex.Store({

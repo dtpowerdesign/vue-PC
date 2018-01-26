@@ -52,19 +52,19 @@
           <p style="text-align:left;font-size:1rem;margin-top:3rem;">您目前的账号完整度较低，建议通过以下方式完善你的信息，可有效提高投标成功率</p>
           <div class="div1-style">
             <span>上传学位证明等教育背景信息</span>
-            <el-upload class="upload-demo" action="http://10.14.4.138:8080/electric-design/uploadPublicProjects" :data="{'account':123}" multiple name="project" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadPublicProjectImages" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传有效身份证件，提高账号安全度</span>
-            <el-upload class="upload-demo" action="" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUserIdNumberFile" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传职称或工作证明等工作信息</span>
-            <el-upload class="upload-demo" action="" :on-success="success" :on-error="failure" :on-exceed="handleExceed" multiple :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadPublicProjectImages" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -100,7 +100,7 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://10.14.4.138:8080/electric-design/getPuserByAccount', {'account': '123464854'}).then((res) => {
+    this.$http.post('http://39.106.34.156:8080/electric-design/getPuserByAccount', {'account': '123'}).then((res) => {
       this.ruleForm.name = res.data.name
       this.ruleForm.sex = res.data.sex
       this.ruleForm.age = res.data.age
@@ -118,7 +118,7 @@ export default {
     for (let i = 18; i < 80; i++) {
       this.Ages.push({value: i, label: i})
     }
-    this.$http.get('http://10.14.4.138:8080/electric-design/getAreasOfChina').then(res => {
+    this.$http.get('http://39.106.34.156:8080/electric-design/getAreasOfChina').then(res => {
       this.provs = res.data
     }).catch(err => {
       console.log(err)
@@ -148,7 +148,7 @@ export default {
       }
     },
     submit () {
-      this.$http.post('http://10.14.4.138:8080/electric-design/changePuserByAccount',
+      this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
         {
           'account': '123464854',
           'data': {
@@ -171,8 +171,8 @@ export default {
       })
     },
     success (response, file, fileList) {
+      console.log(response)
       this.complete = response.data
-      alert(response)
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)

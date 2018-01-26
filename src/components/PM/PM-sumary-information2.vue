@@ -121,7 +121,7 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://10.14.4.138:8080/electric-design/getProjectsByMultiConditions',
+    this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
      {conditions: {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'toAccounts': {'searchMethod': 'values', 'values': ['123']}}})
         .then((res) => {
           if (res.data !== 0) {
@@ -145,10 +145,6 @@ export default {
           }
         }).catch((err) => {
           console.log(err)
-          this.$message({showClose: true,
-            message: '网络连接错误',
-            type: 'error'
-          })
         })
   },
   methods: {
@@ -164,7 +160,7 @@ export default {
       this.classes = row.category
       this.voltage = row.voltage
       this.domain = row.major
-      this.$http.post('http://10.14.4.138:8080/electric-design/getCusersByAccounts', {'desAccounts': ['1111']}).then((res) => {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getCusersByAccounts', {'desAccounts': ['1111']}).then((res) => {
         console.log(res.data)
         this.shejiyuan = res.data[0].companyType
       }).catch((err) => { console.log(err) })

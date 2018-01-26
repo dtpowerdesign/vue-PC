@@ -6,11 +6,13 @@ import router from './router'
 import ElementUI from 'element-ui'
 import Axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
+import domain from './domain.js'
+Vue.prototype.domain = domain
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.prototype.$http = Axios
-/* eslint-disable no-new */
+  /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,

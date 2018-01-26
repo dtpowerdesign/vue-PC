@@ -144,7 +144,12 @@ export default {
     border-radius:.3rem .3rem 0 0;
 
 }
-.div1{float:left;}
+.div1{
+  float:left;
+  height:2rem;
+  display:flex;
+  align-items:center;
+  }
 .clearfix{
     clear:both;
     width:0;

@@ -1,8 +1,10 @@
 <template>
   <div>
+    <div class="content">
+      <el-button @click="publish()">发布</el-button>
+    </div>
     <div class="skip">
-      <div style="margin-left:2rem" @click="$router.push('/PM-new/5')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
-      
+      <div style="margin-left:2rem" @click="$router.push('/per/PM-new/5')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
     </div>
   </div>
 </template>
@@ -13,12 +15,42 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   store,
   computed: {
-    ...mapState(['step'])
+    ...mapState(['step', 'form', 'qualificationRequirements', 'projectCharacteristics', 'existingData'])
   },
   data () {
     return {}
   },
   methods: {
+    publish () {
+      var data = {'sourceAccount': '123',
+        'name': this.form.name,
+        'state': this.form.state,
+        'sizeAndCapacity': this.form.sizeAndCapacitys,
+        'type': this.form.type,
+        'category': this.form.categorys,
+        'voltagelevel': this.form.voltagelevel,
+        'major': [this.form.major],
+        'instruction': this.existingData.detail,
+        'qualificationRequirements': [{'CET': this.qualificationRequirements.CET}],
+        'projectCharacteristics': [{'price': this.projectCharacteristics.price}, {'difficult': this.projectCharacteristics.difficulty}],
+        'startTime': this.form.startTime,
+        'endTime': this.form.endTime}
+      console.log(this.form.startTime)
+      console.log(this.form.name)
+      console.log(this.formatDate(data.startTime))
+      console.log(new Date(data.startTime))
+      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+    },
+    formatDate (date) {
+      var datee = new Date(date)
+      var year = datee.getFullYear()
+      var month = datee.getMonth() + 1
+      var day = datee.getDate()
+      return year + '-' + this.formatTen(month) + '-' + this.formatTen(day)
+    },
+    formatTen (num) {
+      return num > 9 ? (num + '') : ('0' + num)
+    },
     ...mapMutations(['init6'])
   },
   mounted () {
@@ -36,5 +68,10 @@ export default {
   align-items:center;
   color:#4d83e7;
   font-weight:500;
+}
+.content{
+  margin:3rem auto 0 auto;
+  width:80%;
+  display:flex;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="person-classify">
+  <div class="classify">
    <div class="div1">
      <span class="font1">类别:</span><template v-for="i in classes"><span class="font2"  @click="add1($event)">{{i}}</span></template>
    </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import store from '@/vuex/tag.js'
+import store from '@/vuex/archive.js'
 import {mapState, mapMutations} from 'vuex'
 export default {
   store,
@@ -35,7 +35,7 @@ export default {
     }
   },
   computed: mapState(['table']),
-  created () {
+  mounted () {
     this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
       this.classes = res.data.categorys
       this.type = res.data.types
@@ -61,56 +61,56 @@ export default {
       'add'
     ]),
     add1 (e) {
-      if (this.tags.length < 3) {
+      if (this.tags.length < 5) {
         this.tags.push(e.target.innerText)
         this.tag1.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选5项',
           type: 'warning'
         })
       }
     },
     add2 (e) {
-      if (this.tags.length < 3) {
+      if (this.tags.length < 5) {
         this.tags.push(e.target.innerText)
         this.tag2.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选5项',
           type: 'warning'
         })
       }
     },
     add3 (e) {
-      if (this.tags.length < 3) {
+      if (this.tags.length < 5) {
         this.tags.push(e.target.innerText)
         this.tag3.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选5项',
           type: 'warning'
         })
       }
     },
     add4 (e) {
-      if (this.tags.length < 3) {
+      if (this.tags.length < 5) {
         this.tags.push(e.target.innerText)
         this.tag4.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选5项',
           type: 'warning'
         })
       }
     },
     add5 (e) {
-      if (this.tags.length < 3) {
+      if (this.tags.length < 5) {
         this.tags.push(e.target.innerText)
         this.tag5.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选5项',
           type: 'warning'
         })
       }
@@ -121,6 +121,7 @@ export default {
       var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
       this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions', formData)
       .then(res => {
+        console.log(res.data)
         this.$store.commit('init')
         res.data.forEach((el, index) => {
           this.$store.commit('add', el)
@@ -134,17 +135,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.person-classify{
-    text-align:left;
-
-  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-
-    border-radius:.3rem .3rem 0 0;
+.classify{
+  padding:2rem auto;
+  text-align:left;
+ -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  border-radius:.3rem .3rem 0 0;
 
 }
-.div1{float:left;}
+.div1{
+  float:left;
+  height:2rem;
+  display:flex;
+  align-items:center;
+  }
 .clearfix{
     clear:both;
     width:0;

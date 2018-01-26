@@ -5,7 +5,7 @@
       <el-radio v-model="radio" label="2" class="content2">我对项目相关信息不了解</el-radio>
     </div>
     <div class="skip">
-      <div style="margin-right:2rem" @click="$router.push('/PM-new/2')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
+      <div style="margin-right:2rem" @click="$router.push('/per/PM-new/2')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
     </div>
   </div>
 </template>

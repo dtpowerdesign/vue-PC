@@ -55,4 +55,7 @@ export default {
 .description>span{
   margin-left:1rem;
 }
+span{
+  cursor:pointer;
+}
 </style>

@@ -4,6 +4,8 @@
    <search></search>
    <classify></classify>
    <tag></tag>
+   <mycontent></mycontent>
+   <bottom></bottom>
   </div>
 </template>
 
@@ -12,8 +14,10 @@ import top from './archive/top'
 import search from './archive/search'
 import classify from './archive/classify'
 import tag from './archive/tag'
+import mycontent from './archive/content'
+import bottom from './archive/bottom'
 export default {
-  components: {top, search, classify, tag},
+  components: {top, search, classify, tag, mycontent, bottom},
   data () {
     return {}
   }
@@ -24,5 +28,17 @@ export default {
 <style scoped>
 .search{
   margin:5rem auto 0 auto;
+}
+.classify{
+  width:80%;
+  margin:4rem auto 0 auto;
+}
+.tag{
+  width:80%;
+  margin:4rem auto 0 auto;
+}
+.content{
+  width:80%;
+  margin:4rem auto 0 auto;
 }
 </style>

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index'
 import comIndex from '@/components/comindex'
+import perregister from '@/components/register/perregister'
+import comregister from '@/components/register/comregister'
+import login from '@/components/register/login'
 import archive from '@/components/archive'
 import Error from '@/views/Error/404'
 import perAchi from '@/components/person/person-perAchi'
@@ -64,6 +67,15 @@ export default new Router({
   }, {
     path: '/archive',
     component: archive
+  }, {
+    path: '/perregister',
+    component: perregister
+  }, {
+    path: '/comregister',
+    component: comregister
+  }, {
+    path: '/login',
+    component: login
   }, {
     path: '/1',
     redirect: '/404',
