@@ -5,6 +5,7 @@ import comIndex from '@/components/comindex'
 import perregister from '@/components/register/perregister'
 import comregister from '@/components/register/comregister'
 import login from '@/components/register/login'
+import protocol from '@/views/protocol/protocol'
 import archive from '@/components/archive'
 import Error from '@/views/Error/404'
 import perAchi from '@/components/person/person-perAchi'
@@ -33,7 +34,7 @@ import Ccredit from '@/components/Cstatistics/Cstatistics-credit'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [{
     path: '/per',
     name: 'Index',
@@ -76,6 +77,9 @@ export default new Router({
   }, {
     path: '/login',
     component: login
+  }, {
+    path: '/protocol',
+    component: protocol
   }, {
     path: '/1',
     redirect: '/404',

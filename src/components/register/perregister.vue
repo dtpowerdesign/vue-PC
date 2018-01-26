@@ -10,6 +10,9 @@
   <el-form-item label="账号" prop="user">
     <el-input type="text" v-model="Form.user" auto-complete="off"></el-input>
   </el-form-item>
+  <el-form-item label="姓名" prop="name">
+    <el-input type="text" v-model="Form.name" auto-complete="off"></el-input>
+  </el-form-item>
   <el-form-item label="公司" prop="company">
     <el-input type="text" v-model="Form.company" auto-complete="off"></el-input>
   </el-form-item>
@@ -33,6 +36,9 @@
     <el-button type="primary" @click="submitForm('Form')">注册</el-button>
     <el-button @click="resetForm('Form')">重置</el-button>
   </el-form-item>
+  <el-form-item style="margin-left:-100px">
+    <el-checkbox v-model="checked" checked><span @click="$router.push('/protocol')" title="点击阅读">我已阅读并同意相关服务条款和隐私政策</span></el-checkbox>
+  </el-form-item>
   </el-form>
   </el-col>
   </el-row>
@@ -43,8 +49,11 @@
 export default {
   data () {
     var validateUser = (rule, value, callback) => {
+      var re = /0?(13|14|15|17|18|19)[0-9]{9}|\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/
       if (!value) {
-        return callback(new Error('年龄不能为空'))
+        return callback(new Error('账号不能为空'))
+      } else if (!re.test(value)) {
+        return callback(new Error('账号只能为手机号或者邮箱'))
       } else {
         callback()
       }
@@ -112,16 +121,25 @@ export default {
         callback()
       }
     }
+    var validateName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('名字不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
+      checked: true,
       Form: {
         user: '',
         comapny: '',
         pass: '',
+        name: '',
         checkPass: '',
         age: '',
         phonenumber: '',
         check: '',
-        returnCheck: '1111'
+        returnCheck: '123456'
       },
       rules: {
         user: [
@@ -129,6 +147,9 @@ export default {
         ],
         company: [
             { validator: validateCompany, trigger: 'blur' }
+        ],
+        name: [
+            { validator: validateName, trigger: 'blur' }
         ],
         pass: [
             { validator: validatePass, trigger: 'blur' }
@@ -151,29 +172,48 @@ export default {
   methods: {
     check () {
       this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.phonenumber}).then((res) => {
-        console.log(res.data)
         this.Form.returnCheck = res.data.checkMsg
       }).catch((err) => {
         console.log(err)
       })
     },
     submitForm (formName) {
-      this.$refs.perregister.validate((valid) => {
-        if (valid) {
-          alert('submit!')
-          this.$http.post('', {}).then((res) => {
-            console.log(res.data)
-          }).catch((err) => {
-            console.log(err)
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      if (!this.checked) {
+        this.$message({
+          message: '您还未同意条款哦',
+          type: 'warning'
+        })
+      } else {
+        this.$refs.perregister.validate((valid) => {
+          if (valid) {
+            this.$http.post('http://39.106.34.156:8080/electric-design/PRegister', {
+              'account': this.Form.user,
+              'password': this.Form.pass,
+              'name': this.Form.name,
+              'checkMsg': this.Form.check,
+              'company': this.Form.company
+            }).then((res) => {
+              console.log(res.data)
+            }).catch((err) => {
+              console.log(err)
+            })
+          } else {
+            this.$message({
+              message: '请确保所填信息符合要求',
+              type: 'warning'
+            })
+            return false
+          }
+        })
+      }
     },
     resetForm (formName) {
       this.$refs.perregister.resetFields()
+    }
+  },
+  watch: {
+    checked () {
+      console.log(this.checked)
     }
   }
 }
@@ -230,5 +270,9 @@ export default {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   border-radius:.3rem .3rem 0 0
 }
-
+.el-form:hover{
+  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
 </style>
