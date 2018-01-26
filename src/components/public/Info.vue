@@ -17,9 +17,9 @@
           <i class="icon iconfont icon-gerenziliao"></i><span>{{name}}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/person-perAchi">个人业绩</el-menu-item>
-          <el-menu-item index="/person-register">注册信息</el-menu-item>
-          <el-menu-item index="/">退出登录</el-menu-item>
+          <el-menu-item index="/archive">项目归档</el-menu-item>
+          <el-menu-item index="/person-register">修改信息</el-menu-item>
+          <el-menu-item index="/login">退出登录</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       </el-menu>
@@ -31,7 +31,7 @@
 export default {
   data () {
     return {
-      name: 'Alpen'
+      name: this.cookie.get('user')
     }
   },
   methods: {

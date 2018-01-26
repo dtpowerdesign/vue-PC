@@ -33,12 +33,8 @@ export default {
         'instruction': this.existingData.detail,
         'qualificationRequirements': [{'CET': this.qualificationRequirements.CET}],
         'projectCharacteristics': [{'price': this.projectCharacteristics.price}, {'difficult': this.projectCharacteristics.difficulty}],
-        'startTime': this.form.startTime,
-        'endTime': this.form.endTime}
-      console.log(this.form.startTime)
-      console.log(this.form.name)
-      console.log(this.formatDate(data.startTime))
-      console.log(new Date(data.startTime))
+        'startTime': this.formatDate(this.form.startTime),
+        'endTime': this.formatDate(this.form.endTime)}
       this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
     },
     formatDate (date) {

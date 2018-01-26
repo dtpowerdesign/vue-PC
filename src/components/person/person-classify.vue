@@ -118,8 +118,8 @@ export default {
   },
   watch: {
     tags () {
-      var formData = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': this.cookie.get('user')}, 'toAccount': {'searchMethod': 'values', 'values': this.cookie.get('user')}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions', formData)
+      var formData = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}, 'toAccount': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
       .then(res => {
         this.$store.commit('init')
         res.data.forEach((el, index) => {

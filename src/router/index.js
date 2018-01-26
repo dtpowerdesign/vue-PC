@@ -36,6 +36,9 @@ Vue.use(Router)
 export default new Router({
   mode: 'hash',
   routes: [{
+    path: '',
+    redirect: '/login'
+  }, {
     path: '/per',
     name: 'Index',
     component: Index,
