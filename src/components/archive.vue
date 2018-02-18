@@ -2,9 +2,9 @@
   <div class="archive">
    <top></top>
    <search></search>
-   <classify></classify>
+   <classify v-loading="loadingClassify"></classify>
    <tag></tag>
-   <mycontent></mycontent>
+   <mycontent v-loading="loadingContent"></mycontent>
    <bottom></bottom>
   </div>
 </template>
@@ -19,7 +19,10 @@ import bottom from './archive/bottom'
 export default {
   components: {top, search, classify, tag, mycontent, bottom},
   data () {
-    return {}
+    return {
+      loadingClassify: true,
+      loadingContent: true
+    }
   }
 }
 </script>

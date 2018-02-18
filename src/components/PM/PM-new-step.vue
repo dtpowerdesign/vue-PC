@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="content">
-      <el-radio v-model="radio" label="1" class="content1">我了解项目相关信息</el-radio>
-      <el-radio v-model="radio" label="2" class="content2">我对项目相关信息不了解</el-radio>
+      <el-radio v-model="radio" label="1" class="content1">我对项目相关信息不了解</el-radio>
+      <el-radio v-model="radio" label="2" class="content2">我了解项目相关信息</el-radio>
     </div>
     <div class="skip">
-      <div style="margin-right:2rem" @click="$router.push('/per/PM-new/2')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
+      <div style="margin-right:2rem" @click="next()"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
     </div>
   </div>
 </template>
@@ -30,6 +30,13 @@ export default {
     }
   },
   methods: {
+    next () {
+      if (this.radio === '2') {
+        this.$router.push('/per/PM-new/2')
+      } else {
+        this.$router.push('/per/PM-new/2-1')
+      }
+    },
     ...mapMutations(['init'])
   },
   mounted () {

@@ -42,6 +42,7 @@ export default {
       this.stage = res.data.designProcess
       this.voltage = res.data.sizeAndCapacitys
       this.domain = res.data.majors
+      this.$parent.loadingClassify = false
     }).catch((err) => {
       console.log(err)
       this.$message({showClose: true,
@@ -66,7 +67,7 @@ export default {
         this.tag1.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选3项',
           type: 'warning'
         })
       }
@@ -77,7 +78,7 @@ export default {
         this.tag2.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选3项',
           type: 'warning'
         })
       }
@@ -88,7 +89,7 @@ export default {
         this.tag3.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选3项',
           type: 'warning'
         })
       }
@@ -99,7 +100,7 @@ export default {
         this.tag4.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选3项',
           type: 'warning'
         })
       }
@@ -110,7 +111,7 @@ export default {
         this.tag5.push(e.target.innerText)
       } else {
         this.$message({
-          message: '我让你点了吗',
+          message: '最多只能选3项',
           type: 'warning'
         })
       }
@@ -118,13 +119,15 @@ export default {
   },
   watch: {
     tags () {
-      var formData = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}, 'toAccount': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+      var formData = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
       this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
       .then(res => {
+        console.log(res.data)
         this.$store.commit('init')
         res.data.forEach((el, index) => {
           this.$store.commit('add', el)
         })
+        this.$parent.loadingContent = false
         this.$store.state.length = res.data.length
       }).catch(err => { console.log(err) })
     }

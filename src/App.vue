@@ -21,7 +21,7 @@ export default {
 #left, #right{
   height:100%
 }
-.leftNav, .comleftNav{
+.leftNav, .comleftNav, .proLeftNav{
   .el-submenu__title i{
     color:#fff;
 }

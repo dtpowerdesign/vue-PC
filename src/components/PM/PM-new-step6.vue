@@ -35,7 +35,20 @@ export default {
         'projectCharacteristics': [{'price': this.projectCharacteristics.price}, {'difficult': this.projectCharacteristics.difficulty}],
         'startTime': this.formatDate(this.form.startTime),
         'endTime': this.formatDate(this.form.endTime)}
-      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
+        console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            message: '发布成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '发布失败',
+            type: 'warning'
+          })
+        }
+      }).catch((err) => { console.log(err) })
     },
     formatDate (date) {
       var datee = new Date(date)

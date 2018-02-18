@@ -1,17 +1,17 @@
 <template>
   <div class="login">
     <div class="top">
-      <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>登录</span></div>
+       <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">南瑞美思</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
       <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
     </div>
-    <el-form :model="Form" status-icon :rules="rules"  label-width="100px">
+    <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login">
       <el-form-item label="" prop="user" style="margin-left:-100px">
         <el-input v-model="Form.user" placeholder="输入email/手机号">
         <i slot="prefix" class="icon iconfont icon-zhanghao"></i>
         </el-input>
       </el-form-item>
       <el-form-item label="" prop="pass" style="margin-left:-100px">
-        <el-input v-model="Form.pass" placeholder="输入密码">
+        <el-input type="password" v-model="Form.pass" placeholder="输入密码">
         <i slot="prefix" class="icon iconfont icon-suo"></i>
         </el-input>
       </el-form-item>
@@ -70,42 +70,41 @@ export default {
   },
   methods: {
     login () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/PLogin', {
-        'account': this.Form.user,
-        'password': this.Form.pass
-      }).then((res) => {
-        if (res.data.result && res.data.result !== 'false') {
-          this.$message({
-            message: '登录成功',
-            type: 'success'
-          })
-          this.set('user', this.Form.user)
-          this.set('pass', this.Form.pass)
-          this.$router.push('/per')
+      this.$refs.login.validate((valid) => {
+        if (valid) {
+          this.$http.post('http://39.106.34.156:8080/electric-design/AllUserLogin', {
+            'account': this.Form.user,
+            'password': this.Form.pass
+          }).then((res) => {
+            // console.log(res.data)
+            if (res.data.result && res.data.result !== 'false') {
+              this.$message({
+                message: '登录成功',
+                type: 'success'
+              })
+              this.cookie.set('user', this.Form.user)
+              this.cookie.set('pass', this.Form.pass)
+              this.cookie.set('role', res.data.role)
+              this.cookie.set('name', res.data.name)
+              if (res.data.role === 'puser') {
+                this.$router.push('/per')
+              } else {
+                this.$router.push('/com')
+              }
+            } else {
+              this.$message({
+                message: `登录失败:${res.data.reason}`,
+                type: 'warning'
+              })
+            }
+          }).catch((err) => { console.log(err) })
         } else {
           this.$message({
-            message: `登录失败:${res.data.reason}`,
+            message: '请确保所填信息符合要求',
             type: 'warning'
           })
         }
-      }).catch((err) => { console.log(err) })
-    },
-    set: function (name, value, days) {
-      var d = new Date()
-
-      d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-
-      window.document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString()
-    },
-
-    get: function (name) {
-      var v = window.document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
-
-      return v ? v[2] : null
-    },
-
-    delete: function (name) {
-      this.set(name, '', -1)
+      })
     }
   }
 }

@@ -52,23 +52,22 @@
           <p style="text-align:left;font-size:1rem;margin-top:3rem;">您目前的账号完整度较低，建议通过以下方式完善你的信息，可有效提高投标成功率</p>
           <div class="div1-style">
             <span>上传学位证明等教育背景信息</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadPublicProjectImages" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传有效身份证件，提高账号安全度</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUserIdNumberFile" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'identification', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传职称或工作证明等工作信息</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadPublicProjectImages" :data="{'account':123}" multiple name="mFile" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'work', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
-</el-upload>
         </div>
       </el-col>
     </el-row>

@@ -1,3 +1,20 @@
+/* eslint-disable */
+/* Blob.js
+ * A Blob implementation.
+ * 2014-05-27
+ *
+ * By Eli Grey, http://eligrey.com
+ * By Devin Samarin, https://github.com/eboyjr
+ * License: X11/MIT
+ *   See LICENSE.md
+ */
+
+/*global self, unescape */
+/*jslint bitwise: true, regexp: true, confusion: true, es5: true, vars: true, white: true,
+ plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/Blob.js/blob/master/Blob.js */
+
 (function (view) {
   "use strict";
 
@@ -44,30 +61,13 @@
       btoa = view.btoa,
       atob = view.atob
 
-    , ArrayBuffer = view.ArrayBuffer, Uint8Array = view.Uint8Array
-
-    , origin = /^[\w-]+:\/*\[?[\w\.:-]+\]?(?::[0-9]+)?/;
+    , ArrayBuffer = view.ArrayBuffer, Uint8Array = view.Uint8Array;
     FakeBlob.fake = FB_proto.fake = true;
     while (file_ex_code--) {
       FileException.prototype[file_ex_codes[file_ex_code]] = file_ex_code + 1;
     }
-    // Polyfill URL
     if (!real_URL.createObjectURL) {
-      URL = view.URL = function (uri) {
-        var
-          uri_info = document.createElementNS("http://www.w3.org/1999/xhtml", "a"),
-          uri_origin;
-        uri_info.href = uri;
-        if (!("origin" in uri_info)) {
-          if (uri_info.protocol.toLowerCase() === "data:") {
-            uri_info.origin = null;
-          } else {
-            uri_origin = uri.match(origin);
-            uri_info.origin = uri_origin && uri_origin[1];
-          }
-        }
-        return uri_info;
-      };
+      URL = view.URL = {};
     }
     URL.createObjectURL = function (blob) {
       var
@@ -156,37 +156,19 @@
       return "[object Blob]";
     };
     FB_proto.close = function () {
-      this.size = 0;
-      delete this.data;
+      this.size = this.data.length = 0;
     };
     return FakeBlobBuilder;
   }(view));
 
-  view.Blob = function (blobParts, options) {
+  view.Blob = function Blob(blobParts, options) {
     var type = options ? (options.type || "") : "";
     var builder = new BlobBuilder();
     if (blobParts) {
       for (var i = 0, len = blobParts.length; i < len; i++) {
-        if (Uint8Array && blobParts[i] instanceof Uint8Array) {
-          builder.append(blobParts[i].buffer);
-        } else {
-          builder.append(blobParts[i]);
-        }
+        builder.append(blobParts[i]);
       }
     }
-    var blob = builder.getBlob(type);
-    if (!blob.slice && blob.webkitSlice) {
-      blob.slice = blob.webkitSlice;
-    }
-    return blob;
+    return builder.getBlob(type);
   };
-
-  var getPrototypeOf = Object.getPrototypeOf || function (object) {
-    return object.__proto__;
-  };
-  view.Blob.prototype = getPrototypeOf(new view.Blob());
-}(
-  typeof self !== "undefined" && self ||
-  typeof window !== "undefined" && window ||
-  this
-));
+}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this.content || this));

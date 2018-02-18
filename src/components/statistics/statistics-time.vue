@@ -1,7 +1,7 @@
 <template>
   <div class="statistics-time">
     <div class="title"><span style="font-size:2rem">时间统计</span><i class="icon iconfont icon-iconfontquestion"></i><span class="date">{{year}}年{{month}}月{{day}}日</span></div>
-    <el-tabs type="border-card" style="position:relative" class="tab">
+    <el-tabs type="border-card" style="position:relative" class="tab" v-loading="loading">
       <el-tab-pane label="周">
         <div style="display:flex;justify-content:space-between"><span style="font-size:1.5rem;color:#4d83e7">{{year}}年{{month}}月{{week}}周</span><span><i class="icon iconfont icon-shang" @click="lastWeek()"></i><i class="icon iconfont icon-xia" @click="nextWeek()"></i></span></div>
         <ul class="time">
@@ -20,7 +20,7 @@
         <li class="style1">日</li>
         </ul>
         <ul class="ul1">
-          <li v-for="i in weekday">
+          <li v-for="(i, iIndex) in weekday" :key="iIndex">
             <div class="div1" @click="funn($event)">{{i.dayOfMonth}}</div>
             <div class="div-thing">{{i.time1}}</div>
             <div class="div-thing">{{i.time2}}</div>
@@ -41,19 +41,19 @@
         <li class="style1">日</li>
         </ul>
         <ul class="ul1" id="func">
-          <li v-for="i in monthday">
+          <li v-for="(i, iIndex) in monthday" :key="iIndex">
             <div class="div1" @click="funn($event)">{{i.dayCode}}</div>
-            <div class="div2"><ul style="list-style-type:none"><li v-for="k in i.content">{{k}}</li></ul></div>
+            <div class="div2"><ul style="list-style-type:none"><li v-for="(k, kIndex) in i.content" :key="kIndex">{{k}}</li></ul></div>
           </li>
         </ul>
       </el-tab-pane>
       <el-tab-pane label="年">
         <div style="display:flex;justify-content:space-between"><span style="font-size:1.5rem;color:#4d83e7">{{year}}年</span><span><i class="icon iconfont icon-shang" @click="lastYear()"></i><i class="icon iconfont icon-xia" @click="nextYear()"></i></span></div>
         <ul class="ul-month">
-          <li v-for="i in yearday">
+          <li v-for="(i, iIndex) in yearday" :key="iIndex">
             <span style="font-size:1.5rem;color:#da6363;" >{{i.mon}}月</span>
             <ul class="ul-day">
-              <li v-for="j in i.days" :class="{qiatanLine: j.eventCode===1,kaigongLine: j.eventCode===2,jiezhiLine: j.eventCode===3}">
+              <li v-for="(j, jIndex) in i.days" :key="jIndex" :class="{qiatanLine: j.eventCode===1,kaigongLine: j.eventCode===2,jiezhiLine: j.eventCode===3}">
                <span>{{j.dayCode}}</span>
               </li>
             </ul>
@@ -73,6 +73,7 @@
 export default {
   data () {
     return {
+      loading: true,
       weekday: [],
       monthday: [],
       yearday: [],
@@ -123,6 +124,7 @@ export default {
             }
           }
           this.weekday.push(obj)
+          this.loading = false
         })
       }).catch((err) => { console.log(err) })
     },
@@ -157,7 +159,6 @@ export default {
       this.$http.post('http://39.106.34.156:8080/electric-design/getEventsByUserAccountAndYear', {
         'sourceUserAccount': this.cookie.get('user'), 'year': this.year
       }).then((res) => {
-        console.log(res.data)
         res.data.forEach((el, index) => {
           var obj = {}
           obj.mon = el.monthCode
@@ -217,7 +218,6 @@ export default {
     funn (e) {
       $(e.target).addClass('active').parent().siblings().find('.div1').removeClass('active')
       this.day = e.target.innerText
-      console.log(e.target.innerText)
     },
     lastWeek () {
       this.subWeek()

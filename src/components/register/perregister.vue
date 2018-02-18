@@ -1,35 +1,29 @@
 <template>
   <div class="perregister">
    <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>个人注册</span></div>
+   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">南瑞美思</span><span>|</span><span @click="$router.push('/perregister')" style="color:yellow">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')">登录</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
   <el-col :span="8" :offset="2">
   <el-form :model="Form" status-icon label-position="left":rules="rules" ref="perregister" label-width="100px">
   <el-form-item label="账号" prop="user">
-    <el-input type="text" v-model="Form.user" auto-complete="off"></el-input>
+    <el-input type="text" v-model="Form.user" auto-complete="off" placeholder="请填写手机号或者邮箱"></el-input>
   </el-form-item>
   <el-form-item label="姓名" prop="name">
-    <el-input type="text" v-model="Form.name" auto-complete="off"></el-input>
+    <el-input type="text" v-model="Form.name" auto-complete="off" placeholder="请填写中文姓名"></el-input>
   </el-form-item>
-  <el-form-item label="公司" prop="company">
-    <el-input type="text" v-model="Form.company" auto-complete="off"></el-input>
+  <el-form-item label="公司(可选)" >
+    <el-input type="text" v-model="Form.company" auto-complete="off" placeholder="没有的话可以忽略此项"></el-input>
   </el-form-item>
   <el-form-item label="密码" prop="pass">
-    <el-input type="password" v-model="Form.pass" auto-complete="off"></el-input>
+    <el-input type="password" v-model="Form.pass" auto-complete="off" placeholder="请输入密码"></el-input>
   </el-form-item>
   <el-form-item label="确认密码" prop="checkPass">
-    <el-input type="password" v-model="Form.checkPass" auto-complete="off"></el-input>
+    <el-input type="password" v-model="Form.checkPass" auto-complete="off" placeholder="请确认密码"></el-input>
   </el-form-item>
-  <el-form-item label="年龄" prop="age">
-    <el-input v-model.number="Form.age"></el-input>
-  </el-form-item>
-  <el-form-item label="手机号" prop="phonenumber">
-    <el-input type="text" v-model.number="Form.phonenumber" auto-complete="off"></el-input>
-  </el-form-item>
-  <el-form-item label="验证码" prop="check">
-    <el-col :span="16"><el-input type="text" v-model="Form.check" auto-complete="off"></el-input></el-col>
+  <el-form-item label="验证码" prop="check" >
+    <el-col :span="16"><el-input type="text" v-model="Form.check" auto-complete="off" placeholder="请填写收到的验证码"></el-input></el-col>
     <el-col :span="8"><el-button type="primary" @click="check()">免费获取</el-button></el-col>
   </el-form-item>
   <el-form-item style="margin-left:-100px">
@@ -58,29 +52,6 @@ export default {
         callback()
       }
     }
-    var validateCompany = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('公司不能为空'))
-      } else {
-        callback()
-      }
-    }
-    var checkAge = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('年龄不能为空'))
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字值'))
-        } else {
-          if (value < 18) {
-            callback(new Error('必须年满18岁'))
-          } else {
-            callback()
-          }
-        }
-      }, 1000)
-    }
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -100,18 +71,6 @@ export default {
         callback()
       }
     }
-    var checkPhonenumber = (rule, value, callback) => {
-      var re = /^1\d{10}$/
-      if (value === '') {
-        callback(new Error('手机号不能为空'))
-      } else if (!Number.isInteger(value)) {
-        callback(new Error('请输入数字值'))
-      } else if (!re.test(value)) {
-        callback(new Error('请输入正确的手机号格式'))
-      } else {
-        callback()
-      }
-    }
     var checkCheck = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('验证码不能为空'))
@@ -124,6 +83,8 @@ export default {
     var validateName = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('名字不能为空'))
+      } else if (!/^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/.test(value)) {
+        return callback(new Error('您输入的姓名不合法'))
       } else {
         callback()
       }
@@ -136,17 +97,12 @@ export default {
         pass: '',
         name: '',
         checkPass: '',
-        age: '',
-        phonenumber: '',
         check: '',
         returnCheck: '123456'
       },
       rules: {
         user: [
             { validator: validateUser, trigger: 'blur' }
-        ],
-        company: [
-            { validator: validateCompany, trigger: 'blur' }
         ],
         name: [
             { validator: validateName, trigger: 'blur' }
@@ -157,12 +113,6 @@ export default {
         checkPass: [
             { validator: validatePass2, trigger: 'blur' }
         ],
-        age: [
-            { validator: checkAge, trigger: 'blur' }
-        ],
-        phonenumber: [
-            { validator: checkPhonenumber, trigger: 'change' }
-        ],
         check: [
             { validator: checkCheck, trigger: 'blur' }
         ]
@@ -171,7 +121,8 @@ export default {
   },
   methods: {
     check () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.phonenumber}).then((res) => {
+      this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
+        console.log(res.data)
         this.Form.returnCheck = res.data.checkMsg
       }).catch((err) => {
         console.log(err)

@@ -6,7 +6,7 @@
        <leftNav></leftNav>
      </el-col>
      <el-col :span="21" :offset="3"  id="right">
-        <Info style="background-color:white"></Info>
+        <Info style="background-color:white" ref="Info"></Info>
        	<router-view></router-view>
      </el-col>
    </el-row>
@@ -22,7 +22,14 @@ export default {
   data () {
     return {}
   },
-  mounted () {}
+  mounted () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$refs.Info.initData()
+    }
+  }
 }
 </script>
 

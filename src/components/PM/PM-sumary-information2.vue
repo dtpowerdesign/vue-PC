@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div v-if="show">
+  <div v-if="show" v-loading="loadingDetail">
     <div class="title"><span>|{{name}}</span><el-button type="primary" @click="show=false">返回</el-button></div>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
@@ -18,8 +18,8 @@
     </el-row>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
-       <span class="font1">设计院</span><br>
-       <i class="icon iconfont icon-loufang"></i><span class="font2">{{shejiyuan}}</span>
+       <span class="font1">项目个体性质</span><br>
+       <i class="icon iconfont icon-loufang"></i><span class="font2">{{bidType}}</span>
       </el-col>
       <el-col :span="8">
         <span class="font1">报价</span><br>
@@ -31,7 +31,7 @@
       </el-col>
     </el-row>
     <el-row style="margin-top:3rem">
-      <el-col :span="14" :offset="2">
+      <el-col :span="12" :offset="2">
         <span style="font-size:0.8rem;float:left;clear:left;">其他信息</span><br>
         <el-row>
           <el-col :span="12" ><span class="font1" style="float:left;clear:left;">类别:{{classes}}</span></el-col>
@@ -42,13 +42,43 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{domain}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">投标人信息</span><br>
-        <p class="font1" style="text-align:left">{{info}}</p>
+      <el-col :span="6" :offset="2">
+        <span style="font-size:0.8rem;float:left;clear:left;">发布人信息</span><br>
+        <p class="font1" style="text-align:left" v-html="info"></p>
       </el-col>
     </el-row>
+    <el-button type="primary" @click="dialogVisible=true" v-if="sourceAccount===$cookie.get('user')">查看投标信息</el-button>
+    <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="30%">
+      <el-tabs type="card">
+        <el-tab-pane label="个体投标">
+          <el-table :data="bid.personalBidAccounts">
+            <el-table-column label="投标人">
+              <template slot-scope="scope">
+                 <el-radio v-model="radio" :label="scope.row">{{scope.row}}</el-radio>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="企业投标">
+          <el-table :data="bid.companyBidAccounts">
+            <el-table-column label="投标企业">
+              <template slot-scope="scope">
+                <el-radio v-model="radio" :label="scope.row">{{scope.row}}</el-radio>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="联合体投标">
+          <span>联合体投标人账号:<el-radio v-model="radio" :label="bid.jointReleaseAccount">{{bid.jointReleaseAccount}}</el-radio></span>
+        </el-tab-pane>
+      </el-tabs>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="confirmBid()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
-  <div v-else>
+  <div v-else v-loading="loadingTable">
    
   <div style="display:flex; align-items:center; justify-content: space-between">
         <span style="font-size:1.5rem;color:#4d83e7">|投标中</span>
@@ -100,17 +130,24 @@
 export default {
   data () {
     return {
+      radio: '',
+      sourceAccount: '',
+      bid: {},
+      dialogVisible: false,
+      loadingDetail: true,
+      loadingTable: true,
       currentPage: 1,
       pagesize: 5,
       downloadLoading: false,
       tableData: [],
       multipleSelection: [],
       show: false,
+      code: '',
       name: '',
       company: '',
       place: '',
       date: '',
-      shejiyuan: '',
+      bidType: '',
       price: '',
       result: '',
       type: '',
@@ -121,35 +158,45 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
-     {conditions: {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'toAccounts': {'searchMethod': 'values', 'values': ['123']}}})
+  },
+  methods: {
+    initData () {
+      var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
         .then((res) => {
+          console.log(res.data)
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {
+                personalBidAccounts: el.personalBidAccounts,
+                companyBidAccounts: el.companyBidAccounts,
+                jointReleaseAccount: el.jointReleaseAccount,
                 number: el.code,
-                company: el.sourceAccount,
+                company: el.tenderCompany,
                 name: el.name,
                 address: el.address,
                 class: el.category.concat().join(','),
                 type: el.type.concat().join(','),
                 voltage: el.voltagelevel,
-                amount: el.amountOfInvestment,
+                amount: el.lowestPrice + '-' + el.highestPrice,
                 date: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
                 state: el.state,
                 category: el.category.concat().join(','),
-                major: el.major.concat().join(',')
+                major: el.major.concat().join(','),
+                sourceAccount: el.sourceAccount,
+                bidType: el.bidType
               }
               this.tableData.push(obj)
             })
           }
+          this.loadingTable = false
         }).catch((err) => {
           console.log(err)
         })
-  },
-  methods: {
+    },
     detail (row) {
       this.show = true
+      this.code = row.number
       this.name = row.name
       this.company = row.company
       this.place = row.address
@@ -160,11 +207,16 @@ export default {
       this.classes = row.category
       this.voltage = row.voltage
       this.domain = row.major
-      this.$http.post('http://39.106.34.156:8080/electric-design/getCusersByAccounts', {'desAccounts': ['1111']}).then((res) => {
+      this.bidType = row.bidType
+      this.sourceAccount = row.sourceAccount
+      this.bid.personalBidAccounts = row.personalBidAccounts
+      this.bid.companyBidAccounts = row.companyBidAccounts
+      this.bid.jointReleaseAccount = row.jointReleaseAccount
+      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
-        this.shejiyuan = res.data[0].companyType
+        this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
+        this.loadingDetail = false
       }).catch((err) => { console.log(err) })
-      this.info = ''
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -173,13 +225,14 @@ export default {
       this.currentPage = currentPage
     },
     handleDownload () {
+      var xxx = this.multipleSelection
       if (this.multipleSelection.length !== 0) {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
           const tHeader = ['序号', '招标公司', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '发布日期']
           const filterVal = ['number', 'company', 'name', 'address', 'class', 'type', 'voltage', 'amount', 'date']
-          const list = this.multipleSelection
+          const list = xxx
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '项目信息excel')
           this.downloadLoading = false
@@ -197,6 +250,39 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    confirmBid () {
+      console.log(this.radio)
+      this.$confirm(`您确定让${this.radio}中标吗`, '确定后无法修改', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '洽谈中', 'toAccounts': [this.radio]}})
+        .then((res) => {
+          console.log(res.data)
+          if (res.data.result) {
+            this.$message({
+              type: 'success',
+              message: `${this.radio}已经中标`
+            })
+            this.dialogVisible = false
+            this.$router.go(0)
+          } else {
+            this.$message({
+              type: 'warning',
+              message: `操作失败，原因${res.data.reason}`
+            })
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     }
   }
 }

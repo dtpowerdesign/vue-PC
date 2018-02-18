@@ -26,8 +26,10 @@ const mutations = {
     obj.voltagelevel = el.voltagelevel
     obj.designProcess = el.designProcess
     obj.major = el.major.concat().join(',')
-    obj.amountOfInvestment = el.amountOfInvestment
-    obj.endTime = [].concat((el.endTime.year + 1900), (el.endTime.month + 1), el.endTime.date).join('/')
+    if (!el.lowestPrice) { el.lowestPrice = '未填最低值' }
+    if (!el.highestPrice) { el.highestPrice = '未填最高值' }
+    obj.amountOfInvestment = el.lowestPrice + '-' + el.highestPrice
+    if (el.endTime) { obj.endTime = [].concat((el.endTime.year + 1900), (el.endTime.month + 1), el.endTime.date).join('/') } else { obj.endTime = '未填写' }
     obj.state = el.state
     state.table.push(obj)
   }

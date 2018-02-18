@@ -1,9 +1,9 @@
 <template>
   <div class="person-register">
    <div class="title"><span style="font-size:2rem;margin-left:1.7rem">个人业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
-   <myClassify></myClassify>
+   <myClassify v-loading="loadingClassify"></myClassify>
    <myTag></myTag>
-   <myTable></myTable>
+   <myTable v-loading="loadingContent"></myTable>
   </div>
 </template>
 
@@ -14,7 +14,10 @@ import myTag from '@/components/person/person-tag'
 export default {
   components: {myTable, myClassify, myTag},
   data () {
-    return {}
+    return {
+      loadingClassify: true,
+      loadingContent: true
+    }
   }
 }
 </script>

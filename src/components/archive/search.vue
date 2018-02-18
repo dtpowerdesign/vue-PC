@@ -22,13 +22,14 @@ export default {
   computed: mapState(['table']),
   methods: {
     mySearch () {
-      var formData = {'values': this.search}
-      this.$http.post('http://39.16.34.156:8080/electric-design/searchProjectsByValue', formData).then((res) => {
+      this.$parent.loadingContent = true
+      var formData = {'value': this.search}
+      this.$http.post('http://39.106.34.156:8080/electric-design/searchProjectsByValue', formData).then((res) => {
         this.$store.commit('init')
-        console.log(res.data)
         res.data.forEach((el, index) => {
           this.$store.commit('add', el)
         })
+        this.$parent.loadingContent = false
       }).catch((err) => { console.log(err) })
     },
     ...mapMutations([

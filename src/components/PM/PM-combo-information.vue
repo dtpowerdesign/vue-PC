@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div v-if="show">
+  <div v-if="show" v-loading="loadingDetail">
     <div class="title"><span>|{{name}}</span><el-button type="primary" @click="show=false">返回</el-button></div>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
@@ -18,8 +18,8 @@
     </el-row>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
-       <span class="font1">设计院</span><br>
-       <i class="icon iconfont icon-loufang"></i><span class="font2">{{shejiyuan}}</span>
+       <span class="font1">项目个体性质</span><br>
+       <i class="icon iconfont icon-loufang"></i><span class="font2">{{bidType}}</span>
       </el-col>
       <el-col :span="8">
         <span class="font1">报价</span><br>
@@ -44,12 +44,23 @@
       </el-col>
       <el-col :span="4" :offset="2">
         <span style="font-size:0.8rem;float:left;clear:left;">我邀请的人</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span v-for="i in info">{{i}} </span><i class="icon iconfont icon-jiahaoyou"></i></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>{{info.join(',')}}</span><i class="icon iconfont icon-jiahaoyou" @click="dialogVisible=true"></i></p>
+        <span style="font-size:0.8rem;float:left;clear:left;">现有成员(即已经同意邀请的人)</span><br>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoed.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>
       </el-col>
     </el-row>
-    <el-button type="success" style="margin-top:5rem" @click="accept()">接受洽谈</el-button>
+    <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="30%">
+      <el-select v-model="info" multiple allow-create filterable default-first-option placeholder="请选择">
+        <el-option v-for="(i, j) in infos" :key="j" :label="i" :value="i"></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="confirm()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
-  <div v-else>
+  
+  <div v-else v-loading="loadingTable">
    
   <div style="display:flex; align-items:center; justify-content: space-between">
         <span style="font-size:1.5rem;color:#4d83e7">|我的请求</span>
@@ -95,34 +106,42 @@
 export default {
   data () {
     return {
+      dialogVisible: false,
+      loadingDetail: true,
+      loadingTable: true,
       currentPage: 1,
       pagesize: 5,
       downloadLoading: false,
       tableData: [],
       multipleSelection: [],
       show: false,
+      code: '',
       name: '',
       company: '',
       place: '',
       date: '',
-      shejiyuan: '',
+      bidType: '',
       price: '',
       result: '',
       type: '',
       classes: '',
       voltage: '',
       domain: '',
-      info: []
+      info: [],
+      infoed: [],
+      infos: ['18730273658', '111', '222']
     }
   },
   created () {
     this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
-     {conditions: {'jointReleaseAccount': {'searchMethod': 'values', 'values': ['123']}}})
+     {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {
           console.log(res.data)
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {
+                invitatingAccounts: el.invitatingAccounts,
+                invitatedBidAccounts: el.invitatedBidAccounts,
                 number: el.code,
                 initiator: el.sourceAccount,
                 project: el.name,
@@ -135,12 +154,14 @@ export default {
                 category: el.category.concat().join(','),
                 major: el.major.concat().join(','),
                 voltage: el.voltagelevel,
-                amount: el.amountOfInvestment,
-                company: el.sourceAccount
+                amount: el.lowestPrice + '-' + el.highestPrice,
+                company: el.tenderCompany,
+                bidType: el.bidType
               }
               this.tableData.push(obj)
             })
           }
+          this.loadingTable = false
         }).catch((err) => {
           console.log(err)
         })
@@ -148,6 +169,7 @@ export default {
   methods: {
     detail (row) {
       this.show = true
+      this.code = row.number
       this.name = row.project
       this.company = row.company
       this.place = row.address
@@ -158,10 +180,14 @@ export default {
       this.classes = row.category
       this.voltage = row.voltage
       this.domain = row.major
-      this.$http.post('http://39.106.34.156:8080/electric-design/getCusersByAccounts', {'desAccounts': ['1111']}).then((res) => {
-        this.shejiyuan = res.data[0].companyType
+      this.bidType = row.bidType
+      this.info = row.invitatingAccounts || []
+      this.infoed = row.invitatedBidAccounts || []
+      console.log(this.infoed)
+      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
+        console.log(res.data)
+        this.loadingDetail = false
       }).catch((err) => { console.log(err) })
-      this.info = ''
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -170,13 +196,14 @@ export default {
       this.currentPage = currentPage
     },
     handleDownload () {
+      var xxx = this.multipleSelection
       if (this.multipleSelection.length !== 0) {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
           const tHeader = ['序号', '发起人', '投标项目', '项目类型', '专业类别', '请求时间']
           const filterVal = ['number', 'initiator', 'project', 'type', 'domain', 'time']
-          const list = this.multipleSelection
+          const list = xxx
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '项目信息excel')
           this.downloadLoading = false
@@ -195,10 +222,23 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    accept () {
-      this.$message({
-        message: '恭喜你，接受成功',
-        type: 'success'
+    confirm () {
+      this.dialogVisible = false
+      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': this.info}})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: `邀请成功`
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `邀请失败，原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
   }

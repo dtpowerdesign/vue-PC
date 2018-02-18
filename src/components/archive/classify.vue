@@ -36,27 +36,32 @@ export default {
   },
   computed: mapState(['table']),
   mounted () {
-    this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
-      this.classes = res.data.categorys
-      this.type = res.data.types
-      this.stage = res.data.designProcess
-      this.voltage = res.data.sizeAndCapacitys
-      this.domain = res.data.majors
-    }).catch((err) => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
-      })
-    })
-    this.tags = this.$store.state.tags
-    this.tag1 = this.$store.state.tag1
-    this.tag2 = this.$store.state.tag2
-    this.tag3 = this.$store.state.tag3
-    this.tag4 = this.$store.state.tag4
-    this.tag5 = this.$store.state.tag5
+    this.initData()
   },
   methods: {
+    initData () {
+      this.$parent.loadingClassify = true
+      this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
+        this.classes = res.data.categorys
+        this.type = res.data.types
+        this.stage = res.data.designProcess
+        this.voltage = res.data.sizeAndCapacitys
+        this.domain = res.data.majors
+        this.$parent.loadingClassify = false
+      }).catch((err) => {
+        console.log(err)
+        this.$message({showClose: true,
+          message: '网络连接错误',
+          type: 'error'
+        })
+      })
+      this.tags = this.$store.state.tags
+      this.tag1 = this.$store.state.tag1
+      this.tag2 = this.$store.state.tag2
+      this.tag3 = this.$store.state.tag3
+      this.tag4 = this.$store.state.tag4
+      this.tag5 = this.$store.state.tag5
+    },
     ...mapMutations([
       'add'
     ]),
@@ -118,8 +123,9 @@ export default {
   },
   watch: {
     tags () {
-      var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions', formData)
+      this.$parent.loadingContent = true
+      var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions ', formData)
       .then(res => {
         console.log(res.data)
         this.$store.commit('init')
@@ -127,6 +133,7 @@ export default {
           this.$store.commit('add', el)
         })
         this.$store.state.length = res.data.length
+        this.$parent.loadingContent = false
       }).catch(err => { console.log(err) })
     }
   }

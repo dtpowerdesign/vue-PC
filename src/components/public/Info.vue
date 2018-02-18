@@ -3,14 +3,14 @@
     <div style="margin-left:2rem">
       <i class="icon iconfont icon-liebiao" @click="show()"></i>
       <span style="width:40rem;" class="nav">
-        <span onclick="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">平台首页</span>
-        <span onclick="window.location.href='https://githubzhangshuai.github.io/staticSome/'">平台概况</span>
-        <span style="color:#4d83e7">个人门户</span>
+        <span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">平台首页</span>
+        <span onclick="window.location.href='http://39.106.34.156:8080/zs/preview/'">平台概况</span>
+        <span style="color:#4d83e7" @click="$router.push('/per')">个人门户</span>
         <span @click="$router.push('/com')">企业门户</span>
         <span @click="$router.push('/archive')">项目归档</span>
       </span>
     </div>
-    <div>
+    <div style="display:flex;justify-content:space-around">
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
         <el-submenu index="person">
         <template slot="title">
@@ -19,7 +19,17 @@
         <el-menu-item-group>
           <el-menu-item index="/archive">项目归档</el-menu-item>
           <el-menu-item index="/person-register">修改信息</el-menu-item>
-          <el-menu-item index="/login">退出登录</el-menu-item>
+          <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      </el-menu>
+      <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
+        <el-submenu index="person">
+        <template slot="title">
+          <i class="icon iconfont icon-xiangmu"></i><span>我的项目</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item :index="'/per-project/' + i.code"  v-for="(i ,j) in projectList" :key="j">{{i.name}}</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       </el-menu>
@@ -31,12 +41,25 @@
 export default {
   data () {
     return {
-      name: this.cookie.get('user')
+      name: this.$cookie.get('user'),
+      projectList: []
     }
+  },
+  mounted () {
+    this.initData()
   },
   methods: {
     show () {
       $('.Info>div>.nav').fadeToggle(1000)
+    },
+    initData () {
+      var dataForm = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', dataForm).then((res) => {
+        this.projectList = []
+        res.data.forEach((el, index) => {
+          this.projectList.push({name: el.name, code: el.code})
+        })
+      }).catch((err) => { console.log(err) })
     }
   }
 }
