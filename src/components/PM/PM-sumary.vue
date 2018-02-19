@@ -4,6 +4,7 @@
    <div class="clearfix"></div>
    <el-tabs type="border-card" class="PM-tab">
     <el-tab-pane label="项目汇总"><InforAll ref="InforAll"></InforAll></el-tab-pane>
+    <el-tab-pane label="临时态"><Infor0 ref="Infor0"></Infor0></el-tab-pane>
     <el-tab-pane label="发布中"><Infor ref="Infor1"></Infor></el-tab-pane>
     <el-tab-pane label="投标中"><Infor2 ref="Infor2"></Infor2></el-tab-pane>
     <el-tab-pane label="洽谈中"><Infor3 ref="Infor3"></Infor3></el-tab-pane>
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import Infor0 from '@/components/PM/PM-sumary-information0'
 import Infor from '@/components/PM/PM-sumary-information'
 import Infor2 from '@/components/PM/PM-sumary-information2'
 import Infor3 from '@/components/PM/PM-sumary-information3'
@@ -23,7 +25,7 @@ import Infor5 from '@/components/PM/PM-sumary-information5'
 import Infor6 from '@/components/PM/PM-sumary-information6'
 import InforAll from '@/components/PM/PM-sumary-informationAll'
 export default {
-  components: {Infor, Infor2, Infor3, Infor4, Infor5, Infor6, InforAll},
+  components: {Infor0, Infor, Infor2, Infor3, Infor4, Infor5, Infor6, InforAll},
   data () {
     return {}
   },
@@ -33,6 +35,7 @@ export default {
   methods: {
     initData () {
       this.$refs.InforAll.initData()
+      this.$refs.Infor0.initData()
       this.$refs.Infor1.initData()
       this.$refs.Infor2.initData()
       this.$refs.Infor3.initData()

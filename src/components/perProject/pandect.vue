@@ -1,13 +1,15 @@
 <template>
   <div class="pandect"> 
    <div class="title"><span style="font-size:2rem">总览</span><i class="icon iconfont icon-iconfontquestion"></i></div>
-   <div class="content" style="height:12rem">
+   <div class="content" style="height:16rem">
      <el-col :span="8">
        <p style="text-align:left;color:#409EFF;font-size:2rem">|{{name}}</p>
        <div style="display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap">
          <span style="font-size:1.5rem">名称变更</span><el-input v-model="changedName" style="width:50%"></el-input><el-button type="primary" @click="changeName()">保存</el-button>
          <span style="font-size:1.5rem">状态变更</span><el-select v-model="changedState" style="width:50%"><el-option v-for="(i, j) in states" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeState()">保存</el-button>
          <span style="font-size:1.5rem">阶段变更</span><el-select v-model="changedProcess" style="width:50%"><el-option v-for="(i, j) in processRequirementsName" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeProcess()">保存</el-button>
+         <span style="font-size:1.5rem">接受联合体投标</span><el-switch v-model="changedIsAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch><el-button type="primary" @click="changeIsAcceptJointBid()">保存</el-button>
+         <span style="font-size:1.5rem">可以联合体投标</span><el-switch v-model="changedIsJointState" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch><el-button type="primary" @click="changeIsJointState()">保存</el-button>
        </div>
      </el-col>
      <el-col :offset="2" :span="14">
@@ -45,6 +47,8 @@ export default {
       changedName: '',
       changedState: '',
       changedProcess: '',
+      changedIsAcceptJointBid: '',
+      changedIsJointState: '',
       code: '',
       state: '',
       voltagelevel: '',
@@ -77,6 +81,8 @@ export default {
         this.processRequirements = res.data.processRequirements
         this.designProcess = res.data.designProcess
         this.changedProcess = res.data.designProcess
+        this.changedIsAcceptJointBid = res.data.isAcceptJointBid
+        this.changedIsJointState = res.data.isJointState
         this.processRequirementsName = []
         res.data.processRequirements.forEach((el, index) => {
           this.processRequirementsName.push(el.state)
@@ -127,6 +133,42 @@ export default {
           this.$message({
             type: 'success',
             message: `阶段已经改变`
+          })
+          this.initData()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `修改失败`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    changeIsAcceptJointBid () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'isAcceptJointBid': this.changedIsAcceptJointBid }}).then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: `操作成功`
+          })
+          this.initData()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `修改失败`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    changeIsJointState () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: {'isJointState': this.changedIsJointState}}).then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: `操作成功`
           })
           this.initData()
         } else {

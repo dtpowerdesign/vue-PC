@@ -47,6 +47,7 @@
         <p class="font1" style="text-align:left" v-html="info"></p>
       </el-col>
     </el-row>
+    <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
     <el-button type="primary" @click="dialogVisible=true" v-if="sourceAccount===$cookie.get('user')">查看投标信息</el-button>
     <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="30%">
       <el-tabs type="card">
@@ -68,8 +69,9 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="联合体投标">
-          <span>联合体投标人账号:<el-radio v-model="radio" :label="bid.jointReleaseAccount">{{bid.jointReleaseAccount}}</el-radio></span>
+        <el-tab-pane label="联合体投标" v-if="bid.isAcceptJointBid==='true'">
+          <span>联合体投标人账号:<el-radio v-model="radio" :label="bid.finalBid">{{bid.jointReleaseAccount}}</el-radio></span><br>
+          <span>联合投标者邀请的人:<br>{{(bid.invitatedBidAccounts.join(','))}}</span>
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
@@ -170,7 +172,9 @@ export default {
               var obj = {
                 personalBidAccounts: el.personalBidAccounts,
                 companyBidAccounts: el.companyBidAccounts,
+                isAcceptJointBid: el.isAcceptJointBid,
                 jointReleaseAccount: el.jointReleaseAccount,
+                invitatedBidAccounts: el.invitatedBidAccounts,
                 number: el.code,
                 company: el.tenderCompany,
                 name: el.name,
@@ -212,6 +216,9 @@ export default {
       this.bid.personalBidAccounts = row.personalBidAccounts
       this.bid.companyBidAccounts = row.companyBidAccounts
       this.bid.jointReleaseAccount = row.jointReleaseAccount
+      this.bid.invitatedBidAccounts = row.invitatedBidAccounts
+      this.bid.isAcceptJointBid = row.isAcceptJointBid
+      this.bid.finalBid = this.bid.invitatedBidAccounts.concat(this.bid.jointReleaseAccount)
       this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`

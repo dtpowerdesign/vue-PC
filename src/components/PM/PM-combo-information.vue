@@ -43,10 +43,12 @@
         </el-row>
       </el-col>
       <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">我邀请的人</span><br>
+        <span style="font-size:0.8rem;float:left;clear:left;">待确定的人</span><br>
         <p class="font1" style="text-align:left;color:#409EFF"><span>{{info.join(',')}}</span><i class="icon iconfont icon-jiahaoyou" @click="dialogVisible=true"></i></p>
         <span style="font-size:0.8rem;float:left;clear:left;">现有成员(即已经同意邀请的人)</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoed.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoSuccess.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>
+        <span style="font-size:0.8rem;float:left;clear:left;">拒绝邀请的人</span><br>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoFail.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>        
       </el-col>
     </el-row>
     <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="30%">
@@ -128,8 +130,9 @@ export default {
       voltage: '',
       domain: '',
       info: [],
-      infoed: [],
-      infos: ['18730273658', '111', '222']
+      infoSuccess: [],
+      infoFail: [],
+      infos: ['18730273658', '111', '222', '1802528291@qq.com']
     }
   },
   created () {
@@ -142,6 +145,7 @@ export default {
               var obj = {
                 invitatingAccounts: el.invitatingAccounts,
                 invitatedBidAccounts: el.invitatedBidAccounts,
+                invitaFaildAccounts: el.invitaFaildAccounts,
                 number: el.code,
                 initiator: el.sourceAccount,
                 project: el.name,
@@ -182,8 +186,8 @@ export default {
       this.domain = row.major
       this.bidType = row.bidType
       this.info = row.invitatingAccounts || []
-      this.infoed = row.invitatedBidAccounts || []
-      console.log(this.infoed)
+      this.infoSuccess = row.invitatedBidAccounts || []
+      this.infoFail = row.invitaFaildAccounts || []
       this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.loadingDetail = false

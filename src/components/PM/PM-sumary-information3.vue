@@ -49,6 +49,7 @@
     </el-row>
     <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem">
       <el-col :span="24" style="color:#409EFF;font-size:1.5rem">中标者:{{toAccounts.join(',')}}</el-col>
+      <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
       <el-button type="danger" @click="bad()">我拒绝，重新投标</el-button>
       <el-button type="success" @click="good()">聊得不错,投标洽谈</el-button>
     </el-row>
@@ -226,7 +227,7 @@ export default {
         cancelButtonText: '我再考虑考虑',
         type: 'warning'
       }).then(() => {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': []}})
+        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {

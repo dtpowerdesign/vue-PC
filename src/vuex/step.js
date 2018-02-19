@@ -39,7 +39,7 @@ const state = {
   projectCharacteristics: { difficulty: '', price: '' },
   unit: ['km', 'm', 'cm', 'dm', '其他'],
   existingData: { detail: '' },
-  states: ['发布中', '投标中'],
+  states: ['临时态', '发布中', '投标中'],
   major: ['计算机', '电力', '岩土', '绘测'],
   designState: ['前期', '项目建议书', '可行性研究报告', '招投标', '初步设计', '施工图设计', '竣工图编制'],
   sizeAndCapacitys: ['MW', 'KW', 'kVA'],

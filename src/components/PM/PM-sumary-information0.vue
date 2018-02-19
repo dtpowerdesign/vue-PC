@@ -18,7 +18,7 @@
     </el-row>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
-       <span class="font1">设计院</span><br>
+       <span class="font1">项目个体性质</span><br>
        <i class="icon iconfont icon-loufang"></i><span class="font2">{{bidType}}</span>
       </el-col>
       <el-col :span="8">
@@ -31,7 +31,7 @@
       </el-col>
     </el-row>
     <el-row style="margin-top:3rem">
-      <el-col :span="14" :offset="2">
+      <el-col :span="12" :offset="2">
         <span style="font-size:0.8rem;float:left;clear:left;">其他信息</span><br>
         <el-row>
           <el-col :span="12" ><span class="font1" style="float:left;clear:left;">类别:{{classes}}</span></el-col>
@@ -42,20 +42,20 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{domain}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">被邀请的人</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{info.join(',')}} </span></p>
+      <el-col :span="6" :offset="2">
+        <span style="font-size:0.8rem;float:left;clear:left;">发布人信息</span><br>
+        <p class="font1" style="text-align:left" v-html="info"></p>
       </el-col>
     </el-row>
-    <el-button type="danger" style="margin-top:5rem" @click="refuse()">残忍拒绝</el-button>
-    <el-button type="success" style="margin-top:5rem" @click="accept()">果断加入</el-button>
-  </div>  
+    <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
+    <el-button type="primary" @click="confirm()" v-if="sourceAccount===$cookie.get('user')">确定无误，我要发布</el-button>
+  </div>
   <div v-else v-loading="loadingTable">
    
   <div style="display:flex; align-items:center; justify-content: space-between">
-        <span style="font-size:1.5rem;color:#4d83e7">|收到请求</span>
+        <span style="font-size:1.5rem;color:#4d83e7">|发布中</span>
           <div>
-            <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
+            <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload">导出excel</el-button>
             <el-button  type="success">打印</el-button>
           </div>
       </div>
@@ -63,15 +63,23 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="number" label="序号" sortable>
         </el-table-column>
-        <el-table-column prop="initiator"  label="发起人">
+        <el-table-column prop="helpAccount"  label="谁帮我填的">
         </el-table-column>
-        <el-table-column  prop="project" label="投标项目" >
+        <el-table-column prop="company"  label="招标公司">
         </el-table-column>
-        <el-table-column  prop="type" label="项目类型">
+        <el-table-column  prop="name" label="项目名称" >
         </el-table-column>
-        <el-table-column  prop="domain" label="专业类别">
+        <el-table-column  prop="address" label="地点">
         </el-table-column>
-        <el-table-column  prop="time" label="请求时间">
+        <el-table-column  prop="class" label="类别">
+        </el-table-column>
+        <el-table-column  prop="type" label="类型">
+        </el-table-column>
+        <el-table-column  prop="voltage" label="电压等级" sortable>
+        </el-table-column>
+        <el-table-column  prop="amount" label="预计金额" sortable>
+        </el-table-column>
+        <el-table-column  prop="date" label="发布日期" sortable>
         </el-table-column>
         <el-table-column   label="操作">
           <template slot-scope="adasd">
@@ -87,7 +95,7 @@
       :page-size="5"
       layout="total, sizes, prev, pager, next, jumper"
       :total="tableData.length">
-      </el-pagination>
+    </el-pagination>
   </div>
   </div>
 </template>
@@ -96,6 +104,7 @@
 export default {
   data () {
     return {
+      sourceAccount: '',
       loadingDetail: true,
       loadingTable: true,
       currentPage: 1,
@@ -103,8 +112,8 @@ export default {
       downloadLoading: false,
       tableData: [],
       multipleSelection: [],
-      code: '',
       show: false,
+      code: '',
       name: '',
       company: '',
       place: '',
@@ -116,33 +125,34 @@ export default {
       classes: '',
       voltage: '',
       domain: '',
-      info: ['1', '2']
+      info: ''
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
-     {'conditions': {'invitatingAccounts': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
+  },
+  methods: {
+    initData () {
+      var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['临时态']}, 'sourceAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions ', formData)
         .then((res) => {
+          console.log(res.data)
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {
-                invitatingAccounts: el.invitatingAccounts,
-                invitatedBidAccounts: el.invitatedBidAccounts,
-                invitaFaildAccounts: el.invitaFaildAccounts,
+                helpAccount: el.helpAccount,
                 number: el.code,
-                initiator: el.sourceAccount,
-                project: el.name,
-                type: el.type.concat().join(','),
-                domain: el.major.concat().join(','),
+                company: el.tenderCompany,
+                name: el.name,
                 address: el.address,
                 class: el.category.concat().join(','),
-                time: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
+                type: el.type.concat().join(','),
+                voltage: el.voltagelevel,
+                amount: el.lowestPrice + '-' + el.highestPrice,
+                date: [].concat((el.startTime.year + 1900), (el.startTime.month + 1), el.startTime.date).join('/'),
                 state: el.state,
                 category: el.category.concat().join(','),
                 major: el.major.concat().join(','),
-                voltage: el.voltagelevel,
-                amount: el.lowestPrice + '-' + el.highestPrice,
-                company: el.tenderCompany,
+                sourceAccount: el.sourceAccount,
                 bidType: el.bidType
               }
               this.tableData.push(obj)
@@ -152,12 +162,11 @@ export default {
         }).catch((err) => {
           console.log(err)
         })
-  },
-  methods: {
+    },
     detail (row) {
       this.show = true
+      this.name = row.name
       this.code = row.number
-      this.name = row.project
       this.company = row.company
       this.place = row.address
       this.date = row.date
@@ -168,14 +177,30 @@ export default {
       this.voltage = row.voltage
       this.domain = row.major
       this.bidType = row.bidType
-      this.info = row.invitatingAccounts || []
-      this.infoSuccess = row.invitatedBidAccounts || []
-      this.infoFail = row.invitaFaildAccounts || []
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
+      this.sourceAccount = row.sourceAccount
+      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
+        this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
-      console.log(this.info)
+    },
+    confirm () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, data: { 'state': '发布中' }}).then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: `已经进行发布`
+          })
+          this.$router.go(0)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `发布失败`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -189,8 +214,8 @@ export default {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
-          const tHeader = ['序号', '发起人', '投标项目', '项目类型', '专业类别', '请求时间']
-          const filterVal = ['number', 'initiator', 'project', 'type', 'domain', 'time']
+          const tHeader = ['谁帮我填的', '序号', '招标公司', '项目名称', '地点', '类别', '类型', '电压等级', '预计金额', '发布日期']
+          const filterVal = ['helpAccount', 'number', 'company', 'name', 'address', 'class', 'type', 'voltage', 'amount', 'date']
           const list = xxx
           const data = this.formatJson(filterVal, list)
           export_json_to_excel(tHeader, data, '项目信息excel')
@@ -209,51 +234,6 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
-    },
-    accept () {
-      var temp = this.info
-      temp.splice(this.info.indexOf(this.$cookie.get('user')), 1)
-      var otherSuccess = this.infoSuccess.concat(this.$cookie.get('user'))
-      console.log(this.infoSuccess)
-      console.log(otherSuccess)
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': temp, 'invitatedBidAccounts': otherSuccess}})
-      .then((res) => {
-        if (res.data.result) {
-          this.$message({
-            type: 'success',
-            message: `成功接受邀请`
-          })
-        } else {
-          this.$message({
-            type: 'warning',
-            message: `同意邀请失败，原因:${res.data.reason}`
-          })
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    refuse () {
-      var temp = this.info
-      temp.splice(this.info.indexOf(this.$cookie.get('user')), 1)
-      var otherFail = this.infoFail.concat(this.$cookie.get('user'))
-      console.log(otherFail)
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': temp, 'invitaFaildAccounts': otherFail}})
-      .then((res) => {
-        if (res.data.result) {
-          this.$message({
-            type: 'success',
-            message: `成功拒绝邀请`
-          })
-        } else {
-          this.$message({
-            type: 'warning',
-            message: `拒绝失败，原因:${res.data.reason}`
-          })
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
     }
   }
 }

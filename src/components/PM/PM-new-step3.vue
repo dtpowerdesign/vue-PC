@@ -71,6 +71,16 @@
         </el-col>
       </div>
     </div>
+    <div><el-button type="primary" @click="dialogVisible = true">我是替别人填写的</el-button><el-button type="success" @click="confirm">我自己发布的</el-button></div>
+    <el-dialog title="选择被帮助者" :visible.sync="dialogVisible" width="30%">
+      <el-select v-model="helped" multiple filterable :multiple-limit="limit" allow-create default-first-option placeholder="请选择">
+        <el-option v-for="(i, j) in helpeds" :key="j" :label="i" :value="i"></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="helpConfirm()">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="skip">
       <div style="margin-left:2rem" @click="$router.push('/per/PM-new/2')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
       <div style="margin-right:2rem" @click="confirm()"><span>完成</span><i class="icon iconfont icon-you"></i></div>
@@ -87,7 +97,12 @@ export default {
     ...mapState(['step', 'form'])
   },
   data () {
-    return {}
+    return {
+      dialogVisible: false,
+      limit: 1,
+      helpeds: ['18730273658', '1802528291@qq.com'],
+      helped: []
+    }
   },
   methods: {
     confirm () {
@@ -103,6 +118,55 @@ export default {
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': this.form.state,
+        'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
+        'bidType': this.form.character,
+        'type': this.form.type,
+        'category': this.form.categorys,
+        'voltagelevel': this.form.voltagelevel,
+        'major': this.form.major,
+        'address': this.form.place,
+        'performanceRequirements': this.form.performanceReq,
+        'designProcess': this.form.designState,
+        'lowestPrice': this.form.lowPrice,
+        'highestPrice': this.form.highPrice,
+        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'startTime': this.$formDate.formatDate(this.form.startTime),
+        'endTime': this.$formDate.formatDate(this.form.endTime),
+        'payMethod': this.form.paymentMethods,
+        'isAcceptJointBid': this.form.isAcceptJointBid,
+        'processRequirements': stateUnits}
+      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
+        console.log(data)
+        console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            message: '发布成功',
+            type: 'success'
+          })
+          this.$parent.$parent.$parent.$parent.initData()
+        } else {
+          this.$message({
+            message: `发布失败,原因${res.data.reason}`,
+            type: 'warning'
+          })
+        }
+      }).catch((err) => { console.log(err) })
+    },
+    helpConfirm () {
+      var stateUnits = []
+      this.form.stateUnits.forEach((el, index) => {
+        stateUnits.push({
+          'state': el.state,
+          'endTime': this.$formDate.formatDate(el.endTime),
+          'requireResult': el.requireResult
+        })
+      })
+      var data = {'sourceAccount': this.helped[0],
+        'helpedAccount': this.helped[0],
+        'helpAccount': this.$cookie.get('user'),
+        'tenderCompany': this.form.company,
+        'name': this.form.name,
+        'state': '临时态',
         'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
         'bidType': this.form.character,
         'type': this.form.type,
