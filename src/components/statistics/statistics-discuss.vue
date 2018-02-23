@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     initData () {
-      var dataForm = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}, 'toAccounts': {'searchMethod': 'values', 'values': [this.cookie.get('user')]}}}
+      var dataForm = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
       this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', dataForm).then((res) => {
         this.projectList = []
         res.data.forEach((el, index) => {

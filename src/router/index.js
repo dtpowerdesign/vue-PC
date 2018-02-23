@@ -67,7 +67,7 @@ export default new Router({
     children: [
       { path: 'company-comAchi', component: comAchi },
       { path: 'company-register', component: Cregister },
-      { path: 'CM-new', component: Cnew },
+      { path: 'CM-new', component: Cnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }] },
       { path: 'CM-sumary', component: Csumary }, // eslint-disable-next-line
       { path: 'CM-combo', component: Ccombo }, // eslint-disable-next-line
       { path: 'Cstatistics-time', component: Ctime },

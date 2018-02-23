@@ -135,11 +135,11 @@ export default {
       var regword = /\.(docx)$/
       var regtxt = /\.(txt)$/
       var regpdf = /\.(pdf)$/
-      if (regexcel.test(data)) { return '../../../static/excel.jpg' }
-      if (regword.test(data)) { return '../../../static/word.jpg' }
-      if (regtxt.test(data)) { return '../../../static/txt.jpg' }
-      if (regpdf.test(data)) { return '../../../static/pdf.jpg' }
-      return '../../../static/other.png'
+      if (regexcel.test(data)) { return './static/excel.jpg' }
+      if (regword.test(data)) { return './static/word.jpg' }
+      if (regtxt.test(data)) { return './static/txt.jpg' }
+      if (regpdf.test(data)) { return './static/pdf.jpg' }
+      return './static/other.png'
     },
     download (path) {
       alert(1)
