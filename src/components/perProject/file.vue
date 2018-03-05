@@ -16,7 +16,7 @@
     <div style="display:flex;justify-content:center;align-items:center;margin-top:3rem">
     <span>添加文件的备注</span>
     <el-input placeholder="添加文件的备注" v-model="note" style="width:30%" type="textarea" autosize=""></el-input>
-    <el-upload action="http://39.106.34.156:8080/electric-design/uploadExistProjectData" name="project" :show-file-list="showFileList"
+    <el-upload :action='$domain.domain1 + "electric-design/uploadExistProjectData"' name="project" :show-file-list="showFileList"
     :on-success="uploadSuccess"
     :on-error="uploadError"
     :on-preview="uploadPrev"
@@ -142,11 +142,10 @@ export default {
       return './static/other.png'
     },
     download (path) {
-      alert(1)
       window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
     },
     preview (path) {
-      window.open('http://39.106.34.156:8080' + path)
+      window.open(this.$domain.domain1.substring(0) + path)
     },
     record (code) {
       this.dialogVisible = true

@@ -54,25 +54,25 @@
             <el-radio v-model="radio" label="2">独立上传</el-radio>
           <div class="div1-style" v-if="radio==='1'">
             <span>三证合一</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'szhy', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>          
           <div class="div1-style" v-if="radio==='2'">
             <span>营业执照</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'yyzz', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style" v-if="radio==='2'">
             <span>税务登记证</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'identification', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'swdjz', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style" v-if="radio==='2'">
             <span>资质证书</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'work', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'zzzs', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -93,7 +93,7 @@ export default {
   data () {
     return {
       radio: '2',
-      complete: 100,
+      complete: 10,
       status: 'success',
       Ages: [],
       companyType: ['设计院', '施工企业', '开发商', '运营商'],
@@ -140,6 +140,10 @@ export default {
       this.ruleForm.website = res.data.website
       this.ruleForm.companyType = res.data.companyType
       this.ruleForm.instruction = res.data.instruction
+      this.complete = 10
+      for (var i in res.data.dataOfDeepth) {
+        if (res.data.dataOfDeepth[i] === 'yes') { this.complete += 30 }
+      }
     }).catch((err) => {
       console.log(err)
     })
@@ -211,7 +215,7 @@ export default {
     },
     success (response, file, fileList) {
       console.log(response)
-      this.complete = response.data
+      this.complete += 30
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)

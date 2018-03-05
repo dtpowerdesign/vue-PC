@@ -73,6 +73,15 @@ export default {
   padding: 1.1rem 1.5rem;
 }
 
+//穿梭框的选择框位置(头)
+.el-transfer-panel .el-transfer-panel__header .el-checkbox{
+  margin-left: -20%;
+}
+//穿梭框的选择框位置(身)
+.el-transfer-panel__item .el-checkbox__input{
+   left: 10%;
+}
+
 .PM-new-step2{
 .el-date-editor.el-input, .el-date-editor.el-input__inner{
   width:100%;

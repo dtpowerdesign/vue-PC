@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Chat from '@/components/chat'
+import changeTable from '@/components/changeTable'
 import Index from '@/components/index'
 import comIndex from '@/components/comindex'
 import perProject from '@/components/perProject'
@@ -109,6 +111,12 @@ export default new Router({
   }, {
     path: '/protocol',
     component: protocol
+  }, {
+    path: '/chat',
+    component: Chat
+  }, {
+    path: '/changeTable',
+    component: changeTable
   }, {
     path: '/1',
     redirect: '/404',

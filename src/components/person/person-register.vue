@@ -73,19 +73,19 @@
           <p style="text-align:left;font-size:1rem;margin-top:3rem;">您目前的账号完整度较低，建议通过以下方式完善你的信息，可有效提高投标成功率</p>
           <div class="div1-style">
             <span>上传学位证明等教育背景信息</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传有效身份证件，提高账号安全度</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'identification', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'idNumber', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
           <div class="div1-style">
             <span>上传职称或工作证明等工作信息</span>
-            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'work', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'work', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -134,6 +134,7 @@ export default {
   },
   created () {
     this.$http.post(this.$domain.domain1 + 'electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
+      console.log(res.data)
       this.ruleForm.name = res.data.name
       this.ruleForm.sex = res.data.sex
       this.ruleForm.age = res.data.age
@@ -148,6 +149,10 @@ export default {
       this.ruleForm.city = res.data.birthAddress.city
       this.ruleForm.area = res.data.birthAddress.area
       this.ruleForm.instruction = res.data.instruction
+      this.complete = 10
+      for (var i in res.data.dataOfDeepth) {
+        if (res.data.dataOfDeepth[i] === 'yes') { this.complete += 30 }
+      }
     }).catch((err) => {
       console.log(err)
     })
@@ -251,7 +256,8 @@ export default {
     },
     success (response, file, fileList) {
       console.log(response)
-      this.complete = response.data
+      this.complete += 30
+      // this.complete = response.data
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)

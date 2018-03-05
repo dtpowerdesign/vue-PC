@@ -67,11 +67,12 @@ const mutations = {
   },
   init2(state) {
     state.step = 2
-    axios.post(domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
+    axios.post(domain.domain1 + 'electric-design/getDataOfClassKey').then((res) => {
+      console.log(res.data)
       state.categorys = res.data.categorys
       state.type = res.data.types
       state.designState = res.data.designProcess
-      state.sizeAndCapacitys = res.data.sizeAndCapacitys
+      state.unit = res.data.sizeAndCapacitys
       state.major = res.data.majors
     }).catch((err) => {
       console.log(err)

@@ -277,6 +277,21 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey').then((res) => {
+        console.log(res.data)
+        this.categorys = res.data.categorys
+        this.type = res.data.types
+        this.designState = res.data.designProcess
+        this.unit = res.data.sizeAndCapacitys
+        this.major = res.data.majors
+      }).catch((err) => {
+        console.log(err)
+        this.$message({
+          showClose: true,
+          message: '网络连接错误',
+          type: 'error'
+        })
+      })
     },
     confirm () {
       var stateUnits = []
@@ -300,6 +315,7 @@ export default {
         'address': this.form.place,
         'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
         'designProcess': this.form.designState,
+        'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
         'qualificationRequirements': [{'资质要求': this.form.aptitude}],
