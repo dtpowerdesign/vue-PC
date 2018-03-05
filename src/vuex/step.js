@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import domain from '@/domain'
 Vue.use(Vuex)
 const state = {
   stepName: ['身份选择', '填写项目信息', '最终确认'],
@@ -66,7 +67,7 @@ const mutations = {
   },
   init2(state) {
     state.step = 2
-    axios.post('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
+    axios.post(domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
       state.categorys = res.data.categorys
       state.type = res.data.types
       state.designState = res.data.designProcess

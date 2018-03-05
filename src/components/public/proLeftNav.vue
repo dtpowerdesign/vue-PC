@@ -53,7 +53,7 @@ export default {
   methods: {
     initData () {
       this.$store.state.id = this.Id
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.Id}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.Id}).then((res) => {
         this.name = res.data.name
       }).catch((err) => {
         console.log(err)

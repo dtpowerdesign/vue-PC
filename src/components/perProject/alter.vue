@@ -248,14 +248,14 @@ export default {
     //       'requireResult': el.requireResult
     //     })
     //   })
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})
       .then((res) => {
         console.log(res.data)
         this.form.company = res.data.tenderCompany
         this.form.name = res.data.name
         this.form.categorys = res.data.category
-        this.form.sizeAndCapacitys = res.data.sizeAndCapacity.split('/')[0]
-        this.form.unit = res.data.sizeAndCapacity.split('/')[1]
+        this.form.sizeAndCapacitys = res.data.sizeCapacityNumber
+        this.form.unit = res.data.sizeAndCapacity
         this.form.character = res.data.bidType
         this.form.type = res.data.type
         this.form.voltagelevel1 = res.data.voltagelevel.split('/')[0]
@@ -309,7 +309,7 @@ export default {
         'isAcceptJointBid': this.form.isAcceptJointBid,
         'isJointState': 'true',
         'processRequirements': stateUnits}
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, 'data': data}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, 'data': data}).then((res) => {
         if (res.data.result) {
           this.$message({
             message: '修改成功',

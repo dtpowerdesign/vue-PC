@@ -127,14 +127,14 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+    this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
       this.jsonAll = res.data
       for (var i in res.data) {
         if (res.data[i].show) {
           this.json[i] = res.data[i]
         }
       }
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
      {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {
           if (res.data !== 0) {
@@ -181,7 +181,7 @@ export default {
       this.info = row.invitatingAccounts.split(',') || []
       this.infoSuccess = row.invitatedBidAccounts.split(',') || []
       this.infoFail = row.invitaFaildAccounts.split(',') || []
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
@@ -230,7 +230,7 @@ export default {
     confirm () {
       this.dialogVisible = false
       console.log(this.info)
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': this.info}})
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': this.info}})
       .then((res) => {
         if (res.data.result) {
           this.$message({

@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      this.$http.post(this.$domain.domain1 + 'electric-design/getHomepagedata')
       .then((res) => {
         this.msg = res.data.platformName
       }).catch((err) => {
@@ -95,7 +95,7 @@ export default {
     login () {
       this.$refs.login.validate((valid) => {
         if (valid) {
-          this.$http.post('http://39.106.34.156:8080/electric-design/AllUserLogin', {
+          this.$http.post(this.$domain.domain1 + 'electric-design/AllUserLogin', {
             'account': this.Form.user,
             'password': this.Form.pass
           }).then((res) => {

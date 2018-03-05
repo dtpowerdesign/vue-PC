@@ -42,7 +42,7 @@ export default {
   methods: {
     initData () {
       this.$parent.loadingClassify = true
-      this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
+      this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
         this.classes = res.data.categorys
         this.type = res.data.types
         this.stage = res.data.designProcess
@@ -126,7 +126,7 @@ export default {
     tags () {
       this.$parent.loadingContent = true
       var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions ', formData)
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions ', formData)
       .then(res => {
         console.log(res.data)
         this.$store.commit('init')

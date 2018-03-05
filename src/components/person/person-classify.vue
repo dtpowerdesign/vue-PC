@@ -37,7 +37,7 @@ export default {
   },
   computed: mapState(['table', 'json']),
   created () {
-    this.$http.get('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
+    this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
       this.classes = res.data.categorys
       this.type = res.data.types
       this.stage = res.data.designProcess
@@ -120,7 +120,7 @@ export default {
   },
   watch: {
     tags () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         for (var i in res.data) {
           if (res.data[i].show) {
@@ -128,7 +128,7 @@ export default {
           }
         }
         var formData = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-        this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
           this.$store.state.table = []
           if (res.data !== 0) {

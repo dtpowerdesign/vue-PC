@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      this.$http.post(this.$domain.domain1 + 'electric-design/getHomepagedata')
       .then((res) => {
         this.msg = res.data.platformName
       }).catch((err) => {
@@ -133,7 +133,7 @@ export default {
       })
     },
     check () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
         console.log(res.data)
         if (res.data.result) {
           this.$message({
@@ -160,7 +160,7 @@ export default {
       } else {
         this.$refs.perregister.validate((valid) => {
           if (valid) {
-            this.$http.post('http://39.106.34.156:8080/electric-design/PRegister', {
+            this.$http.post(this.$domain.domain1 + 'electric-design/PRegister', {
               'account': this.Form.user,
               'password': this.Form.pass,
               'name': this.Form.name,

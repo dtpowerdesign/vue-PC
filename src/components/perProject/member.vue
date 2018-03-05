@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectMember', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectMember', {
         'belongToProjectCode': this.id
       })
     .then((res) => {
@@ -67,10 +67,10 @@ export default {
     }).catch((err) => {
       console.log(err)
     })
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})
       .then((res) => {
         this.sourceAccount = res.data.sourceAccount
-        this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValues1', {
+        this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValues1', {
           'key': 'account',
           'values': res.data.toAccounts
         }).then((res) => {
@@ -106,7 +106,7 @@ export default {
       formData.belongToProjectCode = this.id
       formData[row.key] = row.value
       console.log(formData)
-      this.$http.post('http://39.106.34.156:8080/electric-design/addProjectMember', formData)
+      this.$http.post(this.$domain.domain1 + 'electric-design/addProjectMember', formData)
       .then((res) => {
         if (res.data.result) {
           this.$message({

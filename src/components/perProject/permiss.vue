@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getPermessionsByMultiConditions', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getPermessionsByMultiConditions', {
         'conditions': {
           'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]}
         }
@@ -72,7 +72,7 @@ export default {
       })
     },
     myConfirm (row) {
-      this.$http.post('http://39.106.34.156:8080/electric-design/addPermession ', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/addPermession ', {
         'belongToUserId': row.belongToUserId,
         'belongtoUserName': row.belongtoUserName,
         'belongToProjectCode': this.id,
@@ -99,7 +99,7 @@ export default {
       })
     },
     myUpdate (row) {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updatePermessionByCode ', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updatePermessionByCode ', {
         'belongToUserId': row.belongToUserId,
         'belongToProjectCode': this.id,
         'data': {
@@ -128,7 +128,7 @@ export default {
       })
     },
     myDelete (row) {
-      this.$http.post('http://39.106.34.156:8080/electric-design/delPermessionByCode', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/delPermessionByCode', {
         'belongToUserId': row.belongToUserId,
         'belongToProjectCode': this.id
       }).then((res) => {

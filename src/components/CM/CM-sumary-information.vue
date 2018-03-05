@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         for (var i in res.data) {
           if (res.data[i].show) {
@@ -122,7 +122,7 @@ export default {
           }
         }
         var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['发布中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -165,14 +165,14 @@ export default {
       this.major = row.major
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
     },
     confirm () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, data: { 'state': '投标中' }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, data: { 'state': '投标中' }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',

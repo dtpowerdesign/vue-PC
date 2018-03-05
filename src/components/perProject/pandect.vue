@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id}).then((res) => {
         this.name = res.data.name
         this.sourceAccount = res.data.sourceAccount
         this.changedName = res.data.name
@@ -107,7 +107,7 @@ export default {
       })
     },
     changeName () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'name': this.changedName }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'name': this.changedName }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
@@ -125,7 +125,7 @@ export default {
       })
     },
     changeState () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'state': this.changedState }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'state': this.changedState }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
@@ -143,7 +143,7 @@ export default {
       })
     },
     changeProcess () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'designProcess': this.changedProcess }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'designProcess': this.changedProcess }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
@@ -161,7 +161,7 @@ export default {
       })
     },
     changeIsAcceptJointBid () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'isAcceptJointBid': this.changedIsAcceptJointBid }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'isAcceptJointBid': this.changedIsAcceptJointBid }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
@@ -179,7 +179,7 @@ export default {
       })
     },
     changeIsJointState () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, data: {'isJointState': this.changedIsJointState}}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: {'isJointState': this.changedIsJointState}}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',

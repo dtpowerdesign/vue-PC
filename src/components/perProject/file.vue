@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})
     .then((res) => {
       this.sourceAccount = res.data.sourceAccount
       this.designProcessName = []
@@ -89,7 +89,7 @@ export default {
         this.processRequirementsName.push(el.state)
       })
       this.processRequirementsName.forEach((el, index) => {
-        this.$http.post('http://39.106.34.156:8080/electric-design/getEventsByMultiConditions', {
+        this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
           'conditions': {
             'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
             'belongToProcess': {'searchMethod': 'values', 'values': [el]}
@@ -143,14 +143,14 @@ export default {
     },
     download (path) {
       alert(1)
-      window.open('http://39.106.34.156:8080/electric-design/dowloads?fileUrl=' + path)
+      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
     },
     preview (path) {
       window.open('http://39.106.34.156:8080' + path)
     },
     record (code) {
       this.dialogVisible = true
-      this.$http.post('http://39.106.34.156:8080/electric-design/getHistoryProjectFiles', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getHistoryProjectFiles', {
         'projectCode': this.id,
         'fileName': code
       }).then((res) => {

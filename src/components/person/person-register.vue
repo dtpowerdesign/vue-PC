@@ -133,7 +133,7 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
+    this.$http.post(this.$domain.domain1 + 'electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
       this.ruleForm.name = res.data.name
       this.ruleForm.sex = res.data.sex
       this.ruleForm.age = res.data.age
@@ -157,7 +157,7 @@ export default {
     for (let i = 18; i < 80; i++) {
       this.Ages.push({value: i, label: i})
     }
-    this.$http.get('http://39.106.34.156:8080/electric-design/getAreasOfChina').then(res => {
+    this.$http.get(this.$domain.domain1 + 'electric-design/getAreasOfChina').then(res => {
       this.provs = res.data
     }).catch(err => {
       console.log(err)
@@ -187,7 +187,7 @@ export default {
       }
     },
     submit () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
+      this.$http.post(this.$domain.domain1 + 'electric-design/changePuserByAccount',
         {
           'account': this.cookie.get('user'),
           'data': {
@@ -225,7 +225,7 @@ export default {
       })
     },
     submitInstruction () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
+      this.$http.post(this.$domain.domain1 + 'electric-design/changePuserByAccount',
         {
           'account': this.cookie.get('user'),
           'data': {

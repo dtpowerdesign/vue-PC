@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getEventsByMultiConditions', {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
         'conditions': {
           'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
           'eventType': {'searchMethod': 'values', 'values': ['provide']}

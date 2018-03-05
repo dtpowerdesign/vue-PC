@@ -35,7 +35,7 @@ export default {
         'projectCharacteristics': [{'price': this.projectCharacteristics.price}, {'difficult': this.projectCharacteristics.difficulty}],
         'startTime': this.formatDate(this.form.startTime),
         'endTime': this.formatDate(this.form.endTime)}
-      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         console.log(res.data)
         if (res.data.result) {
           this.$message({

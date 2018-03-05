@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         for (var i in res.data) {
           if (res.data[i].show) {
@@ -174,7 +174,7 @@ export default {
           }
         }
         var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['合同终止']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -225,7 +225,7 @@ export default {
         this.processRequirementsName.push(el.state)
       })
       this.ppp = this.toAccounts.concat(this.sourceAccount)
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
         this.loadingDetail = false
@@ -278,7 +278,7 @@ export default {
         cancelButtonText: '我再考虑考虑',
         type: 'warning'
       }).then(() => {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {
@@ -306,7 +306,7 @@ export default {
     },
     myCredit () {
       this.dialogVisibleCredit = true
-      this.$http.post('http://39.106.34.156:8080/electric-design/getcreditByMultiConditions', {'conditions': {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getcreditByMultiConditions', {'conditions': {
         'sourceUserId': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]},
         'belongToProjectCode': {'searchMethod': 'values', 'values': [this.code]}
       }}).then((res) => {
@@ -327,7 +327,7 @@ export default {
     },
     confirmCredit (row) {
       if (row.code) {
-        this.$http.post('http://39.106.34.156:8080/electric-design/changeCreditByCode', {'code': row.code,
+        this.$http.post(this.$domain.domain1 + 'electric-design/changeCreditByCode', {'code': row.code,
           'data': {
             'belongToProjectCode': this.code,
             'sourceUserId': this.$cookie.get('user'),
@@ -354,7 +354,7 @@ export default {
           console.log(err)
         })
       } else {
-        this.$http.post('http://39.106.34.156:8080/electric-design/addCredit', {
+        this.$http.post(this.$domain.domain1 + 'electric-design/addCredit', {
           'belongToProjectCode': this.code,
           'sourceUserId': this.$cookie.get('user'),
           'belongToUserId': row.belongToUserId,

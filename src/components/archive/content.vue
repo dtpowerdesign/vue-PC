@@ -60,7 +60,7 @@ export default {
     detail (code, sourceAccount) {
       this.dialogVisible = true
       this.$set(this.details, 'code', code)
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': code})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': code})
       .then((res) => {
         console.log(res.data)
         this.$set(this.details, 'personalBidAccounts', (Array.isArray(res.data.personalBidAccounts) ? res.data.personalBidAccounts : []))
@@ -78,7 +78,7 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': sourceAccount, 'key': 'account'})
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': sourceAccount, 'key': 'account'})
       .then((res) => {
         console.log(res.data[0])
         this.$set(this.details, 'role', res.data[0].role)
@@ -98,7 +98,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'personalBidAccounts': this.details.personalBidAccounts}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'personalBidAccounts': this.details.personalBidAccounts}})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -124,7 +124,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'companyBidAccounts': this.details.companyBidAccounts}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'companyBidAccounts': this.details.companyBidAccounts}})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -150,7 +150,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'jointReleaseAccount': this.$cookie.get('user'), 'isJointState': 'true'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'jointReleaseAccount': this.$cookie.get('user'), 'isJointState': 'true'}})
       .then((res) => {
         if (res.data.result) {
           this.$message({

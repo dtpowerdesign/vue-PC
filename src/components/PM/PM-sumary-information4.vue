@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         for (var i in res.data) {
           if (res.data[i].show) {
@@ -128,7 +128,7 @@ export default {
           }
         }
         var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标洽谈']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', formData)
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -172,7 +172,7 @@ export default {
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
       this.toAccounts = row.toAccounts ? row.toAccounts.split(',') : []
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
         this.loadingDetail = false
@@ -225,7 +225,7 @@ export default {
         cancelButtonText: '我再考虑考虑',
         type: 'warning'
       }).then(() => {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {
@@ -257,7 +257,7 @@ export default {
         cancelButtonText: '手滑了',
         type: 'warning'
       }).then(() => {
-        this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '合同执行中'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '合同执行中'}})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {

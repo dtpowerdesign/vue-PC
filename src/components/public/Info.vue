@@ -55,7 +55,7 @@ export default {
     },
     initData () {
       var dataForm = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser', dataForm).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', dataForm).then((res) => {
         this.projectList = []
         res.data.forEach((el, index) => {
           this.projectList.push({name: el.name, code: el.code})

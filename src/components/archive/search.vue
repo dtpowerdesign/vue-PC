@@ -24,7 +24,7 @@ export default {
     mySearch () {
       this.$parent.loadingContent = true
       var formData = {'value': this.search}
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchProjectsByValue', formData).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchProjectsByValue', formData).then((res) => {
         this.$store.commit('init')
         res.data.forEach((el, index) => {
           this.$store.commit('add', el)

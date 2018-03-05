@@ -111,14 +111,14 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getDataFormatOfProject').then((res) => {
+    this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
       this.jsonAll = res.data
       for (var i in res.data) {
         if (res.data[i].show) {
           this.json[i] = res.data[i]
         }
       }
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectAboutUser',
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser',
      {'conditions': {'isJointState': {'searchMethod': 'values', 'values': 'true'}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {
           if (res.data !== 0) {
@@ -163,7 +163,7 @@ export default {
       this.bidType = row.bidType
       this.initiator = row.initiator
       this.infoed = row.invitatedBidAccounts || []
-      this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })

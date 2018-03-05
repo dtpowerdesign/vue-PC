@@ -118,7 +118,8 @@ export default {
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': this.form.state,
-        'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
+        'sizeCapacityNumber': this.form.sizeAndCapacitys,
+        'sizeAndCapacity': this.form.unit,
         'bidType': this.form.character,
         'type': this.form.type,
         'category': this.form.categorys,
@@ -136,7 +137,7 @@ export default {
         'isAcceptJointBid': this.form.isAcceptJointBid,
         'isJointState': 'true',
         'processRequirements': stateUnits}
-      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         console.log(data)
         console.log(res.data)
         if (res.data.result) {
@@ -168,7 +169,8 @@ export default {
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': '临时态',
-        'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
+        'sizeCapacityNumber': this.form.sizeAndCapacitys,
+        'sizeAndCapacity': this.form.unit,
         'bidType': this.form.character,
         'type': this.form.type,
         'category': this.form.categorys,
@@ -185,7 +187,7 @@ export default {
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
         'isAcceptJointBid': this.form.isAcceptJointBid,
         'processRequirements': stateUnits}
-      this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         console.log(data)
         console.log(res.data)
         if (res.data.result) {
