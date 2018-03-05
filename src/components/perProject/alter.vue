@@ -1,5 +1,6 @@
 <template>
-  <div class="PM-new-step2">
+  <div class="alter">
+    <div class="title0"><span style="font-size:2rem">修改项目信息</span><i class="icon iconfont icon-iconfontquestion" style="font-size:2rem"></i></div>
     <div class="title"><span>项目基本信息</span></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
@@ -78,11 +79,12 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
         </el-form-item>
+        <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
       </el-form>
     </div>
     <div class="title"><span>项目资质要求</span></div>
     <div class="content">
-      <el-form :model="form" label-width="100px" style="width:100%">
+      <el-form :model="form" label-width="140px" style="width:100%">
         <el-form-item label="投标个体性质">
           <el-col :span="9">
           <el-select v-model="form.character" placeholder="请选择个体性质" style="width:100%">
@@ -127,6 +129,7 @@
            <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
           </el-col>
         </el-form-item>
+        <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
       </el-form>
     </div>
     <div class="title">项目设计成果要求</div>
@@ -158,35 +161,171 @@
              </template>
           </el-table-column>
         </el-table>
-        <el-button type="primary" @click="addStateUnits()">增加设计阶段</el-button>
+        <el-button type="primary" @click="addStateUnits()" style="width:100%">增加设计阶段</el-button>
       </el-form>
     </div>
-    <div class="skip">
-      <div style="margin-left:2rem" @click="$router.push('/per/PM-new')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
-      <div style="margin-right:2rem" @click="$router.push('/per/PM-new/3')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
-    </div>
+    <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
   </div>
 </template>
 
 <script>
-import store from '@/vuex/step.js'
-import {mapState, mapMutations} from 'vuex'
+import store from '@/vuex/perProject'
+import {mapState} from 'vuex'
 export default {
   store,
   computed: {
-    ...mapState(['step', 'form', 'states', 'designState', 'type', 'categorys', 'sizeAndCapacitys', 'voltagelevel', 'voltagetype', 'major', 'unit', 'character', 'performanceReq', 'priceType', 'aptitude', 'paymentMethods', 'paymentScale'])
+    ...mapState(['id'])
   },
   data () {
     return {
       disabled: false,
-      radio: '2'
+      radio: '2',
+      form: {
+        company: '某某公司',
+        name: '项目',
+        state: '',
+        sizeAndCapacitys: '',
+        categorys: [],
+        unit: '',
+        type: [],
+        voltagelevel1: '',
+        voltagelevel2: 100,
+        voltagelevel3: '',
+        place: '',
+        major: [],
+        designState: '',
+        startTime: '',
+        endTime: '',
+        character: '',
+        performanceReq1: '',
+        performanceReq2: '',
+        lowPrice: '暂无',
+        highPrice: '暂无',
+        priceType: '',
+        aptitude: '',
+        paymentMethods: '',
+        paymentScale: '',
+        isAcceptJointBid: 'true',
+        stateUnits: [
+      { state: '未填', endTime: '未填', requireResult: '未填' },
+      { state: '未填', endTime: '未填', requireResult: '未填' },
+      { state: '未填', endTime: '未填', requireResult: '未填' }
+        ]
+      },
+      qualificationRequirements: { CET: '' },
+      projectCharacteristics: { difficulty: '', price: '' },
+      unit: ['MW', 'Kva', 'KV', `M^2`],
+      existingData: { detail: '' },
+      states: [{ 'value': '发布中', 'label': '发布完不立即招标' }, { 'value': '投标中', 'label': '发布完直接招标' }],
+      major: ['计算机', '电力', '岩土', '绘测'],
+      designState: ['前期', '项目建议书', '可行性研究报告', '招投标', '初步设计', '施工图设计', '竣工图编制'],
+      sizeAndCapacitys: ['MW', 'KW', 'kVA'],
+      categorys: ['火电', '水电', '风电', '光伏', '核电', '储能'],
+      type: ['发电厂', '输电', '变电', '供配电', '建筑'],
+      voltagelevel: ['KV', 'V'],
+      voltagetype: ['直流', '交流'],
+      character: ['单位', '公司'],
+      performanceReq: ['同类型同规模', '同类型'],
+      priceType: ['最低', '最高'],
+      aptitude: ['高资质', '低资质'],
+      paymentMethods: ['一次性付款', '分阶段付款'],
+      paymentScale: ['1:1', '2:1', '3:1']
     }
   },
   methods: {
-    ...mapMutations(['init2', 'addStateUnits', 'myDelete'])
+    addStateUnits () {
+      this.form.stateUnits.push({ state: '未填', endTime: '未填', requireResult: '未填' })
+    },
+    myDelete (el) {
+      this.form.stateUnits = this.form.stateUnits.filter(o => o.state !== el.state)
+    },
+    initData () {
+    //   var stateUnits = []
+    //   this.form.stateUnits.forEach((el, index) => {
+    //     stateUnits.push({
+    //       'state': el.state,
+    //       'endTime': this.$formDate.formatDate(el.endTime),
+    //       'requireResult': el.requireResult
+    //     })
+    //   })
+      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id})
+      .then((res) => {
+        console.log(res.data)
+        this.form.company = res.data.tenderCompany
+        this.form.name = res.data.name
+        this.form.categorys = res.data.category
+        this.form.sizeAndCapacitys = res.data.sizeAndCapacity.split('/')[0]
+        this.form.unit = res.data.sizeAndCapacity.split('/')[1]
+        this.form.character = res.data.bidType
+        this.form.type = res.data.type
+        this.form.voltagelevel1 = res.data.voltagelevel.split('/')[0]
+        this.form.voltagelevel2 = res.data.voltagelevel.split('/')[1]
+        this.form.voltagelevel3 = res.data.voltagelevel.split('/')[2]
+        this.form.major = res.data.major
+        this.form.place = res.data.address
+        this.form.performanceReq1 = res.data.performanceRequirements.split('/数量要求:')[0]
+        this.form.performanceReq2 = res.data.performanceRequirements.split('/数量要求:')[1]
+        this.form.designState = res.data.designProcess
+        this.form.lowPrice = res.data.lowestPrice
+        this.form.highPrice = res.data.highPrice
+        this.form.startTime = [].concat((res.data.startTime.year + 1900), (res.data.startTime.month + 1), res.data.startTime.date).join('/')
+        this.form.endTime = [].concat((res.data.endTime.year + 1900), (res.data.endTime.month + 1), res.data.endTime.date).join('/')
+        this.form.paymentMethods = res.data.payMethod.split('/')[0]
+        this.form.paymentScale = res.data.payMethod.split('/')[1]
+        this.form.isAcceptJointBid = res.data.isAcceptJointBid
+        this.form.stateUnits = res.data.processRequirements
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    confirm () {
+      var stateUnits = []
+      this.form.stateUnits.forEach((el, index) => {
+        stateUnits.push({
+          'state': el.state,
+          'endTime': this.$formDate.formatDate(el.endTime),
+          'requireResult': el.requireResult
+        })
+      })
+      var data = {'sourceAccount': this.cookie.get('user'),
+        'tenderCompany': this.form.company,
+        'name': this.form.name,
+        'state': this.form.state,
+        'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
+        'bidType': this.form.character,
+        'type': this.form.type,
+        'category': this.form.categorys,
+        'voltagelevel': this.form.voltagelevel1 + '/' + this.form.voltagelevel2 + '/' + this.form.voltagelevel3,
+        'major': this.form.major,
+        'address': this.form.place,
+        'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
+        'designProcess': this.form.designState,
+        'lowestPrice': this.form.lowPrice,
+        'highestPrice': this.form.highPrice,
+        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'startTime': this.$formDate.formatDate(this.form.startTime),
+        'endTime': this.$formDate.formatDate(this.form.endTime),
+        'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
+        'isAcceptJointBid': this.form.isAcceptJointBid,
+        'isJointState': 'true',
+        'processRequirements': stateUnits}
+      this.$http.post('http://39.106.34.156:8080/electric-design/updateProjectByProjectCode', {'code': this.id, 'data': data}).then((res) => {
+        if (res.data.result) {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: `修改失败,原因${res.data.reason}`,
+            type: 'warning'
+          })
+        }
+      }).catch((err) => { console.log(err) })
+    }
   },
   mounted () {
-    this.init2()
+    this.initData()
   },
   watch: {
     radio () {
@@ -202,6 +341,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.alter{
+      width:90%;
+  margin:1rem auto;
+}
+.title0{
+  border-bottom:1px solid black;
+  text-align:left;
+}
 .skip{
   margin-top:1rem;
   display:flex;
@@ -213,7 +360,7 @@ export default {
 .title{
   display:flex;
   justify-content:flex-start;
-  width:80%;
+  width:100%;
   margin:3rem auto 0 auto;
   font-weight:400;
   font-size:1.5rem;
@@ -221,7 +368,7 @@ export default {
 }
 .content{
   margin:3rem auto 0 auto;
-  width:80%;
+  width:100%;
   display:flex;
 }
 </style>

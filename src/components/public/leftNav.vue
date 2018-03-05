@@ -15,7 +15,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/per/person-perAchi">个人业绩</el-menu-item>
-          <el-menu-item index="/per/person-register">注册信息</el-menu-item>
+          <el-menu-item index="/per/person-register" data-step="2" data-intro="完善个人信息" data-position="right">注册信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
      <el-submenu index="PM">
@@ -24,8 +24,8 @@
           <span class="fontBig">项目管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/per/PM-new">发布新项目</el-menu-item>
-          <el-menu-item index="/per/PM-sumary">项目汇总</el-menu-item>
+          <el-menu-item index="/per/PM-new" data-step="1" data-intro="我要发布新项目" data-position="right">发布新项目</el-menu-item>
+          <el-menu-item index="/per/PM-sumary" data-step="4" data-intro="参与项目浏览" data-position="bottom">项目汇总</el-menu-item>
           <el-menu-item index="/per/PM-combo">联合体</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -37,7 +37,7 @@
         <el-menu-item-group>
           <el-menu-item index="/per/statistics-time">时间统计</el-menu-item>
           <el-menu-item index="/per/statistics-discuss">洽谈统计</el-menu-item>
-          <el-menu-item index="/per/statistics-credit">资信统计</el-menu-item>
+          <el-menu-item index="/per/statistics-credit" >提资统计</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>

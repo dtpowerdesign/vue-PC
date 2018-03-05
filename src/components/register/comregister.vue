@@ -1,7 +1,7 @@
 <template>
   <div class="comregister">
    <div class="top">
-    <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">南瑞美思</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')" style="color:yellow">企业注册</span><span @click="$router.push('/login')">登录</span></div>
+    <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')" style="color:yellow">企业注册</span><span @click="$router.push('/login')">登录</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
@@ -16,7 +16,7 @@
   <el-form-item label="企业名称" prop="company">
     <el-input type="text" v-model="Form.company" auto-complete="off" placeholder="请填写企业名称"></el-input>
   </el-form-item>
-  <el-form-item label="网站" prop="website">
+  <el-form-item label="网站(可选)">
     <el-input type="text" v-model="Form.website" auto-complete="off" placeholder="请填写公司的网站"></el-input>
   </el-form-item>
   <el-form-item label="密码" prop="pass">
@@ -99,17 +99,8 @@ export default {
         callback()
       }
     }
-    var checkWebsite = (rule, value, callback) => {
-      var re = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/
-      if (!value) {
-        return callback(new Error('网站不能为空'))
-      } else if (!re.test(value)) {
-        return callback(new Error('网站格式不正确'))
-      } else {
-        callback()
-      }
-    }
     return {
+      msg: '',
       checked: true,
       Form: {
         user: '',
@@ -140,17 +131,36 @@ export default {
         ],
         check: [
             { validator: checkCheck, trigger: 'blur' }
-        ],
-        website: [
-            { validator: checkWebsite, trigger: 'blur' }
         ]
       }
     }
   },
+  mounted () {
+    this.initData()
+  },
   methods: {
+    initData () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     check () {
       this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
         console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '验证码发送成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `验证码发送失败,原因${res.data.reason}`
+          })
+        }
         this.Form.returnCheck = res.data.checkMsg
       }).catch((err) => {
         console.log(err)

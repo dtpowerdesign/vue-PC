@@ -1,8 +1,10 @@
 <template>
   <div class="company-register">
-   <div class="title"><span style="font-size:2rem;margin-left:1.7rem">个人业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:2rem;margin-left:1.7rem">企业业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="xxx">
    <myClassify v-loading="loadingClassify"></myClassify>
    <myTag></myTag>
+   </div>
    <myTable v-loading="loadingContent"></myTable>
   </div>
 </template>
@@ -34,6 +36,11 @@ export default {
 .icon{
   font-size:2rem;
   margin-left:1rem;
+}
+.xxx{
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
 .company-classify{
    background-color:white;

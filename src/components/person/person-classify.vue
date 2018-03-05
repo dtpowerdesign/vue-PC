@@ -15,7 +15,6 @@
    <div class="div1">
      <span class="font1">涉及专业:</span><template v-for="i in domain"><span class="font2" @click="add5($event)">{{i}}</span></template>
    </div>
-   <div class="clearfix"></div>
   </div>
 </template>
 
@@ -26,6 +25,7 @@ export default {
   store,
   data () {
     return {
+      max: '3',
       classes: [],
       type: [],
       stage: [],
@@ -68,7 +68,7 @@ export default {
         this.tag1.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选3项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -79,7 +79,7 @@ export default {
         this.tag2.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选3项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -90,7 +90,7 @@ export default {
         this.tag3.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选3项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -101,7 +101,7 @@ export default {
         this.tag4.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选3项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -112,7 +112,7 @@ export default {
         this.tag5.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选3项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -135,9 +135,9 @@ export default {
             res.data.forEach((el, index) => {
               var obj = {}
               for (var i in this.jsonAll) {
-                if (Array.isArray(el[i])) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
                   obj[i] = el[i].concat().join(',')
-                } else if (i.match(/(Time)$/) && !i.match(/^(all)/)) {
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
                   el[i].year = el[i].year || 0
                   el[i].month = el[i].month || 0
                   el[i].date = el[i].date || 0
@@ -165,19 +165,22 @@ export default {
 <style scoped>
 .person-classify{
     text-align:left;
-
-  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-
-    border-radius:.3rem .3rem 0 0;
-
+    /* -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    border-radius:.3rem .3rem 0 0; */
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    height:auto;
 }
 .div1{
-  float:left;
-  height:2rem;
+  height:auto;
   display:flex;
   align-items:center;
+  font-size: 1.2rem;
+  flex-wrap: wrap;
+  margin-right: 2rem;
   }
 .clearfix{
     clear:both;
@@ -185,11 +188,13 @@ export default {
     height:0;
 }
 .font1{
-    margin-left:2rem;
+    margin-left:1rem;
+    /* margin-right:2rem; */
 }
 .font2{
     color:#4d83e7;
     margin-left:0.5rem;
     cursor:pointer;
+    margin-left: 1rem;
 }
 </style>

@@ -12,11 +12,17 @@
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
           </el-col>
+          <el-col class="line" :offset="5" :span="2">类别</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.categorys" multiple placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
         </el-form-item>
         <el-form-item label="目标状态">
           <el-col :span="4">
             <el-select v-model="form.state"  placeholder="请选择目标状态" >
-            <el-option v-for="(i,j) in states" :key="j" :label="i" :value="i"></el-option>
+            <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
           </el-select>
           </el-col>
           <el-col class="line" :span="1">规模</el-col>
@@ -36,28 +42,26 @@
           </el-col>
         </el-form-item>
         <el-form-item label="类型">
-          <el-col :span="4">
-            <el-select v-model="form.type" multiple placeholder="请选择类型" >
+          <el-col :span="9">
+            <el-select v-model="form.type" multiple placeholder="请选择类型" style="width:100%" filterable allow-create default-first-option>
             <el-option v-for="(i,j) in type" :key="j" :label="i" :value="i"></el-option>
-          </el-select>
-          </el-col>
-          <el-col class="line" :span="1">类别</el-col>
-          <el-col :span="4">
-            <el-select v-model="form.categorys" multiple placeholder="请选择类别" >
-            <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
           </el-select>
           </el-col>
           <el-col :offset="5" :span="2">涉及专业</el-col>
           <el-col :span="8">
-            <el-select v-model="form.major" multiple placeholder="请选择涉及专业" style="width:100%">
+            <el-select v-model="form.major" multiple placeholder="请选择涉及专业" style="width:100%" filterable allow-create default-first-option>
             <el-option v-for="(i,j) in major" :key="j" :label="i" :value="i"></el-option>
             </el-select>
           </el-col>
         </el-form-item>
         <el-form-item label="电压等级">
           <el-col :span="9">
-            <el-select v-model="form.voltagelevel" placeholder="请选择电压等级" style="width:100%">
-            <el-option v-for="(i,j) in voltagelevel" :key="j" :label="i" :value="i"></el-option>
+            <el-select v-model="form.voltagelevel1" style="width:30%">
+              <el-option v-for="(i,j) in voltagetype" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+            <el-input v-model="form.voltagelevel2" style="width:35%" type="number"></el-input>
+            <el-select v-model="form.voltagelevel3" placeholder="请选择电压等级" style="width:30%">
+              <el-option v-for="(i,j) in voltagelevel" :key="j" :label="i" :value="i"></el-option>
             </el-select>
           </el-col>
           <el-col :offset="5" :span="2">开始时间</el-col>
@@ -78,18 +82,22 @@
     </div>
     <div class="title"><span>项目资质要求</span></div>
     <div class="content">
-      <el-form :model="form" label-width="100px" style="width:100%">
+      <el-form :model="form" label-width="140px" style="width:100%">
         <el-form-item label="投标个体性质">
           <el-col :span="9">
           <el-select v-model="form.character" placeholder="请选择个体性质" style="width:100%">
             <el-option v-for="(i,j) in character" :key="j" :value="i" :label="i"></el-option>
           </el-select>
           </el-col>
-          <el-col :offset="2" :span="5">业绩要求</el-col>
-          <el-col :span="8">
-            <el-select v-model="form.performanceReq" placeholder="请选择业绩要求" style="width:100%">
+          <el-col :offset="2" :span="3">业绩要求</el-col>
+          <el-col :span="4">
+            <el-select v-model="form.performanceReq1" placeholder="请选择业绩要求" style="width:100%"  filterable allow-create default-first-option>
               <el-option v-for="(i,j) in performanceReq" :key="j" :value="i" :label="i"></el-option>
             </el-select>
+          </el-col>
+          <el-col :span="3">数量要求</el-col>
+          <el-col :span="3">
+            <el-input v-model="form.performanceReq2" style="width:100%"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="工程限价">
@@ -105,10 +113,13 @@
             </el-select>
           </el-col>
         </el-form-item>
-        <el-form-item label="付款方式">
+        <el-form-item label="付款方式/付款比例">
           <el-col :span="9">
-            <el-select v-model="form.paymentMethods" placeholder="请选择付款方式" style="width:100%">
+            <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
               <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+            <el-select v-model="form.paymentScale" placeholder="自填或选择" style="width:40%" filterable allow-create default-first-option>
+              <el-option v-for="(i,j) in paymentScale" :key="j" :value="i" :label="i"></el-option>
             </el-select>
           </el-col>
           <el-col :offset="2" :span="5">是否接受联合投标</el-col>
@@ -123,7 +134,7 @@
       <el-form :model="form" label-width="80px" style="width:100%">
         <el-radio v-model="radio" label="1">平台推荐</el-radio>
         <el-radio v-model="radio" label="2">自定义</el-radio>
-        <el-table :data="form.stateUnits">
+        <el-table :data="form.stateUnits" stripe style="margin-top:2rem">
           <el-table-column label="设计阶段">
             <template slot-scope="scope">
               <el-select v-model="scope.row.state">
@@ -163,7 +174,7 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   store,
   computed: {
-    ...mapState(['step', 'form', 'states', 'designState', 'type', 'categorys', 'sizeAndCapacitys', 'voltagelevel', 'major', 'unit', 'character', 'performanceReq', 'priceType', 'aptitude', 'paymentMethods'])
+    ...mapState(['step', 'form', 'states', 'designState', 'type', 'categorys', 'sizeAndCapacitys', 'voltagelevel', 'voltagetype', 'major', 'unit', 'character', 'performanceReq', 'priceType', 'aptitude', 'paymentMethods', 'paymentScale'])
   },
   data () {
     return {

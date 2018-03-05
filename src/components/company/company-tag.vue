@@ -1,7 +1,7 @@
 <template>
-  <div class="company-tag">
-   <span style="float:left;font-size:2rem;line-height:2rem;color:#409EFF;margin-left:2rem;">已选:</span>
-   <el-tag v-for="tag in tags" :key="tag.name" closable :type="tag.type" @close="close(tag)">
+  <div class="person-tag">
+   <span style="font-size:1.5rem;line-height:2rem;color:#409EFF;margin-left:1.7rem;">已选:</span>
+   <el-tag v-for="(tag, index) in tags" :key="index" closable type="info" @close="close(tag)">
      {{tag}}
    </el-tag>
   </div>
@@ -45,20 +45,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.company-tag{
-  margin-top:1rem;
-height:3rem;
-display:flex;
-align-items:center;
-
-border-radius:.3rem;
+.person-tag{
+  /* margin-top:2rem; */
+  /* height:3rem; */
+  display:flex;
+  align-items:center;
+  justify-content: flex-start;
+  /* border-radius:.3rem;
   -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-
+  box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; */
+  padding:0 0 1rem 1rem;
 }
 .el-tag{
-    float:left;
     margin-left:1rem;
 }
 </style>

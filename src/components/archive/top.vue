@@ -1,6 +1,13 @@
 <template>
   <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span @click="window.location.href='https://githubzhangshuai.github.io/staticForPro/'">南瑞美思</span><span>|</span><span>项目归档</span></div>
+   <div class="top-left">
+     <el-tooltip content="返回上一级" placement="bottom" effect="light">
+       <i class="icon iconfont icon-zuo" style="color:white;font-size:1.5rem" @click="$router.go(-1)"></i>
+     </el-tooltip>
+     <el-tooltip content="点我进行导航" placement="bottom" effect="light">
+       <i class="icon iconfont icon-iconfontquestion" style="color:white;font-size:1.5rem;curser:pointer" onclick="introJs().setOption('showProgress', true).start();"></i>
+     </el-tooltip>
+     <img src="../../../static/logo.png" alt=""><span @click="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span>项目归档</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
 </template>
@@ -8,7 +15,22 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      msg: ''
+    }
+  },
+  mounted () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
   }
 }
 </script>

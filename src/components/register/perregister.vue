@@ -1,12 +1,12 @@
 <template>
   <div class="perregister">
    <div class="top">
-   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">南瑞美思</span><span>|</span><span @click="$router.push('/perregister')" style="color:yellow">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')">登录</span></div>
+   <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')" style="color:yellow">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')">登录</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
   <el-col :span="8" :offset="2">
-  <el-form :model="Form" status-icon label-position="left":rules="rules" ref="perregister" label-width="100px">
+  <el-form :model="Form" status-icon label-position="left" :rules="rules" ref="perregister" label-width="100px">
   <el-form-item label="账号" prop="user">
     <el-input type="text" v-model="Form.user" auto-complete="off" placeholder="请填写手机号或者邮箱"></el-input>
   </el-form-item>
@@ -90,6 +90,7 @@ export default {
       }
     }
     return {
+      msg: '',
       checked: true,
       Form: {
         user: '',
@@ -119,10 +120,32 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initData()
+  },
   methods: {
+    initData () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     check () {
       this.$http.post('http://39.106.34.156:8080/electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
         console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '验证码发送成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `验证码发送失败,原因${res.data.reason}`
+          })
+        }
         this.Form.returnCheck = res.data.checkMsg
       }).catch((err) => {
         console.log(err)

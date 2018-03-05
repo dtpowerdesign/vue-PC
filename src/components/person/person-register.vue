@@ -7,7 +7,7 @@
     </div>
     <el-row style="margin-top:2rem">
       <el-col :span="11" class="shadow">
-        <el-form :label-position="labelPosition" label-width="80px" :model="ruleForm">
+        <el-form :label-position="labelPosition" label-width="120px" :model="ruleForm">
           <el-form-item label="姓名"  prop="name">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
@@ -25,24 +25,45 @@
             </el-select>
             </el-col>
           </el-form-item>
+          <el-form-item label="工作单位全称">
+            <el-input v-model="ruleForm.workUnit" style="width:100%"></el-input>
+          </el-form-item>
+          <el-form-item label="毕业院校">
+            <el-input v-model="ruleForm.graduateInstitution" style="width:100%"></el-input>
+          </el-form-item>
+          <el-form-item label="在平台工作时间">
+            <el-select v-model="ruleForm.workType" style="width:100%">
+              <el-option v-for="(i, j) in workType" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-form-item>                       
+          <el-form-item label="能接受的出差最长时间">
+            <el-select v-model="ruleForm.acceptableTravelTime" style="width:100%" filterable allow-create default-first-option>
+              <el-option v-for="(i, j) in acceptableTravelTime" :key="j" :label="i" :value="i"></el-option>             
+            </el-select>
+          </el-form-item>   
+          <el-form-item label="工作项目地点">
+            <el-input v-model="ruleForm.workingAddress" style="width:100%"></el-input>
+          </el-form-item>                 
           <el-form-item label="电话" prop="telephone">
-            <el-input v-model="ruleForm.telephone" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
+            <el-input v-model="ruleForm.telephone" style="width:100%"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
+            <el-input v-model="ruleForm.email" style="width:100%"></el-input>
           </el-form-item>
           <el-form-item label="所在地" prop="place">
-            <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:8rem;margin-right:0.6rem;">
+            <div style="display:flex;justify-content:space-around;margin-left:0px">
+            <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:30%;margin-right:0.6rem;">
               <el-option v-for="item in provs" :key="item.name" :label="item.name" :value="item.name"></el-option>
             </el-select>
-            <el-select v-model="ruleForm.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:8rem;margin-right:0.6rem;">
+            <el-select v-model="ruleForm.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:30%;margin-right:0.6rem;">
               <el-option v-for="item in cities" :key="item.name" :label="item.name" :value="item.name"></el-option>
             </el-select>
-            <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:8rem">
+            <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:30%">
               <el-option v-for="item in areas" :key="item" :label="item" :value="item"></el-option>
             </el-select>
+            </div>
           </el-form-item>
-          <el-form-item><el-button type="primary" @click="submit()">保存</el-button></el-form-item>
+          <el-form-item><el-button type="primary" @click="submit()" style="width:120%;margin-left:-120px;">保存</el-button></el-form-item>
         </el-form>
       </el-col>
       <el-col :span="11" :offset="2" class="shadow">
@@ -68,6 +89,11 @@
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
+          <div style="margin-top:3rem">
+            <span style="color:#909399;font-size:1.5rem">个人简介</span>
+            <el-input type="textarea" v-model="ruleForm.instruction" :autosize="{ minRows: 16, maxRows: 18}" placeholder="请输入内容"></el-input>
+            <el-button type="success" @click="submitInstruction()">保存</el-button>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -82,16 +108,24 @@ export default {
       complete: 100,
       status: 'success',
       Ages: [],
+      workType: ['全职', '兼职'],
+      acceptableTravelTime: ['一天', '一周', '一个月', '长期'],
       labelPosition: 'right',
       ruleForm: {
         name: '',
         sex: '',
         age: '',
+        workUnit: '',
+        graduateInstitution: '',
+        acceptableTravelTime: '',
+        workingAddress: '全国',
+        workType: '',
         telephone: '',
         email: '',
         prov: '',
         city: '',
-        area: ''
+        area: '',
+        instruction: ''
       },
       provs: [],
       cities: [],
@@ -105,9 +139,15 @@ export default {
       this.ruleForm.age = res.data.age
       this.ruleForm.telephone = res.data.telephone
       this.ruleForm.email = res.data.email
+      this.ruleForm.workUnit = res.data.workUnit
+      this.ruleForm.graduateInstitution = res.data.graduateInstitution
+      this.ruleForm.acceptableTravelTime = res.data.acceptableTravelTime
+      this.ruleForm.workingAddress = res.data.workingAddress
+      this.ruleForm.workType = res.data.workType
       this.ruleForm.prov = res.data.birthAddress.province
       this.ruleForm.city = res.data.birthAddress.city
       this.ruleForm.area = res.data.birthAddress.area
+      this.ruleForm.instruction = res.data.instruction
     }).catch((err) => {
       console.log(err)
     })
@@ -157,6 +197,11 @@ export default {
             'age': this.ruleForm.age,
             'telephone': this.ruleForm.telephone,
             'email': this.ruleForm.email,
+            'workUnit': this.ruleForm.workUnit,
+            'graduateInstitution': this.ruleForm.graduateInstitution,
+            'acceptableTravelTime': this.ruleForm.acceptableTravelTime,
+            'workingAddress': this.ruleForm.workingAddress,
+            'workType': this.ruleForm.workType,
             'birthAddress': {
               'province': this.ruleForm.prov,
               'city': this.ruleForm.city,
@@ -164,7 +209,42 @@ export default {
             }}
         })
       .then((res) => {
-        console.log('修改成功')
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `保存失败,原因${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    submitInstruction () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
+        {
+          'account': this.cookie.get('user'),
+          'data': {
+            'account': this.cookie.get('user'),
+            'instruction': this.ruleForm.instruction
+          }
+        })
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `保存失败,原因${res.data.reason}`
+          })
+        }
       }).catch((err) => {
         console.log(err)
       })

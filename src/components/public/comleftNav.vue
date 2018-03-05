@@ -15,7 +15,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/com/company-comAchi">企业业绩</el-menu-item>
-          <el-menu-item index="/com/company-register">企业信息</el-menu-item>
+          <el-menu-item index="/com/company-register" data-step="2" data-intro="完善个人信息" data-position="right">企业信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
      <el-submenu index="CM">
@@ -24,8 +24,8 @@
           <span class="fontBig">项目管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/com/CM-new">发布新项目</el-menu-item>
-          <el-menu-item index="/com/CM-sumary">项目汇总</el-menu-item>
+          <el-menu-item index="/com/CM-new" data-step="1" data-intro="我要发布新项目" data-position="right">发布新项目</el-menu-item>
+          <el-menu-item index="/com/CM-sumary" data-step="4" data-intro="参与项目浏览" data-position="bottom">项目汇总</el-menu-item>
           <el-menu-item index="/com/CM-combo">联合体</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -37,7 +37,7 @@
         <el-menu-item-group>
           <el-menu-item index="/com/Cstatistics-time">时间统计</el-menu-item>
           <el-menu-item index="/com/Cstatistics-discuss">洽谈统计</el-menu-item>
-          <el-menu-item index="/com/Cstatistics-credit">资信统计</el-menu-item>
+          <el-menu-item index="/com/Cstatistics-credit">提资统计</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>

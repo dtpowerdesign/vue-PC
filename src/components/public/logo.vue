@@ -2,6 +2,9 @@
   <div>
    <img src="../../../static/logo.png" alt="">
    <span>{{msg}}</span>
+   <el-tooltip content="点我进行导航" placement="bottom" effect="light">
+     <i class="icon iconfont icon-iconfontquestion" style="color:white;font-size:1.5rem;curser:pointer" onclick="introJs().setOption('showProgress', true).start();"></i>
+   </el-tooltip>
   </div>
 </template>
 
@@ -10,6 +13,19 @@ export default {
   data () {
     return {
       msg: '南瑞美思'
+    }
+  },
+  mounted () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

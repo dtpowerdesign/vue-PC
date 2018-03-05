@@ -16,27 +16,33 @@ import Cregister from '@/components/company/company-register'
 import Pnew from '@/components/PM/PM-new'
 import Cnew from '@/components/CM/CM-new'
 import step1 from '@/components/PM/PM-new-step'
+import Cstep1 from '@/components/CM/CM-new-step'
 import step2 from '@/components/PM/PM-new-step2'
+import Cstep2 from '@/components/CM/CM-new-step2'
 import step3 from '@/components/PM/PM-new-step3'
+import Cstep3 from '@/components/CM/CM-new-step3'
 import stepNoabout2 from '@/components/PM/PM-new-step2-1'
+import CstepNoabout2 from '@/components/CM/CM-new-step2-1'
 import step5 from '@/components/PM/PM-new-step5'
 import step6 from '@/components/PM/PM-new-step6'
 import sumary from '@/components/PM/PM-sumary'
-import Csumary from '@/components/CM/CM-sumary'
+// import Csumary from '@/components/CM/CM-sumary'
 import combo from '@/components/PM/PM-combo'
-import Ccombo from '@/components/CM/CM-combo'
+// import Ccombo from '@/components/CM/CM-combo'
 import time from '@/components/statistics/statistics-time'
-import Ctime from '@/components/Cstatistics/Cstatistics-time'
+// import Ctime from '@/components/Cstatistics/Cstatistics-time'
 import discuss from '@/components/statistics/statistics-discuss'
-import Cdiscuss from '@/components/Cstatistics/Cstatistics-discuss'
+// import Cdiscuss from '@/components/Cstatistics/Cstatistics-discuss'
 import credit from '@/components/statistics/statistics-credit'
-import Ccredit from '@/components/Cstatistics/Cstatistics-credit'
+// import Ccredit from '@/components/Cstatistics/Cstatistics-credit'
 import perProjectPandect from '@/components/perProject/pandect'
+import perProjectAlter from '@/components/perProject/alter'
 import perProjectDetail from '@/components/perProject/detail'
 import perProjectFile from '@/components/perProject/file'
 import perProjectTime from '@/components/perProject/time'
 import perProjectEvent from '@/components/perProject/event'
 import perProjectMember from '@/components/perProject/member'
+import perProjectPermiss from '@/components/perProject/permiss'
 
 Vue.use(Router)
 
@@ -67,12 +73,12 @@ export default new Router({
     children: [
       { path: 'company-comAchi', component: comAchi },
       { path: 'company-register', component: Cregister },
-      { path: 'CM-new', component: Cnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }] },
-      { path: 'CM-sumary', component: Csumary }, // eslint-disable-next-line
-      { path: 'CM-combo', component: Ccombo }, // eslint-disable-next-line
-      { path: 'Cstatistics-time', component: Ctime },
-      { path: 'Cstatistics-discuss', component: Cdiscuss },
-      { path: 'Cstatistics-credit', component: Ccredit },
+      { path: 'CM-new', component: Cnew, children: [{ path: '', component: Cstep1 }, { path: '2', component: Cstep2 }, { path: '3', component: Cstep3 }, { path: '2-1', component: CstepNoabout2 }] },
+      { path: 'CM-sumary', component: sumary }, // eslint-disable-next-line
+      { path: 'CM-combo', component: combo }, // eslint-disable-next-line
+      { path: 'Cstatistics-time', component: time },
+      { path: 'Cstatistics-discuss', component: discuss },
+      { path: 'Cstatistics-credit', component: credit },
       { path: '*', component: Error }
     ]
   }, {
@@ -80,11 +86,13 @@ export default new Router({
     component: perProject,
     children: [
       { path: 'pandect', component: perProjectPandect },
+      { path: 'alter', component: perProjectAlter },
       { path: 'detail', component: perProjectDetail },
       { path: 'file', component: perProjectFile },
       { path: 'time', component: perProjectTime },
       { path: 'event', component: perProjectEvent },
-      { path: 'member', component: perProjectMember }
+      { path: 'member', component: perProjectMember },
+      { path: 'permiss', component: perProjectPermiss }
     ]
   }, {
     path: '/archive',

@@ -6,7 +6,7 @@
        <comleftNav></comleftNav>
      </el-col>
      <el-col :span="21" :offset="3"  id="right">
-        <comInfo style="background-color:white"></comInfo>
+        <Info style="background-color:white" ref="Info"></Info>
        	<router-view></router-view>
      </el-col>
    </el-row>
@@ -16,9 +16,9 @@
 <script>
 import comleftNav from '@/components/public/comleftNav'
 import logo from '@/components/public/logo'
-import comInfo from '@/components/public/comInfo'
+import Info from '@/components/public/Info'
 export default {
-  components: {comleftNav, logo, comInfo},
+  components: {comleftNav, logo, Info},
   data () {
     return {}
   },
@@ -31,6 +31,7 @@ export default {
 #left{
   background-color:#4d83e7;
   position:fixed;
+  z-index: 0;
 }
 .comleftNav{
   margin-top:5rem;

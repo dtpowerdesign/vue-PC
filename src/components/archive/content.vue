@@ -157,6 +157,12 @@ export default {
             type: 'success',
             message: `联合体投标成功,请在联合体里查看`
           })
+          if (this.$cookie.get('role') === 'puser') {
+            this.$router.push('/per/PM-combo')
+          }
+          if (this.$cookie.get('role') === 'cuser') {
+            this.$router.push('/com/CM-combo')
+          }
         } else {
           this.$message({
             type: 'warning',

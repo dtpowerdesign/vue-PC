@@ -51,6 +51,7 @@
         <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoFail.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>        
       </el-col>
     </el-row>
+    <el-button @click="dialogVisible=true" type="primary">点我邀请</el-button>
     <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="30%">
       <el-select v-model="info" multiple allow-create filterable default-first-option placeholder="请选择">
         <el-option v-for="(i, j) in infos" :key="j" :label="i" :value="i"></el-option>
@@ -64,17 +65,17 @@
   
   <div v-else v-loading="loadingTable">
    
-  <div style="display:flex; align-items:center; justify-content: space-between">
+  <div style="display:flex; align-items:center; justify-content: space-between;background:#F9F9F9;height:4rem">
         <span style="font-size:1.5rem;color:#4d83e7">|我的请求</span>
           <div>
-            <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
-            <el-button  type="success">打印</el-button>
+            <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
+            <el-button size="small" type="success">打印</el-button>
           </div>
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"></el-table-column>
-        <el-table-column   label="操作">
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
           </template>
@@ -137,13 +138,14 @@ export default {
       this.$http.post('http://39.106.34.156:8080/electric-design/getProjectsByMultiConditions',
      {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {
+          console.log(res.data)
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {}
               for (var i in this.jsonAll) {
-                if (Array.isArray(el[i])) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
                   obj[i] = el[i].concat().join(',')
-                } else if (i.match(/(Time)$/) && !i.match(/^(all)/)) {
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
                   el[i].year = el[i].year || 0
                   el[i].month = el[i].month || 0
                   el[i].date = el[i].date || 0
@@ -178,9 +180,9 @@ export default {
       this.voltage = row.voltage
       this.major = row.major
       this.bidType = row.bidType
-      this.info = row.invitatingAccounts.split(',') || []
-      this.infoSuccess = row.invitatedBidAccounts.split(',') || []
-      this.infoFail = row.invitaFaildAccounts.split(',') || []
+      this.info = row.invitatingAccounts ? row.invitatingAccounts.split(',') : []
+      this.infoSuccess = row.invitatedBidAccounts ? row.invitatedBidAccounts.split(',') : []
+      this.infoFail = row.invitaFaildAccounts ? row.invitaFaildAccounts.split(',') : []
       this.$http.post('http://39.106.34.156:8080/electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.loadingDetail = false

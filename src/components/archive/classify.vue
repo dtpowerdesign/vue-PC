@@ -26,6 +26,7 @@ export default {
   store,
   data () {
     return {
+      max: '',
       classes: [],
       type: [],
       stage: [],
@@ -71,7 +72,7 @@ export default {
         this.tag1.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选5项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -82,7 +83,7 @@ export default {
         this.tag2.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选5项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -93,7 +94,7 @@ export default {
         this.tag3.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选5项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -104,7 +105,7 @@ export default {
         this.tag4.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选5项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -115,7 +116,7 @@ export default {
         this.tag5.push(e.target.innerText)
       } else {
         this.$message({
-          message: '最多只能选5项',
+          message: `最多只能选${this.max}项目`,
           type: 'warning'
         })
       }
@@ -143,31 +144,29 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .classify{
-  padding:2rem auto;
+  padding:2rem 1.5rem;
   text-align:left;
  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   border-radius:.3rem .3rem 0 0;
-
+display: flex;
+flex-wrap: wrap;
 }
 .div1{
-  float:left;
-  height:2rem;
+  height:auto;
   display:flex;
   align-items:center;
+  flex-wrap: wrap;
+  margin-right: 2rem;
   }
-.clearfix{
-    clear:both;
-    width:0;
-    height:0;
-}
+
 .font1{
-    margin-left:2rem;
+    margin-left:1rem;
 }
 .font2{
     color:#4d83e7;
-    margin-left:0.5rem;
+    margin-left:1rem;
     cursor:pointer;
 }
 </style>

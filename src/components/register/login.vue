@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="top">
-       <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">南瑞美思</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
+       <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
       <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
     </div>
     <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login">
@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item style="margin-left:-100px">
         <div style="display:flex;justify-content:space-between">
-          <el-checkbox v-model="checked">记住我</el-checkbox>
+          <el-checkbox v-model="checked">记住我(30天内自动登录)</el-checkbox>
           <span style="cursor:pointer;color:gray;">忘记密码？</span>
         </div>
       </el-form-item>
@@ -54,6 +54,7 @@ export default {
       }
     }
     return {
+      msg: '',
       checked: true,
       Form: {
         user: '',
@@ -68,7 +69,29 @@ export default {
         ]}
     }
   },
+  mounted () {
+    this.initData()
+  },
   methods: {
+    initData () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
+      if (this.$cookie.get('user')) {
+        this.$message({
+          type: 'success',
+          message: `检测到您的账号${this.$cookie.get('user')},自动为您登陆`
+        })
+        if (this.$cookie.get('role') === 'puser') {
+          this.$router.push('/per')
+        } else {
+          this.$router.push('/com')
+        }
+      }
+    },
     login () {
       this.$refs.login.validate((valid) => {
         if (valid) {
@@ -82,10 +105,17 @@ export default {
                 message: '登录成功',
                 type: 'success'
               })
-              this.cookie.set('user', this.Form.user)
-              this.cookie.set('pass', this.Form.pass)
-              this.cookie.set('role', res.data.role)
-              this.cookie.set('name', res.data.name)
+              if (this.checked) {
+                this.cookie.set('user', this.Form.user, 30)
+                this.cookie.set('pass', this.Form.pass, 30)
+                this.cookie.set('role', res.data.role, 30)
+                this.cookie.set('name', res.data.name, 30)
+              } else {
+                this.cookie.set('user', this.Form.user)
+                this.cookie.set('pass', this.Form.pass)
+                this.cookie.set('role', res.data.role)
+                this.cookie.set('name', res.data.name)
+              }
               if (res.data.role === 'puser') {
                 this.$router.push('/per')
               } else {

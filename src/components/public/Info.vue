@@ -4,10 +4,11 @@
       <i class="icon iconfont icon-liebiao" @click="show()"></i>
       <span style="width:40rem;" class="nav">
         <span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">平台首页</span>
-        <span onclick="window.location.href='http://39.106.34.156:8080/zs/preview/'">平台概况</span>
-        <span style="color:#4d83e7" @click="$router.push('/per')">个人门户</span>
-        <span @click="$router.push('/com')">企业门户</span>
-        <span @click="$router.push('/archive')">项目归档</span>
+        <span @click="$router.push('/archive')" data-step="3" data-intro="去投标" data-position="bottom">项目信息</span>
+        <span @click="$router.push('/archive')" data-step="6" data-intro="服务商" data-position="bottom">服务商展示</span>
+        <span style="color:#4d83e7" @click="$router.push('/per')" v-if="$cookie.get('role')==='puser'">个人门户</span>
+        <span style="color:#4d83e7" @click="$router.push('/com')" v-if="$cookie.get('role')==='cuser'">企业门户</span>
+        <span onclick="window.location.href='http://39.106.34.156:8080/zs/preview/'">平台指南</span>
       </span>
     </div>
     <div style="display:flex;justify-content:space-around">
@@ -17,7 +18,7 @@
           <i class="icon iconfont icon-gerenziliao"></i><span>{{name}}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/archive">项目归档</el-menu-item>
+          <el-menu-item index="/archive">项目信息</el-menu-item>
           <el-menu-item index="/person-register">修改信息</el-menu-item>
           <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
         </el-menu-item-group>
@@ -26,7 +27,7 @@
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
         <el-submenu index="person">
         <template slot="title">
-          <i class="icon iconfont icon-xiangmu"></i><span>我的项目</span>
+          <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我的项目</span>
         </template>
         <el-menu-item-group>
           <el-menu-item :index="'/per-project/' + i.code"  v-for="(i ,j) in projectList" :key="j">{{i.name}}</el-menu-item>
@@ -41,7 +42,7 @@
 export default {
   data () {
     return {
-      name: this.$cookie.get('user'),
+      name: this.$cookie.get('user') ? this.$cookie.get('user') : '您还未登陆哦',
       projectList: []
     }
   },

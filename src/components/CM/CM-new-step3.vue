@@ -59,7 +59,7 @@
       <div class="content-item">
         <el-col :span="3"><span style="font-size:1.2rem;color:red">设计结果</span></el-col>
         <el-col :offset="2" :span="19">
-          <el-table :data="form.stateUnits">
+          <el-table :data="form.stateUnits" stripe>
             <el-table-column prop="state" label="设计阶段"></el-table-column>
             <el-table-column  label="交付时间">
               <template slot-scope="scope">
@@ -82,7 +82,7 @@
       </span>
     </el-dialog>
     <div class="skip">
-      <div style="margin-left:2rem" @click="$router.push('/com/CM-new/2')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
+      <div style="margin-left:2rem" @click="$router.push('/per/PM-new/2')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
       <div style="margin-right:2rem" @click="confirm()"><span>完成</span><i class="icon iconfont icon-you"></i></div>
     </div>
   </div>
@@ -122,18 +122,19 @@ export default {
         'bidType': this.form.character,
         'type': this.form.type,
         'category': this.form.categorys,
-        'voltagelevel': this.form.voltagelevel,
+        'voltagelevel': this.form.voltagelevel1 + this.form.voltagelevel2 + this.form.voltagelevel3,
         'major': this.form.major,
         'address': this.form.place,
-        'performanceRequirements': this.form.performanceReq,
+        'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
         'designProcess': this.form.designState,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
         'qualificationRequirements': [{'资质要求': this.form.aptitude}],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
-        'payMethod': this.form.paymentMethods,
+        'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
         'isAcceptJointBid': this.form.isAcceptJointBid,
+        'isJointState': 'true',
         'processRequirements': stateUnits}
       this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {
         console.log(data)
@@ -171,17 +172,17 @@ export default {
         'bidType': this.form.character,
         'type': this.form.type,
         'category': this.form.categorys,
-        'voltagelevel': this.form.voltagelevel,
+        'voltagelevel': this.form.voltagelevel1 + this.form.voltagelevel2 + this.form.voltagelevel3,
         'major': this.form.major,
         'address': this.form.place,
-        'performanceRequirements': this.form.performanceReq,
+        'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
         'designProcess': this.form.designState,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
         'qualificationRequirements': [{'资质要求': this.form.aptitude}],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
-        'payMethod': this.form.paymentMethods,
+        'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
         'isAcceptJointBid': this.form.isAcceptJointBid,
         'processRequirements': stateUnits}
       this.$http.post('http://39.106.34.156:8080/electric-design/addProject1', data).then((res) => {

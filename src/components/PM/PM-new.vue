@@ -2,7 +2,7 @@
   <div class="PM-new">
    <div class="title"><span style="font-size:2rem">发布新项目</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="box">
-     <el-steps :active="step-1" process-status="finish" finish-status="success" align-center style="margin-left:-4rem">
+     <el-steps :active="step-1" process-status="finish" finish-status="success" align-center style="margin-left:-8rem;margin-right:-8rem">
        <el-step v-for="(i, j) in stepName" :key="j" :title="i" ></el-step>
      </el-steps>
      <div class="description"><span>{{description[step-1]}}</span></div>
@@ -30,6 +30,7 @@ export default {
 .PM-new{
   width:90%;
   margin: 1rem auto 0 auto;
+  background-color: #F0F4F7;
 }
 .title{
   text-align:left;
@@ -50,6 +51,7 @@ export default {
 }
 .description{
   margin-top:1rem;
+  margin-left: 4rem;
   text-align:left;
 }
 .description>span{

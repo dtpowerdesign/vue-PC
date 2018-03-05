@@ -38,9 +38,13 @@ export default {
 #left{
   background-color:#4d83e7;
   position:fixed;
+  z-index: 0;
 }
 .leftNav{
   margin-top:5rem;
 }
-
+#right{
+  background-color:#F0F4F7;
+  height: 100%;
+}
 </style>

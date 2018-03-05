@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 Vue.use(Vuex)
 const state = {
   stepName: ['身份选择', '填写项目信息', '最终确认'],
@@ -15,19 +16,23 @@ const state = {
     categorys: [],
     unit: '',
     type: [],
-    voltagelevel: '',
+    voltagelevel1: '',
+    voltagelevel2: 100,
+    voltagelevel3: '',
     place: '',
     major: [],
     designState: '',
     startTime: '',
     endTime: '',
     character: '',
-    performanceReq: '',
-    lowPrice: '',
-    highPrice: '',
+    performanceReq1: '',
+    performanceReq2: '',
+    lowPrice: '暂无',
+    highPrice: '暂无',
     priceType: '',
     aptitude: '',
     paymentMethods: '',
+    paymentScale: '',
     isAcceptJointBid: 'true',
     stateUnits: [
       { state: '未填', endTime: '未填', requireResult: '未填' },
@@ -37,20 +42,22 @@ const state = {
   },
   qualificationRequirements: { CET: '' },
   projectCharacteristics: { difficulty: '', price: '' },
-  unit: ['km', 'm', 'cm', 'dm', '其他'],
+  unit: ['MW', 'Kva', 'KV', `M^2`],
   existingData: { detail: '' },
-  states: ['临时态', '发布中', '投标中'],
+  states: [{ 'value': '发布中', 'label': '发布完不立即招标' }, { 'value': '投标中', 'label': '发布完直接招标' }],
   major: ['计算机', '电力', '岩土', '绘测'],
   designState: ['前期', '项目建议书', '可行性研究报告', '招投标', '初步设计', '施工图设计', '竣工图编制'],
   sizeAndCapacitys: ['MW', 'KW', 'kVA'],
   categorys: ['火电', '水电', '风电', '光伏', '核电', '储能'],
   type: ['发电厂', '输电', '变电', '供配电', '建筑'],
-  voltagelevel: ['直流800KV', '直流500KV', '直流690V', '交流1000KV', '交流750KV', '交流500KV', '交流330KV', '交流220KV', '交流110KV', '交流66KV', '交流35KV', '交流20KV', '交流10KV', '交流6KV', '交流380V', '交流220V', ],
+  voltagelevel: ['KV', 'V'],
+  voltagetype: ['直流', '交流'],
   character: ['单位', '公司'],
-  performanceReq: ['高', '中'],
+  performanceReq: ['同类型同规模', '同类型'],
   priceType: ['最低', '最高'],
   aptitude: ['高资质', '低资质'],
-  paymentMethods: ['平台推荐', '个人']
+  paymentMethods: ['一次性付款', '分阶段付款'],
+  paymentScale: ['1:1', '2:1', '3:1']
 }
 
 const mutations = {
@@ -59,6 +66,20 @@ const mutations = {
   },
   init2(state) {
     state.step = 2
+    axios.post('http://39.106.34.156:8080/electric-design/getTypeMajors').then((res) => {
+      state.categorys = res.data.categorys
+      state.type = res.data.types
+      state.designState = res.data.designProcess
+      state.sizeAndCapacitys = res.data.sizeAndCapacitys
+      state.major = res.data.majors
+    }).catch((err) => {
+      console.log(err)
+      this.$message({
+        showClose: true,
+        message: '网络连接错误',
+        type: 'error'
+      })
+    })
   },
   init3(state) {
     state.step = 3

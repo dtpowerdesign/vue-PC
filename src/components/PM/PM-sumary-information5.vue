@@ -56,17 +56,17 @@
   </div>
   <div v-else v-loading="loadingTable">
    
-  <div style="display:flex; align-items:center; justify-content: space-between">
+  <div style="display:flex; align-items:center; justify-content: space-between; background:#F9F9F9;height:4rem">
         <span style="font-size:1.5rem;color:#4d83e7">|合同执行中</span>
           <div>
-            <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
-            <el-button  type="success">打印</el-button>
+            <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
+            <el-button size="small" type="success">打印</el-button>
           </div>
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"></el-table-column>
-        <el-table-column   label="操作">
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
           </template>
@@ -134,9 +134,9 @@ export default {
             res.data.forEach((el, index) => {
               var obj = {}
               for (var i in this.jsonAll) {
-                if (Array.isArray(el[i])) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
                   obj[i] = el[i].concat().join(',')
-                } else if (i.match(/(Time)$/) && !i.match(/^(all)/)) {
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
                   el[i].year = el[i].year || 0
                   el[i].month = el[i].month || 0
                   el[i].date = el[i].date || 0

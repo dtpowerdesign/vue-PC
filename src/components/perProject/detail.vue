@@ -13,17 +13,24 @@
        <div class="detail-div"><span>开始时间:{{startTime}}</span><span>结束时间:{{endTime}}</span></div>
      </el-col>
    </div>
-   <div class="content" style="height:10rem">
+   <div class="content" style="overflow:auto">
      <el-col :span="4">
        <p style="text-align:left;color:#409EFF;font-size:2rem;color:red">资质要求</p>
      </el-col>
      <el-col :offset="2" :span="18">
        <div class="detail-div"><span>投标个体性质:{{bidType}}</span><span>工程限价:{{lowestPrice}}-{{highestPrice}}</span></div>
        <div class="detail-div"><span>付款方式:{{payMethod}}</span><span>业绩要求:{{performanceRequirements}}</span></div>
-       <div class="detail-div" v-for="(i, j) in qualificationRequirements" :key="j"><span style="width:100%">所需资质:{{i}}</span></div>
      </el-col>
    </div>
-   <div class="content" style="height:4rem">
+   <div class="content" style="overflow:auto">
+     <el-col :span="4">
+       <p style="text-align:left;color:#409EFF;font-size:2rem;color:red">修改项目信息</p>
+     </el-col>
+     <el-col :offset="2" :span="2">
+      <el-button @click="$router.push('/per-project/' + id + '/alter')" type="success">修改项目信息</el-button>
+     </el-col>
+   </div>   
+   <div class="content" style="overflow:auto">
      <el-col :span="4">
        <p style="text-align:left;color:#409EFF;font-size:2rem;color:red">上传文件</p>
      </el-col>
@@ -31,7 +38,7 @@
       <el-button @click="$router.push('/per-project/' + id + '/file')" type="success">查看文件详情</el-button>
      </el-col>
    </div>
-   <div class="content" style="height:4rem">
+   <div class="content" style="overflow:auto">
      <el-col :span="4">
        <p style="text-align:left;color:#409EFF;font-size:2rem;color:red">洽谈记录</p>
      </el-col>
@@ -84,11 +91,12 @@ export default {
     ...mapState(['id'])
   },
   mounted () {
+    console.log(this.$domain.domain1)
     this.initData()
   },
   methods: {
     initData () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/getProjectByCode', {'code': this.id}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id}).then((res) => {
         console.log(res.data)
         this.name = res.data.name
         this.code = res.data.code

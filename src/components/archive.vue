@@ -1,10 +1,10 @@
 <template>
   <div class="archive">
    <top></top>
-   <search></search>
-   <classify v-loading="loadingClassify"></classify>
-   <tag></tag>
-   <mycontent v-loading="loadingContent"></mycontent>
+   <search data-step="1" data-intro="在此输入相关信息进行搜索" data-position="right"></search>
+   <classify v-loading="loadingClassify" data-step="2" data-intro="根据条件分类筛选" data-position="top"></classify>
+   <tag data-step="3" data-intro="更改条件" data-position="top"></tag>
+   <mycontent data-step="4" data-intro="显示结果" data-position="bottom" v-loading="loadingContent"></mycontent>
    <bottom></bottom>
   </div>
 </template>

@@ -7,42 +7,42 @@
     </div>
     <el-row style="margin-top:2rem">
       <el-col :span="11" class="shadow">
-        <el-form :label-position="labelPosition" label-width="80px" :model="ruleForm">
-          <el-form-item label="姓名"  prop="name">
+        <el-form :label-position="labelPosition" label-width="140px" :model="ruleForm">
+          <el-form-item label="(注册人)姓名">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="ruleForm.sex">
-              <el-radio label="男"></el-radio>
-              <el-radio label="女"></el-radio>
-              <el-radio label="">保密</el-radio>
-            </el-radio-group>
+          <el-form-item label="(注册人)电话">
+            <el-input v-model="ruleForm.telephone" style="width:100%"></el-input>
           </el-form-item>
-          <el-form-item label="年龄" prop="age">
-            <el-col :span="24">
-              <el-select v-model="ruleForm.age" placeholder="请选择年龄" style="width:100%">
-              <el-option v-for="item in Ages" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-form-item label="(注册人)邮箱">
+            <el-input v-model="ruleForm.email" style="width:100%"></el-input>
+          </el-form-item>
+          <el-form-item label="第一联系人姓名">
+            <el-col :span="8"><el-input v-model="ruleForm.firstLinkmanName"></el-input></el-col>         
+            <el-col :span="8">第一联系人号码</el-col>         
+            <el-col :span="8"><el-input v-model="ruleForm.firstLinkmanPhnoe"></el-input></el-col>         
+          </el-form-item>
+          <el-form-item label="第二联系人姓名">
+            <el-col :span="8"><el-input v-model="ruleForm.secondLinkmanName"></el-input></el-col>         
+            <el-col :span="8">第二联系人号码</el-col>         
+            <el-col :span="8"><el-input v-model="ruleForm.secondLinkmanPhnoe"></el-input></el-col>         
+          </el-form-item>                    
+          <el-form-item label="企业全称"><el-input v-model="ruleForm.workUnit"></el-input></el-form-item>
+          <el-form-item label="企业组织机构代码"><el-input v-model="ruleForm.companyCode"></el-input></el-form-item>
+          <el-form-item label="企业人数">
+            <el-select v-model="ruleForm.peopleNumber" style="width:100%" filterable allow-create default-first-option>
+              <el-option v-for="(i, j) in peopleNumber" :key="j" :label="i" :value="i"></el-option>
             </el-select>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="电话" prop="telephone">
-            <el-input v-model="ruleForm.telephone" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email" style="width:75%"></el-input><el-button type="primary" style="margin-left:2rem">绑定</el-button>
-          </el-form-item>
-          <el-form-item label="所在地" prop="place">
-            <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:8rem;margin-right:0.6rem;">
-              <el-option v-for="item in provs" :key="item.name" :label="item.name" :value="item.name"></el-option>
-            </el-select>
-            <el-select v-model="ruleForm.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:8rem;margin-right:0.6rem;">
-              <el-option v-for="item in cities" :key="item.name" :label="item.name" :value="item.name"></el-option>
-            </el-select>
-            <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:8rem">
-              <el-option v-for="item in areas" :key="item" :label="item" :value="item"></el-option>
+          </el-form-item>          
+          <el-form-item label="企业成立时间"><el-date-picker v-model="ruleForm.grownTime" style="width:100%" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+          <el-form-item label="企业办公地址详情"><el-input v-model="ruleForm.officeAddress"></el-input></el-form-item>
+          <el-form-item label="企业网站"><el-input v-model="ruleForm.website"></el-input></el-form-item>
+          <el-form-item label="企业类型">
+            <el-select v-model="ruleForm.companyType" style="width:100%" filterable allow-create default-first-option>
+              <el-option v-for="(i, j) in companyType" :key="j" :label="i" :value="i"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item><el-button type="primary" @click="submit()">保存</el-button></el-form-item>
+          <el-form-item><el-button type="primary" @click="submit()" style="width:120%;margin-left:-140px;">保存</el-button></el-form-item>
         </el-form>
       </el-col>
       <el-col :span="11" :offset="2" class="shadow">
@@ -50,24 +50,37 @@
           <p style="text-align:left;font-size:1.5rem">账号完整度</p>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="complete" :status="status" style="margin-top:2rem"></el-progress>
           <p style="text-align:left;font-size:1rem;margin-top:3rem;">您目前的账号完整度较低，建议通过以下方式完善你的信息，可有效提高投标成功率</p>
-          <div class="div1-style">
-            <span>上传学位证明等教育背景信息</span>
+            <el-radio v-model="radio" label="1">三证合一上传</el-radio>
+            <el-radio v-model="radio" label="2">独立上传</el-radio>
+          <div class="div1-style" v-if="radio==='1'">
+            <span>三证合一</span>
+            <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </div>          
+          <div class="div1-style" v-if="radio==='2'">
+            <span>营业执照</span>
             <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'education', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
-          <div class="div1-style">
-            <span>上传有效身份证件，提高账号安全度</span>
+          <div class="div1-style" v-if="radio==='2'">
+            <span>税务登记证</span>
             <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'identification', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
-          <div class="div1-style">
-            <span>上传职称或工作证明等工作信息</span>
+          <div class="div1-style" v-if="radio==='2'">
+            <span>资质证书</span>
             <el-upload class="upload-demo" action="http://39.106.34.156:8080/electric-design/uploadUsersDatas" :data="{'type': 'work', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
+          <div style="margin-top:3rem">
+            <span style="color:#909399;font-size:1.5rem">企业简介</span>
+            <el-input type="textarea" v-model="ruleForm.instruction" :autosize="{ minRows: 16, maxRows: 18}" placeholder="请输入内容"></el-input>
+            <el-button type="success" @click="submitInstruction()">保存</el-button>
+          </div>          
         </div>
       </el-col>
     </el-row>
@@ -79,9 +92,12 @@
 export default {
   data () {
     return {
+      radio: '2',
       complete: 100,
       status: 'success',
       Ages: [],
+      companyType: ['设计院', '施工企业', '开发商', '运营商'],
+      peopleNumber: ['1-50', '50-150', '150-500'],
       labelPosition: 'right',
       ruleForm: {
         name: '',
@@ -89,9 +105,18 @@ export default {
         age: '',
         telephone: '',
         email: '',
-        prov: '',
-        city: '',
-        area: ''
+        firstLinkmanName: '',
+        firstLinkmanPhnoe: '',
+        secondLinkmanName: '',
+        secondLinkmanPhnoe: '',
+        workUnit: '',
+        companyCode: '',
+        peopleNumber: '',
+        grownTime: '',
+        officeAddress: '',
+        website: '',
+        companyType: '',
+        instruction: ''
       },
       provs: [],
       cities: [],
@@ -99,72 +124,87 @@ export default {
     }
   },
   created () {
-    this.$http.post('http://39.106.34.156:8080/electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
+    this.$http.post('http://39.106.34.156:8080/electric-design/getCuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
       this.ruleForm.name = res.data.name
-      this.ruleForm.sex = res.data.sex
-      this.ruleForm.age = res.data.age
       this.ruleForm.telephone = res.data.telephone
       this.ruleForm.email = res.data.email
-      this.ruleForm.prov = res.data.birthAddress.province
-      this.ruleForm.city = res.data.birthAddress.city
-      this.ruleForm.area = res.data.birthAddress.area
+      this.ruleForm.firstLinkmanName = res.data.firstLinkmanName
+      this.ruleForm.firstLinkmanPhnoe = res.data.firstLinkmanPhnoe
+      this.ruleForm.secondLinkmanName = res.data.secondLinkmanName
+      this.ruleForm.secondLinkmanPhnoe = res.data.secondLinkmanPhnoe
+      this.ruleForm.workUnit = res.data.workUnit
+      this.ruleForm.companyCode = res.data.companyCode
+      this.ruleForm.peopleNumber = res.data.peopleNumber
+      this.ruleForm.grownTime = this.$formDate.formatDate(res.data.grownTime)
+      this.ruleForm.officeAddress = res.data.officeAddress
+      this.ruleForm.website = res.data.website
+      this.ruleForm.companyType = res.data.companyType
+      this.ruleForm.instruction = res.data.instruction
     }).catch((err) => {
       console.log(err)
     })
   },
   mounted () {
-    this.Ages = []
-    for (let i = 18; i < 80; i++) {
-      this.Ages.push({value: i, label: i})
-    }
-    this.$http.get('http://39.106.34.156:8080/electric-design/getAreasOfChina').then(res => {
-      this.provs = res.data
-    }).catch(err => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
-      })
-    })
   },
   methods: {
-    getProv (prov) {
-      this.cities = []
-      for (var val of this.provs) {
-        if (prov === val.name) {
-          this.cities = val.cityList
-          this.prov = val.name
-        }
-      }
-    },
-    getCity (city) {
-      this.areas = []
-      for (var val of this.cities) {
-        if (city === val.name) {
-          this.areas = val.areaList
-          this.city = val.name
-        }
-      }
-    },
     submit () {
-      this.$http.post('http://39.106.34.156:8080/electric-design/changePuserByAccount',
+      this.$http.post('http://39.106.34.156:8080/electric-design/changeCuserByAccount',
         {
           'account': this.cookie.get('user'),
           'data': {
             'account': this.cookie.get('user'),
             'name': this.ruleForm.name,
-            'sex': this.ruleForm.sex,
-            'age': this.ruleForm.age,
             'telephone': this.ruleForm.telephone,
             'email': this.ruleForm.email,
-            'birthAddress': {
-              'province': this.ruleForm.prov,
-              'city': this.ruleForm.city,
-              'area': this.ruleForm.area
-            }}
+            'firstLinkmanName': this.ruleForm.firstLinkmanName,
+            'firstLinkmanPhnoe': this.ruleForm.firstLinkmanPhnoe,
+            'secondLinkmanName': this.ruleForm.secondLinkmanName,
+            'secondLinkmanPhnoe': this.ruleForm.secondLinkmanPhnoe,
+            'workUnit': this.ruleForm.workUnit,
+            'companyCode': this.ruleForm.companyCode,
+            'peopleNumber': this.ruleForm.peopleNumber,
+            'grownTime': this.$formDate.formatDate(this.ruleForm.grownTime),
+            'officeAddress': this.ruleForm.officeAddress,
+            'website': this.ruleForm.website,
+            'companyType': this.ruleForm.companyType}
         })
       .then((res) => {
-        console.log('修改成功')
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `保存失败,原因${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    submitInstruction () {
+      this.$http.post('http://39.106.34.156:8080/electric-design/changeCuserByAccount',
+        {
+          'account': this.cookie.get('user'),
+          'data': {
+            'account': this.cookie.get('user'),
+            'instruction': this.ruleForm.instruction
+          }
+        })
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `保存失败,原因${res.data.reason}`
+          })
+        }
       }).catch((err) => {
         console.log(err)
       })

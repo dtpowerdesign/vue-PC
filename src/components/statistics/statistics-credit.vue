@@ -3,11 +3,11 @@
     <div class="title"><span style="font-size:2rem">资信统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card" v-loading="tabLoading">
       <el-tab-pane :label="i.name" v-for="(i, j) in projectList" :key="j">
-        <div style="display:flex; align-items:center; justify-content: space-between;width:95%;height:4rem;margin-left:auto;margin-right:auto">
+        <div style="display:flex; align-items:center; justify-content: space-between;height:4rem;margin-left:auto;margin-right:auto;background:#F9F9F9">
           <span style="font-size:1.5rem;color:#4d83e7">{{i.name}}提资表</span>
           <div>
-            <el-button style='margin-right:20px;' type="success" icon="document" @click="handleDownload">导出excel</el-button>
-            <el-button type="success">打印</el-button>
+            <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload">导出excel</el-button>
+            <el-button size="small" type="success">打印</el-button>
           </div>
         </div>
         <el-table :data="i.value.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe fit ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
