@@ -81,6 +81,17 @@ export default {
 .el-transfer-panel__item .el-checkbox__input{
    left: 10%;
 }
+//穿梭框的宽
+.el-transfer-panel{
+  width: 40%
+}
+//穿梭框的高
+.el-transfer-panel__body{
+  // min-height: 10%;
+}
+.el-transfer-panel__list{
+  height: 100%;
+}
 
 .PM-new-step2{
 .el-date-editor.el-input, .el-date-editor.el-input__inner{

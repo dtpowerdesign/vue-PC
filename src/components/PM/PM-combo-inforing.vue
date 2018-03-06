@@ -56,6 +56,7 @@
       <div style="display:flex; align-items:center; justify-content: space-between; background:#F9F9F9;height:4rem">
           <span style="font-size:1.5rem;color:#4d83e7">|投标中</span>
           <div>
+            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable')" >表头编辑</el-button>
             <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button size="small" type="success">打印</el-button>
           </div>
@@ -113,11 +114,19 @@ export default {
   created () {
     this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
       this.jsonAll = res.data
-      for (var i in res.data) {
-        if (res.data[i].show) {
-          this.json[i] = res.data[i]
+      this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+      .then((res) => {
+        // console.log(res.data)
+        this.json = {}
+        for (var i in res.data) {
+          this.json[i] = {
+            key: i,
+            title: res.data[i]}
         }
-      }
+        // console.log(this.json)
+      }).catch((err) => {
+        console.log(err)
+      })
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser',
      {'conditions': {'isJointState': {'searchMethod': 'values', 'values': 'true'}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {

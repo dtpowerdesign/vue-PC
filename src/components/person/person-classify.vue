@@ -122,11 +122,20 @@ export default {
     tags () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'achievement'})
+      .then((res) => {
+        // console.log(res.data)
+        this.$store.state.json = {}
         for (var i in res.data) {
-          if (res.data[i].show) {
-            this.json[i] = res.data[i]
-          }
+          this.$store.state.json[i] = {
+            key: i,
+            title: res.data[i]}
         }
+        // console.log(this.json)
+      }).catch((err) => {
+        console.log(err)
+      })
+
         var formData = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
         this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {

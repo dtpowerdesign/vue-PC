@@ -1,7 +1,10 @@
 <template>
   <div>
       <el-transfer v-model="value1" :data="data"  @change="handleChange" :titles="['不显示的表头', '显示的表头']" :button-texts="['不显示', '显示']"></el-transfer>
-      <el-button @click="confirm()" style="width:100%" type="primary">确认</el-button>
+      <div style="margin-top:3rem">
+        <el-button @click="confirm()" style="width:100%" type="primary">确认</el-button>
+        <el-button @click="$router.go(-1)" style="width:100%;margin-left:0" type="success">返回上一级</el-button>
+      </div>
   </div>
 </template>
 
