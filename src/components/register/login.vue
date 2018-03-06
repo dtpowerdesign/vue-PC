@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item style="margin-left:-100px">
         <div style="display:flex;justify-content:flex-start;align-items:center">
-          <span style="font-size:1.5rem">第三方账号登录</span><i class="icon iconfont icon-qq" style="font-size:2rem;color:#409eff;margin-left:.5rem"></i><i class="icon iconfont icon-weixin"style="font-size:1.8rem;color:#45b90c;margin-left:.5rem"></i>
+          <span style="font-size:1.5rem" onclick="startInit()">第三方账号登录</span><i class="icon iconfont icon-qq" style="font-size:2rem;color:#409eff;margin-left:.5rem"></i><i class="icon iconfont icon-weixin"style="font-size:1.8rem;color:#45b90c;margin-left:.5rem"></i>
         </div>
       </el-form-item>
     </el-form>
@@ -99,22 +99,26 @@ export default {
             'account': this.Form.user,
             'password': this.Form.pass
           }).then((res) => {
-            // console.log(res.data)
             if (res.data.result && res.data.result !== 'false') {
               this.$message({
                 message: '登录成功',
                 type: 'success'
               })
+              // this.appKey = this.$appKey.appKey
+              // this.token = res.data.token
+              window.startInit()
               if (this.checked) {
                 this.cookie.set('user', this.Form.user, 30)
                 this.cookie.set('pass', this.Form.pass, 30)
                 this.cookie.set('role', res.data.role, 30)
                 this.cookie.set('name', res.data.name, 30)
+                this.cookie.set('token', res.data.token, 30)
               } else {
                 this.cookie.set('user', this.Form.user)
                 this.cookie.set('pass', this.Form.pass)
                 this.cookie.set('role', res.data.role)
                 this.cookie.set('name', res.data.name)
+                this.cookie.set('token', res.data.token)
               }
               if (res.data.role === 'puser') {
                 this.$router.push('/per')

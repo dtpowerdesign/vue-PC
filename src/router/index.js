@@ -45,6 +45,9 @@ import perProjectTime from '@/components/perProject/time'
 import perProjectEvent from '@/components/perProject/event'
 import perProjectMember from '@/components/perProject/member'
 import perProjectPermiss from '@/components/perProject/permiss'
+import add from '@/components/rong/add'
+import apply from '@/components/rong/apply'
+import friendList from '@/components/rong/friendList'
 
 Vue.use(Router)
 
@@ -113,7 +116,12 @@ export default new Router({
     component: protocol
   }, {
     path: '/chat',
-    component: Chat
+    component: Chat,
+    children: [
+      { path: 'add', component: add },
+      { path: 'apply', component: apply },
+      { path: 'friendList', component: friendList }
+    ]
   }, {
     path: '/changeTable',
     component: changeTable

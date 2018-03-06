@@ -1,14 +1,33 @@
 <template>
   <div id="app">
     <router-view/>
+      <div style="margin-left:200%">
+      <div id="appKey">{{appKey}}</div>
+      <div id="token">{{token}}</div>
+      <div id="navi">{{navi}}</div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data () {
+    return {
+      navi: ''
+    }
+  },
+  computed: {
+    token () {
+      return this.$cookie.get('token')
+    },
+    appKey () {
+      return this.$appKey.appKey
+    }
+  }
 }
 </script>
+
 
 <style lang='scss'>
 #app{

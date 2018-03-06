@@ -20,7 +20,7 @@
         <el-menu-item-group>
           <el-menu-item index="/changeTable">改变表头</el-menu-item>
           <el-menu-item index="/chat">视频聊天</el-menu-item>
-          <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
+          <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('token', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       </el-menu>
