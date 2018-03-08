@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-      <div style="margin-left:200%">
+      <div style="height: 0; overflow: hidden;">
       <div id="appKey">{{appKey}}</div>
       <div id="token">{{token}}</div>
       <div id="navi">{{navi}}</div>

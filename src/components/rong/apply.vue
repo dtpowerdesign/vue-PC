@@ -55,7 +55,8 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/getfriendApplyList', {'userId': this.$cookie.get('user')})
       .then((res) => {
         console.log(res.data)
-        this.List = res.data
+        this.List1 = []
+        this.List2 = []
         res.data.forEach((el, index) => {
           if (el.fromUserId !== this.$cookie.get('user')) {
             this.List1.push(el)

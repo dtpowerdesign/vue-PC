@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
+import 'babel-polyfill'
 import Axios from 'axios'
 import qs from 'querystring'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -11,11 +12,15 @@ import domain from './domain.js'
 import appKey from './appKey.js'
 import cookie from 'vue-cookie'
 import check from './util/check'
+import rong from 'co-rongcloud-api'
 import formDate from './util/formDate'
+// var Promise = require('bluebird')
+// window.Promise = Promise
 Vue.use(cookie)
 Vue.prototype.$domain = domain
 Vue.prototype.$appKey = appKey
 Vue.prototype.cookie = cookie
+Vue.prototype.$rong = rong
 Vue.prototype.$check = check
 Vue.prototype.$formDate = formDate
 Vue.config.productionTip = false

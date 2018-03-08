@@ -72,7 +72,7 @@ export default {
         this.sourceAccount = res.data.sourceAccount
         this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValues1', {
           'key': 'account',
-          'values': res.data.toAccounts
+          'values': Array.isArray(res.data.toAccounts) ? res.data.toAccounts : [res.data.toAccounts]
         }).then((res) => {
           this.persons = []
           for (var i in res.data) {

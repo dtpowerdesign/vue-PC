@@ -30,7 +30,7 @@
           <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我的项目</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item :index="'/per-project/' + i.code"  v-for="(i ,j) in projectList" :key="j">{{i.name}}</el-menu-item>
+          <el-menu-item :index="'/per-project/' + i.code + '/pandect'"  v-for="(i ,j) in projectList" :key="j">{{i.name}}</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       </el-menu>

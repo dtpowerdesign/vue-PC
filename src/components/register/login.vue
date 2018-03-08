@@ -6,12 +6,12 @@
     </div>
     <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login">
       <el-form-item label="" prop="user" style="margin-left:-100px">
-        <el-input v-model="Form.user" placeholder="输入email/手机号">
+        <el-input v-model="Form.user" placeholder="输入email/手机号" @keyup.enter.native="next()">
         <i slot="prefix" class="icon iconfont icon-zhanghao"></i>
         </el-input>
       </el-form-item>
       <el-form-item label="" prop="pass" style="margin-left:-100px">
-        <el-input type="password" v-model="Form.pass" placeholder="输入密码">
+        <el-input type="password" v-model="Form.pass" placeholder="输入密码" @keyup.enter.native="login()" id="pass">
         <i slot="prefix" class="icon iconfont icon-suo"></i>
         </el-input>
       </el-form-item>
@@ -24,11 +24,11 @@
       <el-form-item style="margin-left:-100px">
         <el-button type="primary" style="width:100%" @click="login()">登录</el-button>
       </el-form-item>
-      <el-form-item style="margin-left:-100px">
+      <!-- <el-form-item style="margin-left:-100px">
         <div style="display:flex;justify-content:flex-start;align-items:center">
           <span style="font-size:1.5rem" onclick="startInit()">第三方账号登录</span><i class="icon iconfont icon-qq" style="font-size:2rem;color:#409eff;margin-left:.5rem"></i><i class="icon iconfont icon-weixin"style="font-size:1.8rem;color:#45b90c;margin-left:.5rem"></i>
         </div>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -90,7 +90,11 @@ export default {
         } else {
           this.$router.push('/com')
         }
+        window.startInit()
       }
+    },
+    next () {
+      $('#pass').focus()
     },
     login () {
       this.$refs.login.validate((valid) => {

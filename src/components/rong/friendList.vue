@@ -7,8 +7,15 @@
           <div class="friendListDivDiv"><span>工作地点:</span><span>{{i.workingAddress}}</span></div>
           <div class="friendListDivDiv"><span>联系电话:</span><span>{{i.telephone}}</span></div>
           <div class="friendListDivDiv"><span>邮箱:</span><span>{{i.email}}</span></div>
-          <div class="friendListDivDiv"><el-button @click="send()" type="success">发送信息</el-button><el-button @click="myDelete(i.account, i.name)" type="danger">删除好友</el-button></div>   
+          <div class="friendListDivDiv"><el-button @click="dialogVisibleChat=true" type="success">发送信息</el-button><el-button @click="myDelete(i.account, i.name)" type="danger">删除好友</el-button></div>   
    </div>
+   <el-dialog title="提示" :visible.sync="dialogVisibleChat" width="30%">
+     <span>这是一段信息</span>
+     <span slot="footer" class="dialog-footer">
+     <el-button @click="dialogVisibleChat = false">取 消</el-button>
+     <el-button type="primary" @click="dialogVisibleChat = false">发送信息</el-button>
+  </span>
+</el-dialog>
   </div>
 </template>
 
@@ -16,7 +23,8 @@
 export default {
   data () {
     return {
-      data: []
+      data: [],
+      dialogVisibleChat: false
     }
   },
   mounted () {
@@ -33,13 +41,19 @@ export default {
       })
     },
     myDelete (account, name) {
-      this.$http.post(this.$domain.domain1 + 'electric-design/delFriend', {'fromUserId': this.$cookie.get('user'), 'toUserId': account})
+      this.$confirm('此操作将永久删除该好友, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post(this.$domain.domain1 + 'electric-design/delFriend', {'fromUserId': this.$cookie.get('user'), 'toUserId': account})
       .then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
             message: `成功删除好友${name}`
           })
+          this.initData()
         } else {
           this.$message({
             type: 'warning',
@@ -48,6 +62,12 @@ export default {
         }
       }).catch((err) => {
         console.log(err)
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }
