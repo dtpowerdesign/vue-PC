@@ -91,6 +91,8 @@ export default {
           this.$router.push('/com')
         }
         window.startInit()
+        // console.log($('#appKey').text())
+        // console.log($('#token').text())
       }
     },
     next () {

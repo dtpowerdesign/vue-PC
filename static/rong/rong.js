@@ -10562,15 +10562,15 @@
     })();
     RongIMLib.RongUtil = RongUtil;
     /*
-        var observer = new RongObserver();
-        observer.watch({
-            key: 'key',
-            func: function(entity){
-                
-            }
-        });
-
-    */
+          var observer = new RongObserver();
+          observer.watch({
+              key: 'key',
+              func: function(entity){
+                  
+              }
+          });
+  
+      */
     var RongObserver = (function () {
       function RongObserver() {
         this.watchers = {};
@@ -10716,8 +10716,6 @@ function init(params, callbacks, modules) {
       console.log('链接成功，用户id：' + userId)
     },
     onTokenIncorrect: function () {
-      // var requst=new XmlHttpRequest();
-      // requst.open("'post","http://")
       console.log('token无效')
     },
     onError: function (errorCode) {
@@ -10732,8 +10730,6 @@ function startInit(user, targetId) {
     token: getValue("token"),
     navi: getValue("navi")
   };
-  console.log(params.appKey)
-  console.log(params.token)
   var userId = "";
   var callbacks = {
     getCurrentUser: function (userInfo) {
@@ -10747,6 +10743,6 @@ function startInit(user, targetId) {
 }
 
 function getValue(id) {
-  return document.getElementById(id).innerText;
+  return document.getElementById(id).firstChild.nodeValue;
 }
 window.startInit = startInit
