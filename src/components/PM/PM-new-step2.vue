@@ -1,5 +1,99 @@
 <template>
   <div class="PM-new-step2">
+    <div style="margin-top:2rem">
+      <el-radio v-model="form.dataOrProject" label="project">项目类型</el-radio> 
+      <el-radio v-model="form.dataOrProject" label="data">资料类型</el-radio>
+    </div>
+    <div class="data" v-if="form.dataOrProject==='data'">
+    <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
+    <div class="content">
+      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+        <el-form-item label="项目名称">
+          <el-col :span="9">
+            <el-input v-model="form.name"></el-input>
+          </el-col>         
+          <el-col :offset="5" :span="5">是否接受联合投标</el-col>
+          <el-col :span="5">
+           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          </el-col>              
+        </el-form-item>
+        <el-form-item label="招标公司">
+          <el-col :span="9">
+            <el-input v-model="form.company"></el-input>
+          </el-col>
+          <el-col class="line" :offset="5" :span="2">类别</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.categorys" placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="关于投标">
+          <el-col :span="9">
+            <el-select v-model="form.state"  placeholder="请选择" style="width:100%">
+            <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
+          </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">设计阶段</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.designState" style="width:100%">
+              <el-option v-for="(i, j) in designState" :key="j"  :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-col :span="9">
+            <el-select v-model="form.type" multiple placeholder="请选择类型" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in type" :key="j" :label="i" :value="i"></el-option>
+          </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">涉及专业</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.major" multiple placeholder="请选择涉及专业" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in major" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-col :span="9">
+            <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期"></el-date-picker>
+          </el-col>          
+          <el-col :offset="5" :span="2">开始时间</el-col>
+          <el-col :span="8">
+            <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="项目描述">
+          <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
+        </el-form-item>        
+        <el-form-item label="项目要求">
+          <el-input  v-model="form.requirement" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目要求"></el-input>
+        </el-form-item>                
+      </el-form>
+    </div>      
+    <div class="title">付款相关<a :href="help3" class="help">不会填?点我</a></div>
+    <div class="content">
+      <el-form :model="form" label-width="180px" style="width:100%">
+        <el-form-item label="付款方式/付款比例">
+          <el-col :span="8" style="display:flex;justify-content:space-between">
+            <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
+              <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+            <el-select v-model="form.paymentScale" placeholder="自填或选择" style="width:40%" filterable allow-create default-first-option>
+              <el-option v-for="(i,j) in paymentScale" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="6">
+            <el-switch v-model="form.hasInvoice" active-text="有发票" inactive-text="无发票" active-value="yes" inactive-value="no"></el-switch>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="付款描述">
+          <el-input v-model="form.payDiscible" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入付款描述"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    </div>
+    <div v-else>
     <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
@@ -184,6 +278,7 @@
         </el-table>
         <el-button type="primary" @click="addStateUnits()">增加设计阶段</el-button>
       </el-form>
+    </div>
     </div>
     <div class="skip">
       <div style="margin-left:2rem" @click="$router.push('/per/PM-new')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>

@@ -5,12 +5,12 @@
         <el-col :span="3"><span style="font-size:1.2rem;color:red">基本信息</span></el-col>
         <el-col :offset="2" :span="19">
           <el-row>
-            <el-col :span="12"><p class="confirm-p1">所在公司:{{form.company}}</p></el-col>
+            <!-- <el-col :span="12"><p class="confirm-p1">所在公司:{{form.company}}</p></el-col> -->
             <el-col :span="12"><p class="confirm-p1">招标公司:{{form.company}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">项目名称:{{form.name}}</p></el-col>
-            <el-col :span="12"><p class="confirm-p1">目前状态:{{form.projectNowState}}</p></el-col>
+            <el-col :span="12" v-if="!(this.form.dataOrProject==='data')"><p class="confirm-p1">目前状态:{{form.projectNowState}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">类型:{{form.type.join(',')}}</p></el-col>
@@ -18,16 +18,16 @@
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">规模:{{form.sizeAndCapacitys}}{{form.unit}}</p></el-col>
-            <el-col :span="12"><p class="confirm-p1">电压等级:{{form.voltagelevel}}</p></el-col>
+            <el-col :span="12" v-if="!(this.form.dataOrProject==='data')"><p class="confirm-p1">电压等级:{{form.voltagelevel}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">开始时间:{{$formDate.formatDate(form.startTime)}}</p></el-col>
             <el-col :span="12"><p class="confirm-p1">结束时间:{{$formDate.formatDate(form.endTime)}}</p></el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="!(this.form.dataOrProject==='data')">
             <el-col :span="12"><p class="confirm-p1">设计阶段:{{form.designState}}</p></el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="!(this.form.dataOrProject==='data')">
             <el-col :span="24"><p class="confirm-p1">工程造价:{{form.lowPrice}}(最低){{form.highPrice}}(最高)</p></el-col>
           </el-row>
           <el-row>
@@ -39,10 +39,13 @@
           <el-row>
             <el-col :span="24"><p class="confirm-p1">项目要求:{{form.requirement}}</p></el-col>
           </el-row>          
+          <el-row>
+            <el-col><p style="font-size:2rem;color:red"><span v-if="this.form.dataOrProject==='data'">此任务为资料型</span><span v-else>此任务为项目型</span></p></el-col>
+          </el-row>
         </el-col>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="!(this.form.dataOrProject==='data')">
       <div class="content-item">
         <el-col :span="3"><span style="font-size:1.2rem;color:red">资质要求</span></el-col>
         <el-col :offset="2" :span="19">
@@ -72,7 +75,7 @@
         </el-col>
       </div>
     </div>    
-    <div class="content">
+    <div class="content" v-if="!(this.form.dataOrProject==='data')">
       <div class="content-item">
         <el-col :span="3"><span style="font-size:1.2rem;color:red">设计结果</span></el-col>
         <el-col :offset="2" :span="19">
@@ -132,6 +135,7 @@ export default {
         })
       })
       var data = {'sourceAccount': this.cookie.get('user'),
+        'dataOrProject': this.form.dataOrProject,
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': this.form.state,
@@ -153,7 +157,7 @@ export default {
         'payDiscible': this.form.payDiscible,
         'projectNowState': this.form.projectNowState,
         'hasInvoice': this.form.hasInvoice,
-        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'qualificationRequirements': [this.form.aptitude],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
@@ -169,7 +173,7 @@ export default {
             type: 'success'
           })
           this.$parent.$parent.$parent.$parent.initData()
-          this.$router.push("'/per-project/' + res.data.code + '/pandect'")
+          this.$router.push('/per-project/' + res.data.code + '/pandect')
         } else {
           this.$message({
             message: `发布失败,原因${res.data.reason}`,
@@ -190,6 +194,7 @@ export default {
       var data = {'sourceAccount': this.helped[0],
         'helpedAccount': this.helped[0],
         'helpAccount': this.$cookie.get('user'),
+        'dataOrProject': this.form.dataOrProject,
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': '临时态',

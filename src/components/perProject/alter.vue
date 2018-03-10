@@ -1,6 +1,96 @@
 <template>
   <div class="alter">
     <div class="title0"><span style="font-size:2rem">修改项目信息</span><i class="icon iconfont icon-iconfontquestion" style="font-size:2rem"></i></div>
+    <div class="data" v-if="form.dataOrProject==='data'">
+    <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
+    <div class="content">
+      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+        <el-form-item label="项目名称">
+          <el-col :span="9">
+            <el-input v-model="form.name"></el-input>
+          </el-col>         
+          <el-col :offset="5" :span="5">是否接受联合投标</el-col>
+          <el-col :span="5">
+           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          </el-col>              
+        </el-form-item>
+        <el-form-item label="招标公司">
+          <el-col :span="9">
+            <el-input v-model="form.company"></el-input>
+          </el-col>
+          <el-col class="line" :offset="5" :span="2">类别</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.categorys" placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="关于投标">
+          <el-col :span="9">
+            <el-select v-model="form.state"  placeholder="请选择" style="width:100%">
+            <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
+          </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">设计阶段</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.designState" style="width:100%">
+              <el-option v-for="(i, j) in designState" :key="j"  :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-col :span="9">
+            <el-select v-model="form.type" multiple placeholder="请选择类型" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in type" :key="j" :label="i" :value="i"></el-option>
+          </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">涉及专业</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.major" multiple placeholder="请选择涉及专业" style="width:100%" filterable allow-create default-first-option>
+            <el-option v-for="(i,j) in major" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-col :span="9">
+            <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期"></el-date-picker>
+          </el-col>          
+          <el-col :offset="5" :span="2">开始时间</el-col>
+          <el-col :span="8">
+            <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="项目描述">
+          <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
+        </el-form-item>        
+        <el-form-item label="项目要求">
+          <el-input  v-model="form.requirement" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目要求"></el-input>
+        </el-form-item>                
+      </el-form>
+    </div>      
+    <div class="title">付款相关<a :href="help3" class="help">不会填?点我</a></div>
+    <div class="content">
+      <el-form :model="form" label-width="180px" style="width:100%">
+        <el-form-item label="付款方式/付款比例">
+          <el-col :span="8" style="display:flex;justify-content:space-between">
+            <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
+              <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+            <el-select v-model="form.paymentScale" placeholder="自填或选择" style="width:40%" filterable allow-create default-first-option>
+              <el-option v-for="(i,j) in paymentScale" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="6">
+            <el-switch v-model="form.hasInvoice" active-text="有发票" inactive-text="无发票" active-value="yes" inactive-value="no"></el-switch>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="付款描述">
+          <el-input v-model="form.payDiscible" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入付款描述"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    </div>    
+    <div class="Project" v-else>
     <div class="title"><span>项目基本信息</span></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
@@ -8,6 +98,10 @@
           <el-col :span="9">
             <el-input v-model="form.company"></el-input>
           </el-col>
+          <el-col :offset="5" :span="5">是否接受联合投标</el-col>
+          <el-col :span="5">
+           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          </el-col>          
         </el-form-item>
         <el-form-item label="项目名称">
           <el-col :span="9">
@@ -15,7 +109,7 @@
           </el-col>
           <el-col class="line" :offset="5" :span="2">类别</el-col>
           <el-col :span="8">
-            <el-select v-model="form.categorys" multiple placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
+            <el-select v-model="form.categorys" placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
             <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
             </el-select>
           </el-col>
@@ -79,6 +173,19 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
         </el-form-item>
+       <el-form-item label="工程限价">
+          <el-col :span="9">
+          <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
+          <span style="font-size:1.2rem;color:red">到</span>
+          <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
+          </el-col>
+       </el-form-item>        
+        <el-form-item label="项目描述">
+          <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
+        </el-form-item>        
+        <el-form-item label="项目要求">
+          <el-input  v-model="form.requirement" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目要求"></el-input>
+        </el-form-item>          
         <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
       </el-form>
     </div>
@@ -102,21 +209,19 @@
             <el-input v-model="form.performanceReq2" style="width:100%"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="工程限价">
-          <el-col :span="9">
-          <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
-          <span style="font-size:1.2rem;color:red">到</span>
-          <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
-          </el-col>
-          <el-col :offset="2" :span="5">所需资质</el-col>
+        <el-form-item label="所需资质">
           <el-col :span="8">
-            <el-select v-model="form.aptitude" placeholder="请选择所需资质" style="width:100%">
-              <el-option v-for="(i,j) in aptitude" :key="j" :value="i" :label="i"></el-option>
-            </el-select>
+            <el-input v-model="form.aptitude" placeholder="请选择所需资质" style="width:100%"></el-input>
           </el-col>
         </el-form-item>
+        <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
+      </el-form>
+    </div>
+    <div class="title"><span>付款相关</span></div>
+    <div class="content">
+     <el-form :model="form" label-width="180px" style="width:100%">
         <el-form-item label="付款方式/付款比例">
-          <el-col :span="9">
+          <el-col :span="8" style="display:flex;justify-content:space-between">
             <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
               <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
             </el-select>
@@ -124,14 +229,15 @@
               <el-option v-for="(i,j) in paymentScale" :key="j" :value="i" :label="i"></el-option>
             </el-select>
           </el-col>
-          <el-col :offset="2" :span="5">是否接受联合投标</el-col>
-          <el-col :span="8">
-           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          <el-col :span="6">
+            <el-switch v-model="form.hasInvoice" active-text="有发票" inactive-text="无发票" active-value="yes" inactive-value="no"></el-switch>
           </el-col>
         </el-form-item>
-        <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
+        <el-form-item label="付款描述">
+          <el-input v-model="form.payDiscible" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入付款描述"></el-input>
+        </el-form-item>
       </el-form>
-    </div>
+    </div>    
     <div class="title">项目设计成果要求</div>
     <div class="content">
       <el-form :model="form" label-width="80px" style="width:100%">
@@ -164,6 +270,7 @@
         <el-button type="primary" @click="addStateUnits()" style="width:100%">增加设计阶段</el-button>
       </el-form>
     </div>
+    </div>
     <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
   </div>
 </template>
@@ -181,11 +288,12 @@ export default {
       disabled: false,
       radio: '2',
       form: {
+        dataOrProject: '',
         company: '某某公司',
         name: '项目',
         state: '',
         sizeAndCapacitys: '',
-        categorys: [],
+        categorys: '',
         unit: '',
         type: [],
         voltagelevel1: '',
@@ -206,13 +314,18 @@ export default {
         paymentMethods: '',
         paymentScale: '',
         isAcceptJointBid: 'true',
+        instruction: '',
+        requirement: '',
+        payDiscible: '',
+        projectNowState: '',
+        hasInvoice: 'no',
         stateUnits: [
       { state: '未填', endTime: '未填', requireResult: '未填' },
       { state: '未填', endTime: '未填', requireResult: '未填' },
       { state: '未填', endTime: '未填', requireResult: '未填' }
         ]
       },
-      qualificationRequirements: { CET: '' },
+      // qualificationRequirements: { CET: '' },
       projectCharacteristics: { difficulty: '', price: '' },
       unit: ['MW', 'Kva', 'KV', `M^2`],
       existingData: { detail: '' },
@@ -229,7 +342,8 @@ export default {
       priceType: ['最低', '最高'],
       aptitude: ['高资质', '低资质'],
       paymentMethods: ['一次性付款', '分阶段付款'],
-      paymentScale: ['1:1', '2:1', '3:1']
+      paymentScale: ['1:1', '2:1', '3:1'],
+      projectNowStates: ['未开始', '项目建议书', '可研已定', '初设已定', '施工图已定', '竣工图已定']
     }
   },
   methods: {
@@ -252,6 +366,7 @@ export default {
       .then((res) => {
         console.log(res.data)
         this.form.company = res.data.tenderCompany
+        this.form.dataOrProject = res.data.dataOrProject
         this.form.name = res.data.name
         this.form.categorys = res.data.category
         this.form.sizeAndCapacitys = res.data.sizeCapacityNumber
@@ -268,6 +383,12 @@ export default {
         this.form.designState = res.data.designProcess
         this.form.lowPrice = res.data.lowestPrice
         this.form.highPrice = res.data.highPrice
+        this.form.instruction = res.data.instruction
+        this.form.requirement = res.data.requirement
+        this.form.payDiscible = res.data.payDiscible
+        this.form.projectNowState = res.data.projectNowState
+        this.form.hasInvoice = res.data.hasInvoice
+        this.form.aptitude = res.data.qualificationRequirements[0]
         this.form.startTime = [].concat((res.data.startTime.year + 1900), (res.data.startTime.month + 1), res.data.startTime.date).join('/')
         this.form.endTime = [].concat((res.data.endTime.year + 1900), (res.data.endTime.month + 1), res.data.endTime.date).join('/')
         this.form.paymentMethods = res.data.payMethod.split('/')[0]
@@ -292,6 +413,13 @@ export default {
           type: 'error'
         })
       })
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey')
+      .then((res) => {
+        this.paymentScale = res.data.payScale
+        this.projectNowStates = res.data.projectNowState
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     confirm () {
       var stateUnits = []
@@ -306,7 +434,8 @@ export default {
         'tenderCompany': this.form.company,
         'name': this.form.name,
         'state': this.form.state,
-        'sizeAndCapacity': this.form.sizeAndCapacitys + '/' + this.form.unit,
+        'sizeCapacityNumber': this.form.sizeAndCapacitys,
+        'sizeAndCapacity': this.form.unit,
         'bidType': this.form.character,
         'type': this.form.type,
         'category': this.form.categorys,
@@ -318,7 +447,12 @@ export default {
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
-        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'instruction': this.form.instruction,
+        'requirement': this.form.requirement,
+        'payDiscible': this.form.payDiscible,
+        'projectNowState': this.form.projectNowState,
+        'hasInvoice': this.form.hasInvoice,
+        'qualificationRequirements': [this.form.aptitude],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,

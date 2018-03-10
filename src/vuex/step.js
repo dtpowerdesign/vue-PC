@@ -11,6 +11,7 @@ const state = {
   description: ['发布新项目前选择您的身份，方便项目的填写，若您对表单不了解，会由工作人员协同您填写', '在此页面填写与项目有关的基本信息,方便设计人员了解您的项目，有利于项目的进行', '最后确认您的项目信息，点击确认即可发布', '步骤四的说明', '步骤五的说明', '步骤六的说明'],
   radioStep1: '',
   form: {
+    dataOrProject: 'project',
     company: '某某公司',
     name: '项目',
     state: '',
@@ -89,6 +90,13 @@ const mutations = {
         type: 'error'
       })
     })
+    axios.post(domain.domain1 + 'electric-design/getDataOfClassKey')
+      .then((res) => {
+        state.paymentScale = res.data.payScale
+        state.projectNowStates = res.data.projectNowState
+      }).catch((err) => {
+        console.log(err)
+      })
   },
   init3(state) {
     state.step = 3

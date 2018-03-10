@@ -91,7 +91,7 @@ export default {
         this.changedState = res.data.state
         this.voltagelevel = res.data.voltagelevel
         this.type = res.data.type.join(',')
-        this.category = res.data.category.join(',')
+        this.category = res.data.category
         this.major = res.data.major.join(',')
         this.processRequirements = res.data.processRequirements
         this.designProcess = res.data.designProcess
