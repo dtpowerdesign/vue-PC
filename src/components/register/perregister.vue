@@ -13,9 +13,9 @@
   <el-form-item label="姓名" prop="name">
     <el-input type="text" v-model="Form.name" auto-complete="off" placeholder="请填写中文姓名"></el-input>
   </el-form-item>
-  <el-form-item label="公司(可选)" >
+  <!-- <el-form-item label="公司(可选)" >
     <el-input type="text" v-model="Form.company" auto-complete="off" placeholder="没有的话可以忽略此项"></el-input>
-  </el-form-item>
+  </el-form-item> -->
   <el-form-item label="密码" prop="pass">
     <el-input type="password" v-model="Form.pass" auto-complete="off" placeholder="请输入密码"></el-input>
   </el-form-item>
@@ -172,7 +172,28 @@ export default {
                   message: '恭喜您,注册成功',
                   type: 'success'
                 })
-                this.$router.push('/login')
+                this.$confirm('请选择', '提示', {
+                  confirmButtonText: '发项目',
+                  cancelButtonText: '接项目',
+                  type: 'info'
+                }).then(() => {
+                  this.cookie.set('user', this.Form.user, 30)
+                  this.cookie.set('pass', this.Form.pass, 30)
+                  this.cookie.set('role', res.data.role, 30)
+                  this.cookie.set('name', res.data.name, 30)
+                  this.cookie.set('token', res.data.token, 30)
+                  window.startInit()
+                  this.$router.push('/per/PM-new')
+                }).catch(() => {
+                  this.cookie.set('user', this.Form.user, 30)
+                  this.cookie.set('pass', this.Form.pass, 30)
+                  this.cookie.set('role', res.data.role, 30)
+                  this.cookie.set('name', res.data.name, 30)
+                  this.cookie.set('token', res.data.token, 30)
+                  window.startInit()
+                  this.$router.push('/archive')
+                })
+                // this.$router.push('/login')
               } else {
                 this.$message({
                   message: `注册失败,原因${res.data.reason}`,

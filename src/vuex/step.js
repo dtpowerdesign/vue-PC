@@ -15,7 +15,7 @@ const state = {
     name: '项目',
     state: '',
     sizeAndCapacitys: '',
-    categorys: [],
+    categorys: '',
     unit: '',
     type: [],
     voltagelevel1: '',
@@ -36,6 +36,11 @@ const state = {
     paymentMethods: '',
     paymentScale: '',
     isAcceptJointBid: 'true',
+    instruction: '',
+    requirement: '',
+    payDiscible: '',
+    projectNowState: '',
+    hasInvoice: 'no',
     stateUnits: [
       { state: '未填', endTime: '未填', requireResult: '未填' },
       { state: '未填', endTime: '未填', requireResult: '未填' },
@@ -59,7 +64,8 @@ const state = {
   priceType: ['最低', '最高'],
   aptitude: ['高资质', '低资质'],
   paymentMethods: ['一次性付款', '分阶段付款'],
-  paymentScale: ['1:1', '2:1', '3:1']
+  paymentScale: ['1:1', '2:1', '3:1'],
+  projectNowStates: ['未开始', '项目建议书', '可研已定', '初设已定', '施工图已定', '竣工图已定']
 }
 
 const mutations = {

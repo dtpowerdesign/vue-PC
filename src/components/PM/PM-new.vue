@@ -1,6 +1,6 @@
 <template>
   <div class="PM-new">
-   <div class="title"><span style="font-size:2rem">发布新项目</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:2rem">发布新任务</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="box">
      <el-steps :active="step-1" process-status="finish" finish-status="success" align-center style="margin-left:-8rem;margin-right:-8rem">
        <el-step v-for="(i, j) in stepName" :key="j" :title="i" ></el-step>
@@ -30,7 +30,8 @@ export default {
 .PM-new{
   width:90%;
   margin: 1rem auto 0 auto;
-  background-color: #F0F4F7;
+  /* background-color: #F0F4F7; */
+  overflow: hidden;
 }
 .title{
   text-align:left;

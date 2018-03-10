@@ -10,11 +10,11 @@
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">项目名称:{{form.name}}</p></el-col>
-            <el-col :span="12"><p class="confirm-p1">目前状态:{{form.state}}</p></el-col>
+            <el-col :span="12"><p class="confirm-p1">目前状态:{{form.projectNowState}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">类型:{{form.type.join(',')}}</p></el-col>
-            <el-col :span="12"><p class="confirm-p1">类别:{{form.categorys.join(',')}}</p></el-col>
+            <el-col :span="12"><p class="confirm-p1">类别:{{form.categorys}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">规模:{{form.sizeAndCapacitys}}{{form.unit}}</p></el-col>
@@ -27,6 +27,18 @@
           <el-row>
             <el-col :span="12"><p class="confirm-p1">设计阶段:{{form.designState}}</p></el-col>
           </el-row>
+          <el-row>
+            <el-col :span="24"><p class="confirm-p1">工程造价:{{form.lowPrice}}(最低){{form.highPrice}}(最高)</p></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24"><p class="confirm-p1">是否接受联合投标:{{form.isAcceptJointBid}}</p></el-col>
+          </el-row>          
+          <el-row>
+            <el-col :span="24"><p class="confirm-p1">项目描述:{{form.instruction}}</p></el-col>
+          </el-row>                    
+          <el-row>
+            <el-col :span="24"><p class="confirm-p1">项目要求:{{form.requirement}}</p></el-col>
+          </el-row>          
         </el-col>
       </div>
     </div>
@@ -38,23 +50,28 @@
             <el-col :span="24"><p class="confirm-p2">投标个体性质:{{form.character}}</p></el-col>
           </el-row>
           <el-row>
-            <el-col :span="24"><p class="confirm-p2">工程造价:{{form.lowPrice}}(最低){{form.highPrice}}(最高)</p></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24"><p class="confirm-p2">付款方式:{{form.paymentMethods}}</p></el-col>
-          </el-row>
-          <el-row>
             <el-col :span="24"><p class="confirm-p2">业绩要求:{{form.performanceReq}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="24"><p class="confirm-p2">所需资质:{{form.aptitude}}</p></el-col>
           </el-row>
-          <el-row>
-            <el-col :span="24"><p class="confirm-p2">是否接受联合投标:{{form.isAcceptJointBid}}</p></el-col>
-          </el-row>
         </el-col>
       </div>
     </div>
+    <div class="content">
+      <div class="content-item">
+        <el-col :span="3"><span style="font-size:1.2rem;color:red">付款相关</span></el-col>
+        <el-col :span="19" :offset="2">
+          <el-row>
+            <el-col :span="24"><p class="confirm-p2">付款方式:{{form.paymentMethods}}</p></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24"><p class="confirm-p2">付款比例:{{form.paymentScale}}</p></el-col>
+          </el-row>          
+          <el-row><p class="confirm-p2">付款描述:{{form.payDiscible}}</p></el-row>
+        </el-col>
+      </div>
+    </div>    
     <div class="content">
       <div class="content-item">
         <el-col :span="3"><span style="font-size:1.2rem;color:red">设计结果</span></el-col>
@@ -131,6 +148,11 @@ export default {
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
+        'instruction': this.form.instruction,
+        'requirement': this.form.requirement,
+        'payDiscible': this.form.payDiscible,
+        'projectNowState': this.form.projectNowState,
+        'hasInvoice': this.form.hasInvoice,
         'qualificationRequirements': [{'资质要求': this.form.aptitude}],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
@@ -147,6 +169,7 @@ export default {
             type: 'success'
           })
           this.$parent.$parent.$parent.$parent.initData()
+          this.$router.push("'/per-project/' + res.data.code + '/pandect'")
         } else {
           this.$message({
             message: `发布失败,原因${res.data.reason}`,
@@ -183,6 +206,11 @@ export default {
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
+        'instruction': this.form.instruction,
+        'requirement': this.form.requirement,
+        'payDiscible': this.form.payDiscible,
+        'projectNowState': this.form.projectNowState,
+        'hasInvoice': this.form.hasInvoice,
         'qualificationRequirements': [{'资质要求': this.form.aptitude}],
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
@@ -194,7 +222,7 @@ export default {
         console.log(res.data)
         if (res.data.result) {
           this.$message({
-            message: '发布成功',
+            message: `帮${this.helped[0]}发布成功`,
             type: 'success'
           })
           this.$parent.$parent.$parent.$parent.initData()
@@ -225,21 +253,31 @@ export default {
   font-weight:500;
 }
 .content{
-  margin:3rem auto 0 auto;
+  margin:1rem auto 1rem auto;
   width:80%;
   display:flex;
+  border-top: 1px solid black;
 }
 .content-item{
   width:100%;
-  border-top: 1px solid black;
 }
 .confirm-p1{
   font-size:1.3rem;
   text-align:left;
   color:#409EFF;
+  width: 100%;  
+    height: auto;  
+    word-wrap:break-word;  
+    word-break:break-all;  
+    overflow: hidden;
 }
 .confirm-p2{
   font-size:1.2rem;
   text-align:left;
+    width: 100%;  
+    height: auto;  
+    word-wrap:break-word;  
+    word-break:break-all;  
+    overflow: hidden;
 }
 </style>

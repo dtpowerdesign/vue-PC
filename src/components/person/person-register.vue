@@ -41,15 +41,17 @@
               <el-option v-for="(i, j) in acceptableTravelTime" :key="j" :label="i" :value="i"></el-option>             
             </el-select>
           </el-form-item>   
-          <el-form-item label="工作项目地点">
-            <el-input v-model="ruleForm.workingAddress" style="width:100%"></el-input>
-          </el-form-item>                 
           <el-form-item label="电话" prop="telephone">
             <el-input v-model="ruleForm.telephone" style="width:100%"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="ruleForm.email" style="width:100%"></el-input>
           </el-form-item>
+          <el-form-item label="我的角色">
+            <el-select style="width:100%" v-model="ruleForm.job" filterable allow-create default-first-option multiple>
+              <el-option v-for="(i, j) in jobs" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-form-item>          
           <el-form-item label="所在地" prop="place">
             <div style="display:flex;justify-content:space-around;margin-left:0px">
             <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:30%;margin-right:0.6rem;">
@@ -60,9 +62,28 @@
             </el-select>
             <el-select v-model="ruleForm.area" placeholder="请选择区域" style="width:30%">
               <el-option v-for="item in areas" :key="item" :label="item" :value="item"></el-option>
-            </el-select>
+            </el-select>            
             </div>
           </el-form-item>
+          <el-form-item label="可工作的地点">
+              <el-radio v-model="radio" label="1">全国</el-radio>
+              <el-radio v-model="radio" label="2">自定义</el-radio>
+          </el-form-item>
+          <el-form-item label="工作地点选择" v-if="radio==='2'" v-for="(i, j) in workingAddress" :key="j">
+            <div style="display:flex;justify-content:space-around;margin-left:0px">
+            <el-select v-model="i.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:25%;margin-right:0.6rem;">
+              <el-option v-for="item in provs" :key="item.name" :label="item.name" :value="item.name"></el-option>
+            </el-select>
+            <el-select v-model="i.city" placeholder="请选择城市" v-on:change="getCity($event)" style="width:25%;margin-right:0.6rem;">
+              <el-option v-for="item in cities" :key="item.name" :label="item.name" :value="item.name"></el-option>
+            </el-select>
+            <el-select v-model="i.area" placeholder="请选择区域" style="width:25%">
+              <el-option v-for="item in areas" :key="item" :label="item" :value="item"></el-option>
+            </el-select>            
+            <i class="icon iconfont icon-cha" @click="deleteWorkingAddress(j)"></i>
+            </div>
+          </el-form-item>
+          <el-form-item label="添加工作地点" v-if="radio==='2'"><el-button type="info" @click="addWorkingAddress()" style="width:100%">添加工作地点</el-button></el-form-item>
           <el-form-item><el-button type="primary" @click="submit()" style="width:120%;margin-left:-120px;">保存</el-button></el-form-item>
         </el-form>
       </el-col>
@@ -105,12 +126,18 @@
 export default {
   data () {
     return {
+      radio: '1',
       complete: 100,
       status: 'success',
       Ages: [],
       workType: ['全职', '兼职'],
+      jobs: ['学徒', '制图', '主设人', '校核人', '审核人', '项目经理', '工程代理', '平台项目分析师'],
       acceptableTravelTime: ['一天', '一周', '一个月', '长期'],
       labelPosition: 'right',
+      workingAddress: [
+        { prov: '',
+          city: '',
+          area: '' }],
       ruleForm: {
         name: '',
         sex: '',
@@ -122,6 +149,7 @@ export default {
         workType: '',
         telephone: '',
         email: '',
+        job: [],
         prov: '',
         city: '',
         area: '',
@@ -140,9 +168,23 @@ export default {
       this.ruleForm.age = res.data.age
       this.ruleForm.telephone = res.data.telephone
       this.ruleForm.email = res.data.email
+      this.ruleForm.job = Array.isArray(res.data.jobs) ? res.data.jobs : []
       this.ruleForm.workUnit = res.data.workUnit
       this.ruleForm.graduateInstitution = res.data.graduateInstitution
       this.ruleForm.acceptableTravelTime = res.data.acceptableTravelTime
+      if (Array.isArray(res.data.workingAddress)) {
+        this.radio = '2'
+        this.workingAddress = []
+        res.data.workingAddress.forEach((el, index) => {
+          this.workingAddress.push({
+            'prov': el.split('/')[0],
+            'city': el.split('/')[1],
+            'area': el.split('/')[2]
+          })
+        })
+      } else {
+        this.radio = '1'
+      }
       this.ruleForm.workingAddress = res.data.workingAddress
       this.ruleForm.workType = res.data.workType
       this.ruleForm.prov = res.data.birthAddress.province
@@ -173,6 +215,16 @@ export default {
     })
   },
   methods: {
+    addWorkingAddress () {
+      this.workingAddress.push({
+        prov: '',
+        city: '',
+        area: ''
+      })
+    },
+    deleteWorkingAddress (index) {
+      this.workingAddress = this.workingAddress.filter(o => this.workingAddress.indexOf(o) !== index)
+    },
     getProv (prov) {
       this.cities = []
       for (var val of this.provs) {
@@ -192,6 +244,16 @@ export default {
       }
     },
     submit () {
+      if (this.radio === '1') {
+        this.ruleForm.workingAddress = '全国'
+      } else {
+        // this.ruleForm.workingAddress = ''
+        var arrTemp = []
+        this.workingAddress.forEach((el, index) => {
+          arrTemp[index] = `${el.prov}/${el.city}/${el.area}`
+        })
+        this.ruleForm.workingAddress = arrTemp
+      }
       this.$http.post(this.$domain.domain1 + 'electric-design/changePuserByAccount',
         {
           'account': this.cookie.get('user'),
@@ -206,6 +268,7 @@ export default {
             'graduateInstitution': this.ruleForm.graduateInstitution,
             'acceptableTravelTime': this.ruleForm.acceptableTravelTime,
             'workingAddress': this.ruleForm.workingAddress,
+            'jobs': this.ruleForm.job,
             'workType': this.ruleForm.workType,
             'birthAddress': {
               'province': this.ruleForm.prov,

@@ -189,7 +189,28 @@ export default {
                   message: '恭喜您,注册成功',
                   type: 'success'
                 })
-                this.$router.push('/login')
+                this.$confirm('请选择', '提示', {
+                  confirmButtonText: '发项目',
+                  cancelButtonText: '接项目',
+                  type: 'success'
+                }).then(() => {
+                  this.cookie.set('user', this.Form.user, 30)
+                  this.cookie.set('pass', this.Form.pass, 30)
+                  this.cookie.set('role', res.data.role, 30)
+                  this.cookie.set('name', res.data.name, 30)
+                  this.cookie.set('token', res.data.token, 30)
+                  window.startInit()
+                  this.$router.push('/com/CM-new')
+                }).catch(() => {
+                  this.cookie.set('user', this.Form.user, 30)
+                  this.cookie.set('pass', this.Form.pass, 30)
+                  this.cookie.set('role', res.data.role, 30)
+                  this.cookie.set('name', res.data.name, 30)
+                  this.cookie.set('token', res.data.token, 30)
+                  window.startInit()
+                  this.$router.push('/archive')
+                })
+                // this.$router.push('/login')
               } else {
                 this.$message({
                   message: `注册失败,原因${res.data.reason}`,

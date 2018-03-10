@@ -1,27 +1,31 @@
 <template>
   <div class="PM-new-step2">
-    <div class="title"><span>项目基本信息</span></div>
+    <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+        <el-form-item label="项目名称">
+          <el-col :span="9">
+            <el-input v-model="form.name"></el-input>
+          </el-col>         
+          <el-col :offset="5" :span="5">是否接受联合投标</el-col>
+          <el-col :span="5">
+           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          </el-col>              
+        </el-form-item>
         <el-form-item label="招标公司">
           <el-col :span="9">
             <el-input v-model="form.company"></el-input>
           </el-col>
-        </el-form-item>
-        <el-form-item label="项目名称">
-          <el-col :span="9">
-            <el-input v-model="form.name"></el-input>
-          </el-col>
           <el-col class="line" :offset="5" :span="2">类别</el-col>
           <el-col :span="8">
-            <el-select v-model="form.categorys" multiple placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
+            <el-select v-model="form.categorys" placeholder="请选择类别" style="width:100%" filterable allow-create default-first-option>
             <el-option v-for="(i,j) in categorys" :key="j" :label="i" :value="i"></el-option>
             </el-select>
           </el-col>
         </el-form-item>
-        <el-form-item label="目标状态">
+        <el-form-item label="关于投标">
           <el-col :span="4">
-            <el-select v-model="form.state"  placeholder="请选择目标状态" >
+            <el-select v-model="form.state"  placeholder="请选择" >
             <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
           </el-select>
           </el-col>
@@ -78,9 +82,28 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
         </el-form-item>
+        <el-form-item label="工程限价">
+          <el-col :span="9">
+          <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
+          <span style="font-size:1.2rem;color:red">到</span>
+          <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
+          </el-col>       
+          <el-col :offset="5" :span="2">目前状态</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.projectNowState" style="width:100%">
+              <el-option v-for="(i, j) in projectNowStates"  :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-col>          
+        </el-form-item>
+        <el-form-item label="项目描述">
+          <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
+        </el-form-item>        
+        <el-form-item label="项目要求">
+          <el-input  v-model="form.requirement" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目要求"></el-input>
+        </el-form-item>                
       </el-form>
     </div>
-    <div class="title"><span>项目资质要求</span></div>
+    <div class="title"><span>项目资质要求</span><a :href="help2" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form :model="form" label-width="140px" style="width:100%">
         <el-form-item label="投标个体性质">
@@ -90,31 +113,29 @@
           </el-select>
           </el-col>
           <el-col :offset="2" :span="3">业绩要求</el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-select v-model="form.performanceReq1" placeholder="请选择业绩要求" style="width:100%"  filterable allow-create default-first-option>
               <el-option v-for="(i,j) in performanceReq" :key="j" :value="i" :label="i"></el-option>
             </el-select>
           </el-col>
-          <el-col :span="3">数量要求</el-col>
-          <el-col :span="3">
-            <el-input v-model="form.performanceReq2" style="width:100%"></el-input>
+          <!-- <el-col :span="3"></el-col> -->
+          <el-col :span="4">
+            <el-input v-model="form.performanceReq2" style="width:100%" placeholder="数量要求"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="工程限价">
-          <el-col :span="9">
-          <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
-          <span style="font-size:1.2rem;color:red">到</span>
-          <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
-          </el-col>
-          <el-col :offset="2" :span="5">所需资质</el-col>
-          <el-col :span="8">
-            <el-select v-model="form.aptitude" placeholder="请选择所需资质" style="width:100%">
+        <el-form-item label="所需资质">
+            <el-input v-model="form.aptitude"></el-input>
+            <!-- <el-select v-model="" placeholder="请选择所需资质" style="width:100%">
               <el-option v-for="(i,j) in aptitude" :key="j" :value="i" :label="i"></el-option>
-            </el-select>
-          </el-col>
+            </el-select>           -->
         </el-form-item>
+      </el-form>
+    </div>
+    <div class="title">付款相关<a :href="help3" class="help">不会填?点我</a></div>
+    <div class="content">
+      <el-form :model="form" label-width="180px" style="width:100%">
         <el-form-item label="付款方式/付款比例">
-          <el-col :span="9">
+          <el-col :span="8" style="display:flex;justify-content:space-between">
             <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
               <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
             </el-select>
@@ -122,18 +143,21 @@
               <el-option v-for="(i,j) in paymentScale" :key="j" :value="i" :label="i"></el-option>
             </el-select>
           </el-col>
-          <el-col :offset="2" :span="5">是否接受联合投标</el-col>
-          <el-col :span="8">
-           <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
+          <el-col :span="6">
+            <el-switch v-model="form.hasInvoice" active-text="有发票" inactive-text="无发票" active-value="yes" inactive-value="no"></el-switch>
           </el-col>
+        </el-form-item>
+        <el-form-item label="付款描述">
+          <el-input v-model="form.payDiscible" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入付款描述"></el-input>
         </el-form-item>
       </el-form>
     </div>
-    <div class="title">项目设计成果要求</div>
-    <div class="content">
+    <div class="title">项目设计成果要求<a :href="help4" class="help">不会填?点我</a></div>
+    <div class="content" style="display:block">
+      <div style="color:#F56C6C">注意:各个设计阶段的文件需发布成功后才可上传</div><br>
       <el-form :model="form" label-width="80px" style="width:100%">
-        <el-radio v-model="radio" label="1">平台推荐</el-radio>
-        <el-radio v-model="radio" label="2">自定义</el-radio>
+        <!-- <el-radio v-model="radio" label="1">平台推荐</el-radio>
+        <el-radio v-model="radio" label="2">自定义</el-radio> -->
         <el-table :data="form.stateUnits" stripe style="margin-top:2rem">
           <el-table-column label="设计阶段">
             <template slot-scope="scope">
@@ -174,10 +198,14 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   store,
   computed: {
-    ...mapState(['step', 'form', 'states', 'designState', 'type', 'categorys', 'sizeAndCapacitys', 'voltagelevel', 'voltagetype', 'major', 'unit', 'character', 'performanceReq', 'priceType', 'aptitude', 'paymentMethods', 'paymentScale'])
+    ...mapState(['step', 'form', 'states', 'designState', 'type', 'categorys', 'sizeAndCapacitys', 'voltagelevel', 'voltagetype', 'major', 'unit', 'character', 'performanceReq', 'priceType', 'aptitude', 'paymentMethods', 'paymentScale', 'projectNowStates'])
   },
   data () {
     return {
+      help1: '',
+      help2: '',
+      help3: '',
+      help4: '',
       disabled: false,
       radio: '2'
     }
@@ -209,6 +237,9 @@ export default {
   align-items:center;
   color:#4d83e7;
   font-weight:500;
+}
+.help{
+  margin-left:1rem;color:#409EFF
 }
 .title{
   display:flex;

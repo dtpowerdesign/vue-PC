@@ -37,11 +37,29 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+a,a:hover{
+  color:#409EFF;
+  cursor: pointer;
+    text-decoration: none;
+}
+a:hover{
+
+}
 #left, #right{
   height:100%
 }
 .cell{
   text-align: center;
+}
+
+//修改MessageBox 弹框默认样式
+.el-message-box__btns{
+  display: flex;
+  justify-content:center;
+  .el-button--default{
+    background-color: #409EFF;
+    color: white;
+}
 }
 
 // 导航栏展开宽度

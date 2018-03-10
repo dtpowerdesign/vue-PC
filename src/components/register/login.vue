@@ -112,7 +112,6 @@ export default {
               })
               // this.appKey = this.$appKey.appKey
               // this.token = res.data.token
-              window.startInit()
               if (this.checked) {
                 this.cookie.set('user', this.Form.user, 30)
                 this.cookie.set('pass', this.Form.pass, 30)
@@ -126,6 +125,7 @@ export default {
                 this.cookie.set('name', res.data.name)
                 this.cookie.set('token', res.data.token)
               }
+              window.startInit()
               if (res.data.role === 'puser') {
                 this.$router.push('/per')
               } else {
