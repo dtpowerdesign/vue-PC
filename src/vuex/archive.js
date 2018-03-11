@@ -12,7 +12,9 @@ const state = {
   tag4: [],
   tag5: [],
   data: [],
-  length: 1
+  length: 1,
+  json: {},
+  table: []
 }
 
 const mutations = {

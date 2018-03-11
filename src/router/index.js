@@ -16,15 +16,15 @@ import comAchi from '@/components/company/company-comAchi'
 import register from '@/components/person/person-register'
 import Cregister from '@/components/company/company-register'
 import Pnew from '@/components/PM/PM-new'
-import Cnew from '@/components/CM/CM-new'
+// import Cnew from '@/components/CM/CM-new'
 import step1 from '@/components/PM/PM-new-step'
-import Cstep1 from '@/components/CM/CM-new-step'
+// import Cstep1 from '@/components/CM/CM-new-step'
 import step2 from '@/components/PM/PM-new-step2'
-import Cstep2 from '@/components/CM/CM-new-step2'
+// import Cstep2 from '@/components/CM/CM-new-step2'
 import step3 from '@/components/PM/PM-new-step3'
-import Cstep3 from '@/components/CM/CM-new-step3'
+// import Cstep3 from '@/components/CM/CM-new-step3'
 import stepNoabout2 from '@/components/PM/PM-new-step2-1'
-import CstepNoabout2 from '@/components/CM/CM-new-step2-1'
+// import CstepNoabout2 from '@/components/CM/CM-new-step2-1'
 import step5 from '@/components/PM/PM-new-step5'
 import step6 from '@/components/PM/PM-new-step6'
 import sumary from '@/components/PM/PM-sumary'
@@ -78,7 +78,7 @@ export default new Router({
     children: [
       { path: 'company-comAchi', component: comAchi },
       { path: 'company-register', component: Cregister },
-      { path: 'CM-new', component: Cnew, children: [{ path: '', component: Cstep1 }, { path: '2', component: Cstep2 }, { path: '3', component: Cstep3 }, { path: '2-1', component: CstepNoabout2 }] },
+      { path: 'PM-new', component: Pnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }, { path: '5', component: step5 }, { path: '6', component: step6 }] },
       { path: 'CM-sumary', component: sumary }, // eslint-disable-next-line
       { path: 'CM-combo', component: combo }, // eslint-disable-next-line
       { path: 'Cstatistics-time', component: time },

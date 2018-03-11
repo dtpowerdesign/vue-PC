@@ -1,6 +1,6 @@
 <template>
   <div class="bottom">
-   <div class="div1"><img src="../../../static/logo.png" alt=""><span>南瑞美思</span></div>
+   <div class="div1"><img src="../../../static/logo.png" alt=""><span>{{msg}}</span></div>
    <ul class="ul1">
       <li>
         <span class="ul1-title">关于平台</span>
@@ -39,7 +39,22 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      msg: ''
+    }
+  },
+  mounted () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getHomepagedata')
+      .then((res) => {
+        this.msg = res.data.platformName
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
   }
 }
 </script>

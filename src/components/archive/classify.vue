@@ -32,10 +32,11 @@ export default {
       stage: [],
       voltage: [],
       domain: [],
-      tags: []
+      tags: [],
+      jsonAll: {}
     }
   },
-  computed: mapState(['table']),
+  computed: mapState(['table', 'json']),
   mounted () {
     this.initData()
   },
@@ -125,17 +126,60 @@ export default {
   watch: {
     tags () {
       this.$parent.loadingContent = true
-      var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
-      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions ', formData)
-      .then(res => {
-        console.log(res.data)
-        this.$store.commit('init')
-        res.data.forEach((el, index) => {
-          this.$store.commit('add', el)
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+        this.jsonAll = res.data
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+      .then((res) => {
+        this.$store.state.json = {}
+        for (var i in res.data) {
+          this.$store.state.json[i] = {
+            key: i,
+            title: res.data[i]}
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+        var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions', formData)
+        .then((res) => {
+          this.$store.state.table = []
+          if (res.data !== 0) {
+            res.data.forEach((el, index) => {
+              var obj = {}
+              for (var i in this.jsonAll) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
+                  obj[i] = el[i].concat().join(',')
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
+                  el[i].year = el[i].year || 0
+                  el[i].month = el[i].month || 0
+                  el[i].date = el[i].date || 0
+                  obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
+                } else {
+                  obj[i] = el[i]
+                }
+              }
+              this.$store.state.table.push(obj)
+            })
+          }
+          this.$parent.loadingContent = false
+        }).catch((err) => {
+          console.log(err)
         })
-        this.$store.state.length = res.data.length
-        this.$parent.loadingContent = false
-      }).catch(err => { console.log(err) })
+      }).catch((err) => {
+        console.log(err)
+      })
+
+      // var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+      // this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions ', formData)
+      // .then(res => {
+      //   console.log(res.data)
+      //   this.$store.commit('init')
+      //   res.data.forEach((el, index) => {
+      //     this.$store.commit('add', el)
+      //   })
+      //   this.$store.state.length = res.data.length
+      //   this.$parent.loadingContent = false
+      // }).catch(err => { console.log(err) })
     }
   }
 }
