@@ -18,17 +18,18 @@ export default {
       tag2: [],
       tag3: [],
       tag4: [],
-      tag5: []
+      tag5: [],
+      tag6: []
     }
   },
   mounted () {
-    this.tags = this.$store.state.tags
     this.tags = this.$store.state.tags
     this.tag1 = this.$store.state.tag1
     this.tag2 = this.$store.state.tag2
     this.tag3 = this.$store.state.tag3
     this.tag4 = this.$store.state.tag4
     this.tag5 = this.$store.state.tag5
+    this.tag6 = this.$store.state.tag6
   },
   methods: {
     close (tag) {
@@ -38,6 +39,7 @@ export default {
       this.tag3.splice(this.tags.indexOf(tag), 1)
       this.tag4.splice(this.tags.indexOf(tag), 1)
       this.tag5.splice(this.tags.indexOf(tag), 1)
+      this.tag6.splice(this.tags.indexOf(tag), 1)
     }
   }
 }

@@ -8,8 +8,10 @@ import perProject from '@/components/perProject'
 import perregister from '@/components/register/perregister'
 import comregister from '@/components/register/comregister'
 import login from '@/components/register/login'
+import uploadAchieve from '@/components/uploadAchieve/uploadAchieve'
 import protocol from '@/views/protocol/protocol'
 import archive from '@/components/archive'
+import facilitator from '@/components/facilitator'
 import Error from '@/views/Error/404'
 import perAchi from '@/components/person/person-perAchi'
 import comAchi from '@/components/company/company-comAchi'
@@ -62,7 +64,7 @@ export default new Router({
     component: Index,
     children: [
       { path: 'person-perAchi', component: perAchi },
-      { path: 'person-register', component: register },
+      { path: 'uploadAchieve', component: uploadAchieve },
       { path: 'person-register', component: register },
       { path: 'PM-new', component: Pnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }, { path: '5', component: step5 }, { path: '6', component: step6 }] },
       { path: 'PM-sumary', component: sumary }, // eslint-disable-next-line
@@ -77,6 +79,7 @@ export default new Router({
     component: comIndex,
     children: [
       { path: 'company-comAchi', component: comAchi },
+      { path: 'uploadAchieve', component: uploadAchieve },
       { path: 'company-register', component: Cregister },
       { path: 'PM-new', component: Pnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }, { path: '5', component: step5 }, { path: '6', component: step6 }] },
       { path: 'CM-sumary', component: sumary }, // eslint-disable-next-line
@@ -103,6 +106,9 @@ export default new Router({
     path: '/archive',
     component: archive
   }, {
+    path: '/facilitator',
+    component: facilitator
+  }, {
     path: '/perregister',
     component: perregister
   }, {
@@ -123,7 +129,7 @@ export default new Router({
       { path: 'friendList', component: friendList }
     ]
   }, {
-    path: '/changeTable',
+    path: '/changeTable/:value',
     component: changeTable
   }, {
     path: '/1',

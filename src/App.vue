@@ -61,6 +61,13 @@ a:hover{
     color: white;
 }
 }
+//垂直方向下拉框高度
+.el-menu--popup-bottom-start{
+   max-height: 30rem;
+   max-width: 20rem;
+    overflow: scroll;
+
+}
 
 // 导航栏展开宽度
 .leftNav, .comleftNav, .proLeftNav{

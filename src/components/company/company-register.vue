@@ -45,7 +45,12 @@
             <el-select style="width:100%" v-model="ruleForm.job" filterable allow-create default-first-option multiple>
               <el-option v-for="(i, j) in jobs" :key="j" :value="i" :label="i"></el-option>
             </el-select>
-          </el-form-item>                    
+          </el-form-item>      
+          <el-form-item label="我的专业">
+            <el-select style="width:100%" v-model="ruleForm.major" multiple filterable allow-create default-first-option multiple>
+              <el-option v-for="(i, j) in major" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-form-item>                            
           <el-form-item><el-button type="primary" @click="submit()" style="width:120%;margin-left:-140px;">保存</el-button></el-form-item>
         </el-form>
       </el-col>
@@ -108,6 +113,7 @@ export default {
       companyType: ['设计院', '施工企业', '开发商', '运营商'],
       peopleNumber: ['1-50', '50-150', '150-500'],
       labelPosition: 'right',
+      major: [],
       jobs: ['学徒', '制图', '主设人', '校核人', '审核人', '项目经理', '工程代理', '平台项目分析师'],
       ruleForm: {
         name: '',
@@ -127,7 +133,8 @@ export default {
         website: '',
         job: [],
         companyType: [],
-        instruction: ''
+        instruction: '',
+        major: []
       },
       provs: [],
       cities: [],
@@ -135,6 +142,21 @@ export default {
     }
   },
   created () {
+    this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
+      this.major = res.data.majors
+    }).catch((err) => {
+      console.log(err)
+      this.$message({showClose: true,
+        message: '网络连接错误',
+        type: 'error'
+      })
+    })
+    this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey')
+        .then((res) => {
+          this.jobs = res.data.duties
+        }).catch((err) => {
+          console.log(err)
+        })
     this.$http.post(this.$domain.domain1 + 'electric-design/getCuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
       // console.log(res.data)
       this.ruleForm.name = res.data.name
@@ -152,6 +174,7 @@ export default {
       this.ruleForm.website = res.data.website
       this.ruleForm.job = Array.isArray(res.data.jobs) ? res.data.jobs : []
       this.ruleForm.companyType = Array.isArray(res.data.companyType) ? res.data.companyType : []
+      this.ruleForm.major = Array.isArray(res.data.major) ? res.data.major : []
       this.ruleForm.instruction = res.data.instruction
       this.complete = 10
       for (var i in res.data.dataOfDeepth) {
@@ -179,6 +202,7 @@ export default {
             'secondLinkmanPhnoe': this.ruleForm.secondLinkmanPhnoe,
             // 'workUnit': this.ruleForm.workUnit,
             'jobs': this.ruleForm.job,
+            'major': this.ruleForm.major,
             'companyCode': this.ruleForm.companyCode,
             'peopleNumber': this.ruleForm.peopleNumber,
             'grownTime': this.$formDate.formatDate(this.ruleForm.grownTime),

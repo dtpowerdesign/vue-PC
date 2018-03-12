@@ -5,7 +5,7 @@ export default {
     var month = datee.getMonth() + 1
     var day = datee.getDate()
     if (isNaN(year))
-      return '0000-00-00';
+      return '1970-00-00';
     else {
       return year + '-' + this.formatTen(month) + '-' + this.formatTen(day)
     }

@@ -15,6 +15,9 @@
    <div class="div1">
      <span class="font1">涉及专业:</span><template v-for="i in domain"><span class="font2" @click="add5($event)">{{i}}</span></template>
    </div>
+   <div class="div1">
+     <span class="font1">是否为线上项目:</span><span class="font2" @click="add6($event)">yes</span><span class="font2" @click="add6($event)">no</span>
+   </div>   
   </div>
 </template>
 
@@ -57,6 +60,7 @@ export default {
     this.tag3 = this.$store.state.tag3
     this.tag4 = this.$store.state.tag4
     this.tag5 = this.$store.state.tag5
+    this.tag6 = this.$store.state.tag6
   },
   methods: {
     ...mapMutations([
@@ -116,6 +120,17 @@ export default {
           type: 'warning'
         })
       }
+    },
+    add6 (e) {
+      if (this.tags.length < 3) {
+        this.tags.push(e.target.innerText)
+        this.tag6.push(e.target.innerText)
+      } else {
+        this.$message({
+          message: `最多只能选${this.max}项目`,
+          type: 'warning'
+        })
+      }
     }
   },
   watch: {
@@ -135,7 +150,7 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formData = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}}}
+        var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['洽谈中', '投标中', '投标洽谈', '合同执行中', '合同终止']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}, 'isOnlineAchivment': {'searchMethod': 'values', 'values': this.tag6}}}
         this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
           this.$store.state.table = []

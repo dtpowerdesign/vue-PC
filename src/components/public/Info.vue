@@ -4,10 +4,10 @@
       <i class="icon iconfont icon-liebiao" @click="show()"></i>
       <span style="width:40rem;" class="nav">
         <span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">平台首页</span>
-        <span @click="$router.push('/archive')" data-step="3" data-intro="去投标" data-position="bottom">项目信息</span>
-        <span @click="$router.push('/archive')" data-step="6" data-intro="服务商" data-position="bottom">服务商展示</span>
-        <span style="color:#4d83e7" @click="$router.push('/per')" v-if="$cookie.get('role')==='puser'">个人门户</span>
-        <span style="color:#4d83e7" @click="$router.push('/com')" v-if="$cookie.get('role')==='cuser'">企业门户</span>
+        <span @click="$router.push('/archive')" data-step="3" data-intro="去投标" data-position="bottom" id="archive">项目信息</span>
+        <span @click="$router.push('/facilitator')" data-step="6" data-intro="服务商" data-position="bottom" id="facilitator">服务商展示</span>
+        <span @click="$router.push('/per')" v-if="$cookie.get('role')==='puser'" id="puser">个人门户</span>
+        <span @click="$router.push('/com')" v-if="$cookie.get('role')==='cuser'" id="cuser">企业门户</span>
         <span onclick="window.location.href='http://39.106.34.156:8080/zs/preview/'">平台指南</span>
       </span>
     </div>
@@ -18,7 +18,7 @@
           <i class="icon iconfont icon-gerenziliao"></i><span>{{name}}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/changeTable">改变表头</el-menu-item>
+          <el-menu-item index="/changeTable/project">改变表头</el-menu-item>
           <el-menu-item index="/chat">视频聊天</el-menu-item>
           <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('token', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
         </el-menu-item-group>

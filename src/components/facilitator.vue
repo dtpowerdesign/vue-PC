@@ -1,6 +1,6 @@
 <template>
   <div class="archive">
-    <Info></Info>
+   <Info></Info>
    <!-- <top></top> -->
    <search data-step="1" data-intro="在此输入相关信息进行搜索" data-position="right"></search>
    <classify v-loading="loadingClassify" data-step="2" data-intro="根据条件分类筛选" data-position="top"></classify>
@@ -13,10 +13,10 @@
 <script>
 import Info from '@/components/public/Info'
 import top from './archive/top'
-import search from './archive/search'
-import classify from './archive/classify'
-import tag from './archive/tag'
-import mycontent from './archive/content'
+import search from './facilitator/search'
+import classify from './facilitator/classify'
+import tag from './facilitator/tag'
+import mycontent from './facilitator/content'
 import bottom from './archive/bottom'
 export default {
   components: {Info, top, search, classify, tag, mycontent, bottom},
@@ -31,7 +31,7 @@ export default {
     // $('#facilitator').css('color', 'black')
     // $('#puser').css('color', 'black')
     // $('#cuser').css('color', 'black')
-    $('#archive').css('color', '#409EFF')
+    $('#facilitator').css('color', '#409EFF')
   }
 }
 </script>

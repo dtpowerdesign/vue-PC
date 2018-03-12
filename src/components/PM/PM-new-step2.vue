@@ -58,7 +58,7 @@
           <el-col :span="9">
             <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>          
-          <el-col :offset="5" :span="2">开始时间</el-col>
+          <el-col :offset="5" :span="2">结束时间</el-col>
           <el-col :span="8">
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>

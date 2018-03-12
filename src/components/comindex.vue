@@ -22,7 +22,15 @@ export default {
   data () {
     return {}
   },
-  mounted () {}
+  mounted () {
+    $('#puser').css('color', '#409EFF')
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$refs.Info.initData()
+    }
+  }
 }
 </script>
 

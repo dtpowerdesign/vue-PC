@@ -15,6 +15,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/per/person-perAchi">个人业绩</el-menu-item>
+          <el-menu-item index="/per/uploadAchieve">上传业绩</el-menu-item>
           <el-menu-item index="/per/person-register" data-step="2" data-intro="完善个人信息" data-position="right">注册信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>

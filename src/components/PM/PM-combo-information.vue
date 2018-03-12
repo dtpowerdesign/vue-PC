@@ -53,6 +53,7 @@
     </el-row>
     <el-button @click="dialogVisible=true" type="primary">点我邀请</el-button>
     <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="30%">
+      <el-button type="primary" @click="$router.push('/facilitator')">查找更多用户用户</el-button>
       <el-select v-model="info" multiple allow-create filterable default-first-option placeholder="请选择">
         <el-option v-for="(i, j) in infos" :key="j" :label="i" :value="i"></el-option>
       </el-select>
@@ -68,7 +69,7 @@
   <div style="display:flex; align-items:center; justify-content: space-between;background:#F9F9F9;height:4rem">
         <span style="font-size:1.5rem;color:#4d83e7">|我的请求</span>
           <div>
-            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable')" >表头编辑</el-button>
+            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
             <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button size="small" type="success">打印</el-button>
           </div>

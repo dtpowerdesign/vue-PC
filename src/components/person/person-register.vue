@@ -51,7 +51,12 @@
             <el-select style="width:100%" v-model="ruleForm.job" filterable allow-create default-first-option multiple>
               <el-option v-for="(i, j) in jobs" :key="j" :value="i" :label="i"></el-option>
             </el-select>
-          </el-form-item>          
+          </el-form-item>
+          <el-form-item label="我的专业">
+            <el-select style="width:100%" v-model="ruleForm.major" multiple filterable allow-create default-first-option multiple>
+              <el-option v-for="(i, j) in major" :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-form-item>             
           <el-form-item label="所在地" prop="place">
             <div style="display:flex;justify-content:space-around;margin-left:0px">
             <el-select v-model="ruleForm.prov" placeholder="请选择省份" v-on:change="getProv($event)" style="width:30%;margin-right:0.6rem;">
@@ -134,6 +139,7 @@ export default {
       jobs: ['学徒', '制图', '主设人', '校核人', '审核人', '项目经理', '工程代理', '平台项目分析师'],
       acceptableTravelTime: ['一天', '一周', '一个月', '长期'],
       labelPosition: 'right',
+      major: [],
       workingAddress: [
         { prov: '',
           city: '',
@@ -153,7 +159,8 @@ export default {
         prov: '',
         city: '',
         area: '',
-        instruction: ''
+        instruction: '',
+        major: []
       },
       provs: [],
       cities: [],
@@ -161,6 +168,21 @@ export default {
     }
   },
   created () {
+    this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
+      this.major = res.data.majors
+    }).catch((err) => {
+      console.log(err)
+      this.$message({showClose: true,
+        message: '网络连接错误',
+        type: 'error'
+      })
+    })
+    this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey')
+        .then((res) => {
+          this.jobs = res.data.duties
+        }).catch((err) => {
+          console.log(err)
+        })
     this.$http.post(this.$domain.domain1 + 'electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
       console.log(res.data)
       this.ruleForm.name = res.data.name
@@ -169,6 +191,7 @@ export default {
       this.ruleForm.telephone = res.data.telephone
       this.ruleForm.email = res.data.email
       this.ruleForm.job = Array.isArray(res.data.jobs) ? res.data.jobs : []
+      this.ruleForm.major = Array.isArray(res.data.major) ? res.data.major : []
       this.ruleForm.workUnit = res.data.workUnit
       this.ruleForm.graduateInstitution = res.data.graduateInstitution
       this.ruleForm.acceptableTravelTime = res.data.acceptableTravelTime
@@ -269,6 +292,7 @@ export default {
             'acceptableTravelTime': this.ruleForm.acceptableTravelTime,
             'workingAddress': this.ruleForm.workingAddress,
             'jobs': this.ruleForm.job,
+            'major': this.ruleForm.major,
             'workType': this.ruleForm.workType,
             'birthAddress': {
               'province': this.ruleForm.prov,

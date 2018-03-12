@@ -49,35 +49,85 @@
     </el-row>
     <el-button type="success" @click="$router.push('/per-project/' + code)" v-if="sourceAccount===$cookie.get('user')">我要修改项目信息</el-button>
     <el-button type="primary" @click="dialogVisible=true" v-if="sourceAccount===$cookie.get('user')">查看投标信息</el-button>
-    <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="60%">
       <el-tabs type="card">
         <el-tab-pane label="个体投标">
-          <el-table :data="bid.personalBidAccounts">
-            <el-table-column label="投标人">
+          <el-table :data="bid.personalBidAccounts" border>
+            <el-table-column label="投标人账号" prop="srcUserAccount" min-width="10%"></el-table-column>
+            <el-table-column label="投标人姓名" prop="srcUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标描述" prop="bidInstruction" min-width="30%"></el-table-column>
+            <el-table-column label="投标附件" min-width="40%">
               <template slot-scope="scope">
-                 <el-radio v-model="radio" :label="scope.row">{{scope.row}}</el-radio>
+                <span v-for="(i, j) in scope.row.upDatas" :key="j">
+                  <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
+                    <a href="#" @click="download(i.urlPath)">  
+                      {{i.dataName}}
+                    </a>
+                  </el-tooltip>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="选取中标者" min-width="10%">
+              <template slot-scope="scope">
+                <el-button type="success" @click="confirmBid(scope.row)">选我</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="企业投标">
-          <el-table :data="bid.tenderCompanyBidAccounts">
-            <el-table-column label="投标企业">
+          <el-table :data="bid.tenderCompanyBidAccounts" border>
+            <el-table-column label="投标企业账号" prop="srcUserAccount" min-width="10%"></el-table-column>
+            <el-table-column label="投标企业名称" prop="srcUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标描述" prop="bidInstruction" min-width="30%"></el-table-column>
+            <el-table-column label="投标附件" min-width="40%">
               <template slot-scope="scope">
-                <el-radio v-model="radio" :label="scope.row">{{scope.row}}</el-radio>
+                <span v-for="(i, j) in scope.row.upDatas" :key="j">
+                  <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
+                    <a href="#" @click="download(i.urlPath)">  
+                      {{i.dataName}}
+                    </a>
+                  </el-tooltip>
+                </span>
               </template>
             </el-table-column>
-          </el-table>
+            <el-table-column label="选取中标者" min-width="10%">
+              <template slot-scope="scope">
+                <el-button type="success" @click="confirmBid(scope.row)">选我</el-button>
+              </template>
+            </el-table-column>
+          </el-table>          
         </el-tab-pane>
         <el-tab-pane label="联合体投标" v-if="bid.isAcceptJointBid==='true'">
-          <span>联合体投标人账号:<el-radio v-model="radio" :label="bid.finalBid">{{bid.jointReleaseAccount}}</el-radio></span><br>
-          <span>联合投标者邀请的人:<br>{{bid.invitatedBidAccounts.join(',')}}</span>
+          <el-table :data="bid.jointReleaseAccounts" border>
+            <el-table-column label="联合体成员账号" prop="srcUserAccount" min-width="20%"></el-table-column>
+            <el-table-column label="联合投标账号" prop="srcUser" min-width="10%"></el-table-column>
+            <el-table-column label="联合投标姓名" prop="srcUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标描述" prop="bidInstruction" min-width="30%"></el-table-column>
+            <el-table-column label="投标附件" min-width="20%">
+              <template slot-scope="scope">
+                <span v-for="(i, j) in scope.row.upDatas" :key="j">
+                  <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
+                    <a href="#" @click="download(i.urlPath)">  
+                      {{i.dataName}}
+                    </a>
+                  </el-tooltip>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="选取中标者" min-width="10%">
+              <template slot-scope="scope">
+                <el-button type="success" @click="confirmBid(scope.row)">选我</el-button>
+              </template>
+            </el-table-column>
+          </el-table>          
+          <!-- <span>联合体投标人账号:<el-radio v-model="radio" :label="bid.finalBid">{{bid.jointReleaseAccount}}</el-radio></span><br>
+          <span>联合投标者邀请的人:<br>{{bid.invitatedBidAccounts.join(',')}}</span> -->
         </el-tab-pane>
       </el-tabs>
-      <span slot="footer" class="dialog-footer">
+      <!-- <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="confirmBid()">确 定</el-button>
-      </span>
+      </span> -->
     </el-dialog>
   </div>
   <div v-else v-loading="loadingTable">
@@ -85,7 +135,7 @@
   <div style="display:flex; align-items:center; justify-content: space-between; background:#F9F9F9;height:4rem">
         <span style="font-size:1.5rem;color:#4d83e7">|投标中</span>
           <div>
-            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable')" >表头编辑</el-button>
+            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
             <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button size="small" type="success">打印</el-button>
           </div>
@@ -167,7 +217,7 @@ export default {
         var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
         this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {}
@@ -209,14 +259,35 @@ export default {
       this.major = row.major
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
-      this.bid.personalBidAccounts = row.personalBidAccounts ? row.personalBidAccounts.split(',') : []
-      this.bid.tenderCompanyBidAccounts = row.tenderCompanyBidAccounts ? row.tenderCompanyBidAccounts.split(',') : []
+      // this.bid.personalBidAccounts = row.personalBidAccounts ? row.personalBidAccounts.split(',') : []
+      // this.bid.tenderCompanyBidAccounts = row.tenderCompanyBidAccounts ? row.tenderCompanyBidAccounts.split(',') : []
       this.bid.jointReleaseAccount = row.jointReleaseAccount
-      this.bid.invitatedBidAccounts = row.invitatedBidAccounts ? row.invitatedBidAccounts.split(',') : []
-      this.bid.isAcceptJointBid = row.isAcceptJointBid
+      this.bid.invitatedBidAccounts = row.invitatedBidAccounts === '暂无数据' ? [] : row.invitatedBidAccounts.split(',')
       this.bid.finalBid = this.bid.invitatedBidAccounts.concat(this.bid.jointReleaseAccount)
+      this.bid.isAcceptJointBid = row.isAcceptJointBid
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {'table': 'bidrecord', 'keys': ['belongToProjectCode'], 'values': [row.code]})
+      .then((res) => {
+        // console.log(res.data)
+        this.bid.personalBidAccounts = []
+        this.bid.tenderCompanyBidAccounts = []
+        this.bid.jointReleaseAccounts = []
+        res.data.forEach((el, index) => {
+          if (el.bidType === 'unit') {
+            this.bid.jointReleaseAccounts.push(el)
+            this.bid.jointReleaseAccounts[0].srcUser = this.bid.jointReleaseAccounts[0].srcUserAccount
+            this.bid.jointReleaseAccounts[0].srcUserAccount = this.bid.finalBid
+          } else {
+            if (el.srcUserType === 'puser') {
+              this.bid.personalBidAccounts.push(el)
+            } else {
+              this.bid.tenderCompanyBidAccounts.push(el)
+            }
+          }
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
-        console.log(res.data)
         this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
@@ -262,20 +333,54 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    confirmBid () {
-      console.log(this.radio)
-      this.$confirm(`您确定让${this.radio}中标吗`, '确定后无法修改', {
+    // selectBid (row) {
+    //   this.$confirm(`您确定让${row.srcUserName}中标吗`, '确定后无法修改', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     this.$http.post(this.$domain.domain1 + 'electric-design/updateTableRecod', {
+    //       'table': 'bidrecord',
+    //       'keyNames': ['srcUserAccount', 'belongToProjectCode'],
+    //       'keyValues': [row.srcUserAccount, '12'],
+    //       'newJsonData': {'bidState': 'selected'}
+    //     })
+    //   .then((res) => {
+    //     if (res.data.result) {
+    //       this.$message({
+    //         type: 'success',
+    //         message: `${row.srcUserName}已经中标`
+    //       })
+    //       this.dialogVisible = false
+    //       this.$router.go(0)
+    //     } else {
+    //       this.$message({
+    //         type: 'warning',
+    //         message: `操作失败，原因${res.data.reason}`
+    //       })
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
+    // },
+    confirmBid (row) {
+      // console.log(this.radio)
+      this.$confirm(`您确定让${row.srcUserName}中标吗`, '确定后无法修改', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '洽谈中', 'toAccounts': Array.isArray(this.radio) ? this.radio : [this.radio]}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '洽谈中', 'toAccounts': Array.isArray(row.name) ? row.name : [row.srcUserAccount]}})
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           if (res.data.result) {
             this.$message({
               type: 'success',
-              message: `${this.radio}已经中标`
+              message: `${row.srcUserName}已经中标`
             })
             this.dialogVisible = false
             this.$router.go(0)
@@ -294,6 +399,9 @@ export default {
           message: '已取消'
         })
       })
+    },
+    download (path) {
+      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
     }
   }
 }

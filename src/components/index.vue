@@ -23,6 +23,7 @@ export default {
     return {}
   },
   mounted () {
+    $('#puser').css('color', '#409EFF')
     this.initData()
   },
   methods: {

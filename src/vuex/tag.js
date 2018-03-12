@@ -9,6 +9,7 @@ const state = {
   tag3: [],
   tag4: [],
   tag5: [],
+  tag6: [],
   table: [],
   length: 1,
   json: {}

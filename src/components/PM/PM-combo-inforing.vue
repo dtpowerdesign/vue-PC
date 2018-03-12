@@ -46,7 +46,7 @@
         <span style="font-size:0.8rem;float:left;clear:left;">发布者</span><br>
         <p class="font1" style="text-align:left;color:#409EFF"><span>{{initiator}}</span></p>
         <span style="font-size:0.8rem;float:left;clear:left;">参与者</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoed.join(',')}}</span></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoed}}</span></p>
       </el-col>
     </el-row>
     <el-button type="success" style="margin-top:5rem" @click="accept()">接受洽谈</el-button>
@@ -56,7 +56,7 @@
       <div style="display:flex; align-items:center; justify-content: space-between; background:#F9F9F9;height:4rem">
           <span style="font-size:1.5rem;color:#4d83e7">|投标中</span>
           <div>
-            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable')" >表头编辑</el-button>
+            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
             <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload" >导出excel</el-button>
             <el-button size="small" type="success">打印</el-button>
           </div>
@@ -172,6 +172,7 @@ export default {
       this.bidType = row.bidType
       this.initiator = row.initiator
       this.infoed = row.invitatedBidAccounts || []
+      // console.log(this.infoed)
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
         console.log(res.data)
         this.loadingDetail = false

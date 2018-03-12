@@ -7,6 +7,7 @@
        <div class="detail2"><span style="margin-left:.3rem">{{i.company}}</span><span>{{i.endTime}}</span></div>
      </li>
    </ul> --> 
+   <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
    <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width:100%">
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
@@ -16,7 +17,7 @@
         </el-table-column>
    </el-table>
 
-   <el-dialog title="确定要投标?" :visible.sync="dialogVisible" width="30%">
+   <el-dialog title="确定要投标?" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
      <!-- <div style="text-align:left;border-top:1px solid gray;padding:1rem" v-loading="details.loadingPeople">
      <p style="color:#4d83e7;font-size:1.5rem">发布人信息</p>
      <p>发布者账号:{{details.account}}</p>
@@ -33,17 +34,26 @@
      <p>是否接受联合投标:{{details.isAcceptJointBid==='true'?'是':'否'}}</p>
      <p v-if="details.isAcceptJointBid==='true'">是否已经被联合投标:{{!(details.isJointState==='true')?'是':'否'}}</p>
      </div>
-     <span slot="footer" class="dialog-footer">
-      <el-button type="danger" @click="dialogVisible=false">我不感兴趣</el-button>
+     <div> 
+       <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='puser'">个人投标</el-radio>
+       <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='cuser'">企业投标</el-radio>
+       <el-radio v-model="bidType" label="unit" v-if="details.isAcceptJointBid==='true'&&details.isJointState === 'true'">联合投标</el-radio>
+     </div>     
+     <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction"></el-input>
+     <el-upload multiple class="upload-demo" ref="upload" id="upload" :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
+     :action='this.$domain.domain1+"electric-design/bidAndUpLoad"'
+      :file-list="fileList"
+     :before-upload="beforeUpload" :on-progress="progress" :on-remove="remove" :on-change="change" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  
+     :limit="this.limit">
+       <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">投标</el-button>
+       <div slot="tip" class="el-upload__tip">点击投标时可以上传附件，不超过{{limit}}个</div>     
+     </el-upload>     
+     <!-- <span slot="footer" class="dialog-footer">
+      <el-button type="danger"  @click="handleClose()">我不感兴趣</el-button>
       <el-button type="success" @click="allyBid(details.code, details.state)" v-if="details.isAcceptJointBid==='true'&&details.isJointState === 'true'">联合投标</el-button>
       <el-button type="primary" @click="perBid(details.code, details.state)" v-if="$cookie.get('role')==='puser'">个人投标</el-button>
       <el-button type="primary" @click="comBid(details.code, details.state)" v-if="$cookie.get('role')==='cuser'">企业投标</el-button>
-     </span>
-     <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction "></el-input>
-     <el-upload multiple class="upload-demo" ref="upload" :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': bidInstruction, 'bidType': bidType}" name="data" :action='this.$domain.domain1+"electric-design/bidAndUpLoad"' :auto-upload="false" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="this.limit">
-       <el-button slot="trigger" size="small" type="primary">添加附件</el-button>
-       <div slot="tip" class="el-upload__tip">最多上传{{limit}}个附件</div>     
-     </el-upload>
+     </span> -->
    </el-dialog>
    <div style="clear:both;"></div>
    <el-pagination  class="paging" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9, 18]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="table.length">
@@ -63,12 +73,25 @@ export default {
       pagesize: 3,
       details: {'loadingPeople': true, 'loadingProject': true},
       bidInstruction: '',
-      bidType: '',
-      limit: 5
+      bidType: 'personal',
+      limit: 5,
+      fileList: [],
+      uploadDis: false
     }
   },
-  computed: mapState(['data', 'table', 'json']),
+  computed: {
+    ...mapState(['data', 'table', 'json'])},
   methods: {
+    handleClose () {
+      this.fileList = []; this.dialogVisible = false
+      this.uploadDis = false
+    },
+    getBidInstruction () {
+      return this.bidInstruction
+    },
+    getBidType () {
+      return this.bidType
+    },
     handleSizeChange (size) {
       this.pagesize = size
     },
@@ -90,7 +113,7 @@ export default {
         this.$set(this.details, 'isAcceptJointBid', res.data.isAcceptJointBid)
         this.$set(this.details, 'isJointState', res.data.isJointState)
         this.$set(this.details, 'type', res.data.type.join(','))
-        this.$set(this.details, 'category', res.data.category.join(','))
+        this.$set(this.details, 'category', res.data.category)
         this.$set(this.details, 'major', res.data.major.join(','))
         this.$set(this.details, 'loadingProject', false)
       }).catch((err) => {
@@ -118,17 +141,21 @@ export default {
       } else {
         this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'personalBidAccounts': this.details.personalBidAccounts}})
       .then((res) => {
-        if (res.data.result) {
+        console.log(res.data)
+        if (res.data.result === true) {
           this.$message({
             type: 'success',
             message: `个人投标成功,请在项目汇总里查看`
           })
-          this.bidType = 'personal'
-          this.$refs.upload.submit()
+          // this.bidType = 'personal'
+          // this.$refs.upload.submit()
+          // // $('#upload').submit()
+          this.fileList = []
+          this.uploadDis = false
         } else {
           this.$message({
             type: 'warning',
-            message: `投标失败,原因：${res.data.reason}`
+            message: '您已经对此项目投标了'
           })
         }
       }).catch((err) => {
@@ -151,15 +178,21 @@ export default {
             type: 'success',
             message: `企业投标成功,请在项目汇总里查看`
           })
-          this.bidType = 'personal'
-          this.$refs.upload.submit()
+          // this.bidType = 'personal'
+          // this.$refs.upload.submit()
+          this.fileList = []
+          this.uploadDis = false
         } else {
           this.$message({
             type: 'warning',
-            message: `投标失败,原因：${res.data.reason}`
+            message: '您已经对此项目投标了'
           })
         }
       }).catch((err) => {
+        this.$message({
+          type: 'warning',
+          message: '您已经对此项目投标了'
+        })
         console.log(err)
       })
       }
@@ -179,8 +212,10 @@ export default {
             type: 'success',
             message: `联合体投标成功,请在联合体里查看`
           })
-          this.bidType = 'unit'
-          this.$refs.upload.submit()
+          // this.bidType = 'unit'
+          // this.$refs.upload.submit()
+          this.fileList = []
+          this.uploadDis = false
           if (this.$cookie.get('role') === 'puser') {
             this.$router.push('/per/PM-combo')
           }
@@ -190,20 +225,43 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: `投标失败,原因：${res.data.reason}`
+            message: '您已经对此项目投标了'
           })
         }
       }).catch((err) => {
+        this.$message({
+          type: 'warning',
+          message: '您已经对此项目投标了'
+        })
         console.log(err)
       })
       }
     },
+    beforeUpload (file) {
+      console.log('before')
+      console.log(file)
+    },
     success (response, file, fileList) {
       console.log(response)
-      this.$message({
-        type: 'success',
-        message: '附件上传成功'
-      })
+      if (response.result) {
+        // this.$message({
+        //   type: 'success',
+        //   message: `投标成功`
+        // })
+        if (this.bidType === 'unit') {
+          this.allyBid(this.details.code, this.details.state)
+        } else {
+          if (this.$cookie.get('role') === 'puser') {
+            this.perBid(this.details.code, this.details.state)
+          } else { this.comBid(this.details.code, this.details.state) }
+        }
+      } else {
+        this.$message({
+          type: 'warning',
+          message: `投标失败原因${response.reason}`
+        })
+      }
+      this.uploadDis = true
       // this.complete = response.data
     },
     failure (err, file, fileList) {
@@ -212,6 +270,21 @@ export default {
     },
     handleExceed (files, fileList) {
       this.$message.warning(`当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    progress (event, file, fileList) {
+      // console.log('progress')
+      // console.log(event)
+      // console.log(file)
+      // console.log(fileList)
+      this.fileList = fileList
+    },
+    change (file, fileList) {
+      // console.log(fileList)
+      this.fileList = fileList
+    },
+    remove (file, fileList) {
+      console.log(fileList)
+      this.fileList = fileList
     }
   }
 }

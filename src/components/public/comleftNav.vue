@@ -15,6 +15,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/com/company-comAchi">企业业绩</el-menu-item>
+        <el-menu-item index="/com/uploadAchieve">上传业绩</el-menu-item>          
           <el-menu-item index="/com/company-register" data-step="2" data-intro="完善个人信息" data-position="right">企业信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
