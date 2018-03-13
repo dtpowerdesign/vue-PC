@@ -26,8 +26,8 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/per/PM-new" data-step="1" data-intro="我要发布新任务" data-position="right">发布新任务</el-menu-item>
-          <el-menu-item index="/per/PM-sumary" data-step="4" data-intro="参与项目浏览" data-position="bottom">项目汇总</el-menu-item>
-          <el-menu-item index="/per/PM-combo">联合体</el-menu-item>
+          <el-menu-item index="/per/PM-sumary/2" data-step="4" data-intro="参与项目浏览" data-position="bottom">项目汇总</el-menu-item>
+          <el-menu-item index="/per/PM-combo/2">联合体</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
         <el-submenu index="statistics">

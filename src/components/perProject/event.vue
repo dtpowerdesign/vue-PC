@@ -23,17 +23,25 @@ export default {
     return {}
   },
   mounted () {
-    this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
-      'conditions': {
-        'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
-        'eventType': {'searchMethod': 'values', 'values': ['upload']}
+    this.initData()
+  },
+  updated () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
+        'conditions': {
+          'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
+          'eventType': {'searchMethod': 'values', 'values': ['upload']}
+        }
       }
-    }
     ).then((res) => {
       console.log(res.data)
     }).catch((err) => {
       console.log(err)
     })
+    }
   }
 }
 </script>

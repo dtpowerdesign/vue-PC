@@ -1,12 +1,12 @@
 <template>
   <div class="PM-combo">
     <div class="title"><span style="font-size:2rem">联合体</span><i class="icon iconfont icon-iconfontquestion"></i></div>
-    <el-tabs type="border-card" class="PM-tab">
-      <el-tab-pane label="收到请求"><Rinfor></Rinfor></el-tab-pane>
-      <el-tab-pane label="我的请求">
+    <el-tabs type="border-card" class="PM-tab" :value="value">
+      <el-tab-pane label="收到请求" name="1"><Rinfor></Rinfor></el-tab-pane>
+      <el-tab-pane label="我的请求" name="2">
         <infor></infor>
       </el-tab-pane>
-      <el-tab-pane label="投标中"><inforing></inforing></el-tab-pane>
+      <el-tab-pane label="投标中" name="3"><inforing></inforing></el-tab-pane>
   </el-tabs>
   </div>
   
@@ -19,7 +19,12 @@ import inforing from '@/components/PM/PM-combo-inforing.vue'
 export default {
   components: {Rinfor, infor, inforing},
   data () {
-    return {}
+    return {
+      value: ''
+    }
+  },
+  mounted () {
+    this.value = this.$route.params.value
   }
 }
 </script>

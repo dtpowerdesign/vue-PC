@@ -2,15 +2,15 @@
   <div class="PM-sumary">
    <div class="title"><span>项目信息<i class="icon iconfont icon-iconfontquestion"></i></span></div>
    <div class="clearfix"></div>
-   <el-tabs type="border-card" class="PM-tab">
-    <el-tab-pane label="项目汇总"><InforAll ref="InforAll"></InforAll></el-tab-pane>
-    <el-tab-pane label="临时态"><Infor0 ref="Infor0"></Infor0></el-tab-pane>
-    <el-tab-pane label="发布中"><Infor ref="Infor1"></Infor></el-tab-pane>
-    <el-tab-pane label="投标中"><Infor2 ref="Infor2"></Infor2></el-tab-pane>
-    <el-tab-pane label="洽谈中"><Infor3 ref="Infor3"></Infor3></el-tab-pane>
-    <el-tab-pane label="投标洽谈"><Infor4 ref="Infor4"></Infor4></el-tab-pane>
-    <el-tab-pane label="合同执行中"><Infor5 ref="Infor5"></Infor5></el-tab-pane>
-    <el-tab-pane label="合同终止"><Infor6 ref="Infor6"></Infor6></el-tab-pane>
+   <el-tabs type="border-card" class="PM-tab" :value="value">
+    <el-tab-pane label="项目汇总" name="all"><InforAll ref="InforAll"></InforAll></el-tab-pane>
+    <el-tab-pane label="临时态" name="0"><Infor0 ref="Infor0"></Infor0></el-tab-pane>
+    <el-tab-pane label="发布中" name="1"><Infor ref="Infor1"></Infor></el-tab-pane>
+    <el-tab-pane label="投标中" name="2"><Infor2 ref="Infor2"></Infor2></el-tab-pane>
+    <el-tab-pane label="洽谈中" name="3"><Infor3 ref="Infor3"></Infor3></el-tab-pane>
+    <el-tab-pane label="投标洽谈" name="4"><Infor4 ref="Infor4"></Infor4></el-tab-pane>
+    <el-tab-pane label="合同执行中" name="5"><Infor5 ref="Infor5"></Infor5></el-tab-pane>
+    <el-tab-pane label="合同终止" name="6"><Infor6 ref="Infor6"></Infor6></el-tab-pane>
    </el-tabs>
   </div>
 </template>
@@ -27,9 +27,12 @@ import InforAll from '@/components/PM/PM-sumary-informationAll'
 export default {
   components: {Infor0, Infor, Infor2, Infor3, Infor4, Infor5, Infor6, InforAll},
   data () {
-    return {}
+    return {
+      value: ''
+    }
   },
   mounted () {
+    this.value = this.$route.params.value
     this.initData()
   },
   methods: {

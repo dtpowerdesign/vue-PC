@@ -127,9 +127,9 @@ export default {
               }
               window.startInit()
               if (res.data.role === 'puser') {
-                this.$router.push('/per')
+                this.$router.push('/per/person-perAchi')
               } else {
-                this.$router.push('/com')
+                this.$router.push('/com/company-comAchi')
               }
             } else {
               this.$message({

@@ -152,6 +152,7 @@ export default {
           // // $('#upload').submit()
           this.fileList = []
           this.uploadDis = false
+          this.$router.push('/per/PM-sumary/2')
         } else {
           this.$message({
             type: 'warning',
@@ -182,6 +183,7 @@ export default {
           // this.$refs.upload.submit()
           this.fileList = []
           this.uploadDis = false
+          this.$router.push('/com/CM-sumary/2')
         } else {
           this.$message({
             type: 'warning',
@@ -217,10 +219,10 @@ export default {
           this.fileList = []
           this.uploadDis = false
           if (this.$cookie.get('role') === 'puser') {
-            this.$router.push('/per/PM-combo')
+            this.$router.push('/per/PM-combo/2')
           }
           if (this.$cookie.get('role') === 'cuser') {
-            this.$router.push('/com/CM-combo')
+            this.$router.push('/com/CM-combo/2')
           }
         } else {
           this.$message({

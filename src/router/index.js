@@ -67,8 +67,8 @@ export default new Router({
       { path: 'uploadAchieve', component: uploadAchieve },
       { path: 'person-register', component: register },
       { path: 'PM-new', component: Pnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }, { path: '5', component: step5 }, { path: '6', component: step6 }] },
-      { path: 'PM-sumary', component: sumary }, // eslint-disable-next-line
-      { path: 'PM-combo', component: combo }, // eslint-disable-next-line
+      { path: 'PM-sumary/:value', component: sumary }, // eslint-disable-next-line
+      { path: 'PM-combo/:value', component: combo }, // eslint-disable-next-line
       { path: 'statistics-time', component: time },
       { path: 'statistics-discuss', component: discuss },
       { path: 'statistics-credit', component: credit },
@@ -82,8 +82,8 @@ export default new Router({
       { path: 'uploadAchieve', component: uploadAchieve },
       { path: 'company-register', component: Cregister },
       { path: 'PM-new', component: Pnew, children: [{ path: '', component: step1 }, { path: '2', component: step2 }, { path: '3', component: step3 }, { path: '2-1', component: stepNoabout2 }, { path: '5', component: step5 }, { path: '6', component: step6 }] },
-      { path: 'CM-sumary', component: sumary }, // eslint-disable-next-line
-      { path: 'CM-combo', component: combo }, // eslint-disable-next-line
+      { path: 'CM-sumary/:value', component: sumary }, // eslint-disable-next-line
+      { path: 'CM-combo/:value', component: combo }, // eslint-disable-next-line
       { path: 'Cstatistics-time', component: time },
       { path: 'Cstatistics-discuss', component: discuss },
       { path: 'Cstatistics-credit', component: credit },

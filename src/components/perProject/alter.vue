@@ -346,6 +346,9 @@ export default {
       projectNowStates: ['未开始', '项目建议书', '可研已定', '初设已定', '施工图已定', '竣工图已定']
     }
   },
+  updated () {
+    this.initData()
+  },
   methods: {
     addStateUnits () {
       this.form.stateUnits.push({ state: '未填', endTime: '未填', requireResult: '未填' })
