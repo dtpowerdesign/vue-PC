@@ -4,23 +4,24 @@
     <div style="margin-top:3rem">
       <p style="text-align:left">填写真实的资料更方便大家了解你，以下信息将显示在个人资料页。</p>
       <p style="text-align:left">(请不要在资料里留电话，QQ等联系方式，会导致您的资料无法通过审核)</p>
+      <p style="text-align:left">如果姓名性别年龄有误，请重新上传身份证</p>
     </div>
     <el-row style="margin-top:2rem">
       <el-col :span="11" class="shadow">
         <el-form :label-position="labelPosition" label-width="120px" :model="ruleForm">
           <el-form-item label="姓名"  prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
+            <el-input v-model="ruleForm.name" disabled></el-input>
           </el-form-item>
           <el-form-item label="性别" prop="sex">
             <el-radio-group v-model="ruleForm.sex">
-              <el-radio label="男"></el-radio>
-              <el-radio label="女"></el-radio>
+              <el-radio label="男" disabled></el-radio>
+              <el-radio label="女" disabled></el-radio>
               <el-radio label="">保密</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
             <el-col :span="24">
-              <el-select v-model="ruleForm.age" placeholder="请选择年龄" style="width:100%">
+              <el-select v-model="ruleForm.age" placeholder="请选择年龄" style="width:100%" disabled>
               <el-option v-for="item in Ages" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             </el-col>
@@ -104,8 +105,8 @@
             </el-upload>
           </div>
           <div class="div1-style">
-            <span>上传有效身份证件，提高账号安全度</span>
-            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'idNumber', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" multiple name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
+            <span>上传身份证件正面，提高账号安全度</span>
+            <el-upload class="upload-demo" :action='$domain.domain1 + "electric-design/uploadUsersDatas"' :data="{'userDatatype': 'idNumber', 'sourceType': $cookie.get('role'), 'sourceName': $cookie.get('name'), 'sourceAccount': $cookie.get('user')}" name="data" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  :limit="3">
             <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -168,76 +169,79 @@ export default {
     }
   },
   created () {
-    this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
-      this.major = res.data.majors
-    }).catch((err) => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
+  },
+  mounted () {
+    this.initData()
+  },
+  methods: {
+    initData () {
+      this.$http.get(this.$domain.domain1 + 'electric-design/getTypeMajors').then((res) => {
+        this.major = res.data.majors
+      }).catch((err) => {
+        console.log(err)
+        this.$message({showClose: true,
+          message: '网络连接错误',
+          type: 'error'
+        })
       })
-    })
-    this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey')
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataOfClassKey')
         .then((res) => {
           this.jobs = res.data.duties
         }).catch((err) => {
           console.log(err)
         })
-    this.$http.post(this.$domain.domain1 + 'electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
-      console.log(res.data)
-      this.ruleForm.name = res.data.name
-      this.ruleForm.sex = res.data.sex
-      this.ruleForm.age = res.data.age
-      this.ruleForm.telephone = res.data.telephone
-      this.ruleForm.email = res.data.email
-      this.ruleForm.job = Array.isArray(res.data.jobs) ? res.data.jobs : []
-      this.ruleForm.major = Array.isArray(res.data.major) ? res.data.major : []
-      this.ruleForm.workUnit = res.data.workUnit
-      this.ruleForm.graduateInstitution = res.data.graduateInstitution
-      this.ruleForm.acceptableTravelTime = res.data.acceptableTravelTime
-      if (Array.isArray(res.data.workingAddress)) {
-        this.radio = '2'
-        this.workingAddress = []
-        res.data.workingAddress.forEach((el, index) => {
-          this.workingAddress.push({
-            'prov': el.split('/')[0],
-            'city': el.split('/')[1],
-            'area': el.split('/')[2]
+      this.$http.post(this.$domain.domain1 + 'electric-design/getPuserByAccount', {'account': this.cookie.get('user')}).then((res) => {
+        console.log(res.data)
+        this.ruleForm.name = res.data.name
+        this.ruleForm.sex = res.data.sex
+        this.ruleForm.age = res.data.age
+        this.ruleForm.telephone = res.data.telephone
+        this.ruleForm.email = res.data.email
+        this.ruleForm.job = Array.isArray(res.data.jobs) ? res.data.jobs : []
+        this.ruleForm.major = Array.isArray(res.data.major) ? res.data.major : []
+        this.ruleForm.workUnit = res.data.workUnit
+        this.ruleForm.graduateInstitution = res.data.graduateInstitution
+        this.ruleForm.acceptableTravelTime = res.data.acceptableTravelTime
+        if (Array.isArray(res.data.workingAddress)) {
+          this.radio = '2'
+          this.workingAddress = []
+          res.data.workingAddress.forEach((el, index) => {
+            this.workingAddress.push({
+              'prov': el.split('/')[0],
+              'city': el.split('/')[1],
+              'area': el.split('/')[2]
+            })
           })
-        })
-      } else {
-        this.radio = '1'
-      }
-      this.ruleForm.workingAddress = res.data.workingAddress
-      this.ruleForm.workType = res.data.workType
-      this.ruleForm.prov = res.data.birthAddress.province
-      this.ruleForm.city = res.data.birthAddress.city
-      this.ruleForm.area = res.data.birthAddress.area
-      this.ruleForm.instruction = res.data.instruction
-      this.complete = 10
-      for (var i in res.data.dataOfDeepth) {
-        if (res.data.dataOfDeepth[i] === 'yes') { this.complete += 30 }
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-  },
-  mounted () {
-    this.Ages = []
-    for (let i = 18; i < 80; i++) {
-      this.Ages.push({value: i, label: i})
-    }
-    this.$http.get(this.$domain.domain1 + 'electric-design/getAreasOfChina').then(res => {
-      this.provs = res.data
-    }).catch(err => {
-      console.log(err)
-      this.$message({showClose: true,
-        message: '网络连接错误',
-        type: 'error'
+        } else {
+          this.radio = '1'
+        }
+        this.ruleForm.workingAddress = res.data.workingAddress
+        this.ruleForm.workType = res.data.workType
+        this.ruleForm.prov = res.data.birthAddress.province
+        this.ruleForm.city = res.data.birthAddress.city
+        this.ruleForm.area = res.data.birthAddress.area
+        this.ruleForm.instruction = res.data.instruction
+        this.complete = 10
+        for (var i in res.data.dataOfDeepth) {
+          if (res.data.dataOfDeepth[i] === 'yes') { this.complete += 30 }
+        }
+      }).catch((err) => {
+        console.log(err)
       })
-    })
-  },
-  methods: {
+      this.Ages = []
+      for (let i = 18; i < 80; i++) {
+        this.Ages.push({value: i, label: i})
+      }
+      this.$http.get(this.$domain.domain1 + 'electric-design/getAreasOfChina').then(res => {
+        this.provs = res.data
+      }).catch(err => {
+        console.log(err)
+        this.$message({showClose: true,
+          message: '网络连接错误',
+          type: 'error'
+        })
+      })
+    },
     addWorkingAddress () {
       this.workingAddress.push({
         prov: '',
@@ -343,8 +347,15 @@ export default {
     },
     success (response, file, fileList) {
       console.log(response)
-      this.complete += 30
+      // this.complete += 30
       // this.complete = response.data
+      if (response.result) {
+        this.$message({
+          type: 'success',
+          message: `上传成功`
+        })
+        this.initData()
+      }
     },
     failure (err, file, fileList) {
       this.$message.warning(`${file.name}上传失败`)
