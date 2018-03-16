@@ -6,8 +6,8 @@
         <span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">平台首页</span>
         <span @click="$router.push('/archive')" data-step="3" data-intro="去投标" data-position="bottom" id="archive">项目信息</span>
         <span @click="$router.push('/facilitator')" data-step="6" data-intro="服务商" data-position="bottom" id="facilitator">服务商展示</span>
-        <span @click="$router.push('/per')" v-if="$cookie.get('role')==='puser'" id="puser">个人门户</span>
-        <span @click="$router.push('/com')" v-if="$cookie.get('role')==='cuser'" id="cuser">企业门户</span>
+        <span @click="$router.push('/per/person-perAchi')" v-if="$cookie.get('role')==='puser'" id="puser">个人门户</span>
+        <span @click="$router.push('/com/company-comAchi')" v-if="$cookie.get('role')==='cuser'" id="cuser">企业门户</span>
         <span onclick="window.location.href='http://39.106.34.156:8080/zs/preview/'">平台指南</span>
       </span>
     </div>

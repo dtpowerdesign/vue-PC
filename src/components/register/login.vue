@@ -86,11 +86,12 @@ export default {
           message: `检测到您的账号${this.$cookie.get('user')},自动为您登陆`
         })
         if (this.$cookie.get('role') === 'puser') {
-          this.$router.push('/per')
+          this.$router.push('/per/person-perAchi')
         } else {
-          this.$router.push('/com')
+          this.$router.push('/com/company-comAchi')
         }
-        window.startInit()
+        // window.startInit()
+        this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
         // console.log($('#appKey').text())
         // console.log($('#token').text())
       }
@@ -125,7 +126,8 @@ export default {
                 this.cookie.set('name', res.data.name)
                 this.cookie.set('token', res.data.token)
               }
-              window.startInit()
+              // window.startInit()
+              this.$startInit(this.$cookie.get('user'), {token: res.data.token})
               if (res.data.role === 'puser') {
                 this.$router.push('/per/person-perAchi')
               } else {

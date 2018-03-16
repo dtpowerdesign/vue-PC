@@ -3,7 +3,7 @@
     <div class="title"><span style="font-size:2rem">注册信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <div style="margin-top:3rem">
       <p style="text-align:left">填写真实的资料更方便大家了解你，以下信息将显示在个人资料页。</p>
-      <p style="text-align:left">(请不要在资料里留电话，QQ等联系方式，会导致您的资料无法通过审核)</p>
+      <p style="text-align:left">其中姓名性别和年龄仅能靠上传身份证更改</p>
       <p style="text-align:left">如果姓名性别年龄有误，请重新上传身份证</p>
     </div>
     <el-row style="margin-top:2rem">
