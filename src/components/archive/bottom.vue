@@ -44,6 +44,7 @@ export default {
     }
   },
   mounted () {
+    // console.log(this.$root.$children[0].$children[0].$children[0].$children[1].$children[1].$children[0].$children[1].$children[0])
     this.initData()
   },
   methods: {

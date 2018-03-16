@@ -112,7 +112,7 @@ export default {
       code: '',
       name: '',
       tenderCompany: '',
-      address: '',
+      address: '?',
       startTime: '',
       bidType: '',
       price: '',
@@ -126,13 +126,19 @@ export default {
       infoFail: [],
       infos: ['18730273658', '111', '222', '1802528291@qq.com'],
       json: {},
-      jsonAll: {}
+      jsonAll: {},
+      rows: {}
     }
   },
   created () {
-    this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
-      this.jsonAll = res.data
-      this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+    this.initData()
+  },
+  methods: {
+    test (i) {
+      alert(i)
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+        this.jsonAll = res.data
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
       .then((res) => {
         // console.log(res.data)
         this.json = {}
@@ -145,10 +151,67 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
      {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
+          this.tableData = []
+          if (res.data !== 0) {
+            res.data.forEach((el, index) => {
+              var obj = {}
+              for (var i in this.jsonAll) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
+                  obj[i] = el[i].concat().join(',')
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
+                  el[i].year = el[i].year || 0
+                  el[i].month = el[i].month || 0
+                  el[i].date = el[i].date || 0
+                  obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
+                } else {
+                  obj[i] = el[i]
+                }
+              }
+              this.tableData.push(obj)
+            })
+            this.tableData.forEach((el, index) => {
+              console.log(el.code)
+              if (el.code === parseInt(i)) {
+                this.rows = el
+                console.log('aaa')
+              }
+              this.detail(this.rows)
+              this.dialogVisible = true
+            })
+          }
+          this.loadingTable = false
+        }).catch((err) => {
+          console.log(err)
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    initData () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+        this.jsonAll = res.data
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+      .then((res) => {
+        // console.log(res.data)
+        this.json = {}
+        for (var i in res.data) {
+          this.json[i] = {
+            key: i,
+            title: res.data[i]}
+        }
+        // console.log(this.json)
+      }).catch((err) => {
+        console.log(err)
+      })
+        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
+     {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
+        .then((res) => {
+          // console.log(res.data)
+          this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {}
@@ -171,11 +234,10 @@ export default {
         }).catch((err) => {
           console.log(err)
         })
-    }).catch((err) => {
-      console.log(err)
-    })
-  },
-  methods: {
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     detail (row) {
       this.show = true
       this.code = row.code
@@ -194,7 +256,7 @@ export default {
       this.infoSuccess = row.invitatedBidAccounts ? row.invitatedBidAccounts.split(',') : []
       this.infoFail = row.invitaFaildAccounts ? row.invitaFaildAccounts.split(',') : []
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
     },

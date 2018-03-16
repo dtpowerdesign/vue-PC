@@ -2,8 +2,8 @@
   <div class="PM-combo">
     <div class="title"><span style="font-size:2rem">联合体</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card" class="PM-tab" :value="value">
-      <el-tab-pane label="收到请求" name="1"><Rinfor></Rinfor></el-tab-pane>
-      <el-tab-pane label="我的请求" name="2">
+      <el-tab-pane label="收到请求" name="1" ref="comboo"><Rinfor></Rinfor></el-tab-pane>
+      <el-tab-pane label="我的请求" name="2" ref="comboo2">
         <infor></infor>
       </el-tab-pane>
       <el-tab-pane label="投标中" name="3"><inforing></inforing></el-tab-pane>
@@ -25,6 +25,18 @@ export default {
   },
   mounted () {
     this.value = this.$route.params.value
+    // console.log(this.$refs.comboo2.$children[0])
+    // this.test(1)
+    this.$one.$on('test', this.test)
+  },
+  methods: {
+    test (i) {
+      // alert(i)
+      this.$nextTick(function () {
+        console.log(this.$refs.comboo2.$children[0])
+        this.$refs.comboo2.$children[0].test(i)
+      })
+    }
   }
 }
 </script>
