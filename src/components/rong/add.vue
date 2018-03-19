@@ -7,7 +7,7 @@
         <el-button style="width:10%" type="success" @click="mySearch()">搜索</el-button>
       </div>
       <div class="exhibition">
-        <div v-for="(i, j) in data" :key="j" class="exhibitionDiv">
+        <div v-for="(i, j) in data.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="j" class="exhibitionDiv">
           <div class="exhibitionDivDiv"><span>姓名:</span><span>{{i.name}}</span></div>
           <div class="exhibitionDivDiv"><span>账号:</span><span>{{i.account}}</span></div>
           <div class="exhibitionDivDiv"><span>账号类型:</span><span>{{i.role}}</span></div>
@@ -17,7 +17,15 @@
           <div class="exhibitionDivDiv"><el-button @click="open(i.account, i.name)" type="success" style="width:100%">加好友</el-button></div>
         </div>
       </div>
-
+      <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[1, 3, 6, 9, 18]"
+      :page-size="6"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="data.length">
+      </el-pagination>
       <el-dialog title="填写验证信息" :visible.sync="dialogVisibleRemark" width="30%">
         <el-input type="textarea" v-model="extraMsg" placeholder="验证信息"></el-input>
         <span slot="footer" class="dialog-footer">
@@ -32,6 +40,8 @@
 export default {
   data () {
     return {
+      currentPage: 1,
+      pagesize: 5,
       dialogVisibleRemark: false,
       search: '',
       data: [],
@@ -41,6 +51,12 @@ export default {
     }
   },
   methods: {
+    handleSizeChange (size) {
+      this.pagesize = size
+    },
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+    },
     mySearch () {
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByValue', {'value': this.search})
       .then((res) => {

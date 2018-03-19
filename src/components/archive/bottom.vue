@@ -1,6 +1,6 @@
 <template>
   <div class="bottom">
-   <div class="div1"><img src="../../../static/logo.png" alt=""><span>{{msg}}</span></div>
+   <div class="div1"><img src="../../../static/logo-buleBGC.png" alt=""><span>{{msg}}</span></div>
    <ul class="ul1">
       <li>
         <span class="ul1-title">关于平台</span>
@@ -71,10 +71,10 @@ export default {
 display:flex;
 align-items:center;
 margin-top:2rem;
-margin-left:13%;
+margin-left:14%;
 }
 .div1>img{
-    width:25%;
+    width:10%;
 }
 .div1>span{
     color:white;

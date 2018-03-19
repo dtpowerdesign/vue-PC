@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="top">
-       <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
+       <div class="top-left"><img src="../../../static/logo-buleBGC.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
       <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
     </div>
     <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login">
@@ -164,6 +164,7 @@ export default {
     background-color:#4d83e7;
     display:flex;
     justify-content:space-between;
+    height: 6%;
 }
 .top span{
     cursor:pointer;
@@ -178,7 +179,7 @@ export default {
     align-items:center;
 }
 .top-left>img{
-    width:15%;
+    width:5%;
 }
 .top-left>span{
     font-size:1.5rem;

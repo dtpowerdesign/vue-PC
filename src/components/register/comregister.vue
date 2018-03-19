@@ -1,7 +1,7 @@
 <template>
   <div class="comregister">
    <div class="top">
-    <div class="top-left"><img src="../../../static/logo.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')" style="color:yellow">企业注册</span><span @click="$router.push('/login')">登录</span></div>
+    <div class="top-left"><img src="../../../static/logo-buleBGC.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')" style="color:yellow">企业注册</span><span @click="$router.push('/login')">登录</span></div>
    <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
   </div>
   <el-row>
@@ -34,7 +34,10 @@
     <el-button @click="resetForm('Form')">重置</el-button>
   </el-form-item>
   <el-form-item style="margin-left:-100px">
-    <el-checkbox v-model="checked" checked><span @click="$router.push('/protocol')" title="点击阅读">我已阅读并同意相关服务条款和隐私政策</span></el-checkbox>
+    <el-checkbox v-model="checked" checked>
+      <!-- <span @click="$router.push('/protocol')" title="点击阅读">我已阅读并同意相关服务条款和隐私政策</span> -->
+      <a :href="$domain.domain1 + '/electric-design/public/templets/platprotocl.html'" target="_blank">我已阅读并同意相关服务条款和隐私政策</a>
+      </el-checkbox>
   </el-form-item>
   </el-form>
   </el-col>
@@ -254,6 +257,7 @@ export default {
     background-color:#4d83e7;
     display:flex;
     justify-content:space-between;
+        height: 6%;
 }
 .top span{
     cursor:pointer;
@@ -268,7 +272,7 @@ export default {
     align-items:center;
 }
 .top-left>img{
-    width:15%;
+    width:5%;
 }
 .top-left>span{
     font-size:1.5rem;

@@ -5,7 +5,7 @@
       <el-radio v-model="form.dataOrProject" label="data">资料类型</el-radio>
     </div>
     <div class="data" v-if="form.dataOrProject==='data'">
-    <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
+    <div class="title"><span>任务基本信息</span><a :href="help1" class="help" >不会填?点我</a></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
         <el-form-item label="项目名称">
@@ -297,10 +297,10 @@ export default {
   },
   data () {
     return {
-      help1: '',
-      help2: '',
-      help3: '',
-      help4: '',
+      help1: this.$domain.domain1 + 'electric-design/public/templets/taskbasemsg.html',
+      help2: this.$domain.domain1 + 'electric-design/public/templets/projectrequriment.html',
+      help3: this.$domain.domain1 + 'electric-design/public/templets/payabout.html',
+      help4: this.$domain.domain1 + 'electric-design/public/templets/resultrequriment.html',
       disabled: false,
       radio: '2'
     }

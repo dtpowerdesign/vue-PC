@@ -14,6 +14,7 @@ import cookie from 'vue-cookie'
 import check from './util/check'
 import rong from 'co-rongcloud-api'
 import formDate from './util/formDate'
+import store from './vuex/rong'
 // var Promise = require('bluebird')
 // window.Promise = Promise
 Vue.use(cookie)
@@ -28,9 +29,16 @@ Vue.use(ElementUI)
 Vue.prototype.$http = Axios
 Vue.prototype.$qs = qs
 
-/* eslint-disable no-new */
-var bus = new Vue()
+/* eslint-disable */
+var bus = new Vue({
+  store,
+  data: {
+    people: []
+  }
+})
 Vue.prototype.$one = bus
+
+
 var vm = new Vue({
   el: '#app',
   router,
@@ -42,12 +50,14 @@ Vue.prototype.$self = vm
 const myRongIMLib = window.RongIMLib
 const myRongIMClient = myRongIMLib.RongIMClient
 Vue.prototype.$RongIMLib = myRongIMLib
-Vue.prototype.$RongIMClient = myRongIMClient
+Vue.prototype.$RongIMClient = myRongIMClient.setOnReceiveMessageListener
 Vue.prototype.$startInit = startInit
 Vue.prototype.$Appkey = 'pvxdm17jpibfr'
 
+
+
 // 注册自定义消息
-function registerMessage (type, propertys) {
+function registerMessage(type, propertys) {
   let messageNmae = type // 消息名称
   let objectName = 's:' + type // 消息内置名称
   let mesasgeTag = new myRongIMLib.Message(true, true) // 保存并计数
@@ -60,7 +70,7 @@ function registerMessage (type, propertys) {
   )
 }
 
-function startInit (user, config, targetId) {
+function startInit(user, config, targetId) {
   let params = {
     appKey: 'pvxdm17jpibfr',
     token: config.token,
@@ -70,12 +80,12 @@ function startInit (user, config, targetId) {
   let userId = ''
 
   let callbacks = {
-    getInstance (instance) {
+    getInstance(instance) {
       myRongIMLib.RongIMEmoji.init()
       let propertys = ['name', 'age', 'gender']
       registerMessage('PersonMessage', propertys)
     },
-    getCurrentUser (userInfo) {
+    getCurrentUser(userInfo) {
       console.log(userInfo.userId)
       userId = userInfo.userId
       console.log('链接成功；userid=' + userInfo.userId)
@@ -96,7 +106,7 @@ function startInit (user, config, targetId) {
   init(params, callbacks)
 }
 
-function init (params, callbacks, modules) {
+function init(params, callbacks, modules) {
   let appKey = params.appKey
   let token = params.token
   let navi = params.navi || ''
@@ -129,8 +139,9 @@ function init (params, callbacks, modules) {
 
   let instance = RongIMClient.getInstance()
 
+  //   连接状态监听器
   RongIMClient.setConnectionStatusListener({
-    onChanged (status) {
+    onChanged(status) {
       console.log(status)
       switch (status) {
         case RongIMLib.ConnectionStatus['CONNECTED']:
@@ -152,16 +163,19 @@ function init (params, callbacks, modules) {
         case RongIMLib.ConnectionStatus['NETWORK_UNAVAILABLE']:
         case 3:
           console.log('网络不可用')
+          RongIMClient.reconnect(reCallback, reConfig)
           break
 
         case RongIMLib.ConnectionStatus['CONNECTION_CLOSED']:
         case 4:
           console.log('未知原因，连接关闭')
+          RongIMClient.reconnect(reCallback, reConfig)
           break
 
         case RongIMLib.ConnectionStatus['KICKED_OFFLINE_BY_OTHER_CLIENT']:
         case 6:
           console.log('用户账户在其他设备登录，本机会被踢掉线')
+            // RongIMClient.reconnect(reCallback, reConfig)
           break
 
         case RongIMLib.ConnectionStatus['DOMAIN_INCORRECT']:
@@ -178,25 +192,52 @@ function init (params, callbacks, modules) {
    */
   RongIMClient.setOnReceiveMessageListener({
     // 接收到的消息
-    onReceived (message) {
+    onReceived(message) {
       // 应判断消息类型
       console.log('新消息: ' + message.targetId)
       console.log(message)
+      bus.$emit('refresh', message)
+      bus.$emit('has', message.targetId)
+        // console.log(this.$store.state.people[0])
+        // Vue.set(bus.$data.people, message.targetId, message)
+        // console.log(bus.$data.people[message.targetId])
       callbacks.receiveNewMessage && callbacks.receiveNewMessage(message)
     }
   })
 
   // 开始连接
   RongIMClient.connect(token, {
-    onSuccess (userId) {
+    onSuccess(userId) {
       callbacks.getCurrentUser && callbacks.getCurrentUser({ userId: userId })
       console.log('链接成功，用户id：' + userId)
     },
-    onTokenIncorrect () {
+    onTokenIncorrect() {
       console.log('token无效')
     },
-    onError (errorCode) {
+    onError(errorCode) {
       console.log(errorCode)
     }
   })
+
+  // 重新连接
+  var reCallback = {
+    onSuccess: function (userId) {
+      console.log('Reconnect successfully.' + userId)
+    },
+    onTokenIncorrect: function () {
+      console.log('token无效')
+    },
+    onError: function (errorCode) {
+      console.log(errorCode)
+    }
+  }
+  var reConfig = {
+    // 默认 false, true 启用自动重连，启用则为必选参数
+    auto: true,
+    // 重试频率 [100, 1000, 3000, 6000, 10000, 18000] 单位为毫秒，可选
+    url: 'cdn.ronghub.com/RongIMLib-2.2.6.min.js',
+    // 网络嗅探地址 [http(s)://]cdn.ronghub.com/RongIMLib-2.2.6.min.js 可选
+    rate: [100, 1000, 3000, 6000, 10000]
+  }
+  RongIMClient.reconnect(reCallback, reConfig)
 }

@@ -17,6 +17,14 @@ export default {
       navi: ''
     }
   },
+  mounted () {
+    this.$one.$on('has', (targetId) => {
+      this.$notify.info({
+        title: `来自${targetId}`,
+        message: '有人发信息给你'
+      })
+    })
+  },
   computed: {
     token () {
       return this.$cookie.get('token')
