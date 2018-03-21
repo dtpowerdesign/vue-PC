@@ -7,7 +7,7 @@
       background-color="#4d83e7"
       text-color="#fff"
       active-background-color="#409EFF"
-      :default-openeds="[]">
+      :default-openeds="['recent', 'friend', 'group']">
       <el-submenu index="recent">
         <template slot="title">
           <i class="icon iconfont icon-zuijinlaifang"></i>

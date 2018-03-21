@@ -10,6 +10,7 @@
        	<router-view></router-view>
      </el-col>
    </el-row>
+   <Drag></Drag>
   </div>
 </template>
 
@@ -17,8 +18,9 @@
 import proLeftNav from '@/components/public/proLeftNav'
 import logo from '@/components/public/logo'
 import Info from '@/components/public/Info'
+import Drag from '@/components/public/drag'
 export default {
-  components: {proLeftNav, logo, Info},
+  components: {proLeftNav, logo, Info, Drag},
   data () {
     return {}
   },

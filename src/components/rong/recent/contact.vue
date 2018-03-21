@@ -4,12 +4,12 @@
    <el-table :data="getData" border="" row-click="open">
        <el-table-column prop="otherName" label="姓名/群名称" min-width="20%"></el-table-column>
        <el-table-column prop="otherUserId" label="账号/群账号" min-width="10%"></el-table-column>
-       <el-table-column label="时间" min-width="10%">
+       <el-table-column label="时间" min-width="15%">
            <template slot-scope="scope">
                <p>{{scope.row.msgTime.year+1900}}/{{scope.row.msgTime.month+1}}/{{scope.row.msgTime.date}}/{{scope.row.msgTime.hours}}:{{scope.row.msgTime.minutes}}:{{scope.row.msgTime.seconds}}</p>
            </template>
        </el-table-column>
-       <el-table-column label="内容" min-width="40%">
+       <el-table-column label="内容" min-width="35%">
          <template slot-scope="scope">
              <div style="display:flex;justify-content:flex-end;flex-wrap:wrap">
              <p style="color:#409EFF" v-if="scope.row.fromUserId === $cookie.get('user')">我:{{scope.row.message.content}}</p>

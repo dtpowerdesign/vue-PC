@@ -7,6 +7,7 @@
    <tag data-step="3" data-intro="更改条件" data-position="top"></tag>
    <mycontent data-step="4" data-intro="显示结果" data-position="bottom" v-loading="loadingContent"></mycontent>
    <bottom></bottom>
+   <Drag></Drag>
   </div>
 </template>
 
@@ -18,8 +19,9 @@ import classify from './facilitator/classify'
 import tag from './facilitator/tag'
 import mycontent from './facilitator/content'
 import bottom from './archive/bottom'
+import Drag from '@/components/public/drag'
 export default {
-  components: {Info, top, search, classify, tag, mycontent, bottom},
+  components: {Info, top, search, classify, tag, mycontent, bottom, Drag},
   data () {
     return {
       loadingClassify: true,

@@ -10,6 +10,7 @@
        	<router-view></router-view>
      </el-col>
    </el-row>
+   <Drag></Drag>
   </div>
 </template>
 
@@ -17,8 +18,9 @@
 import comleftNav from '@/components/public/comleftNav'
 import logo from '@/components/public/logo'
 import Info from '@/components/public/Info'
+import Drag from '@/components/public/drag'
 export default {
-  components: {comleftNav, logo, Info},
+  components: {comleftNav, logo, Info, Drag},
   data () {
     return {}
   },
@@ -40,6 +42,8 @@ export default {
   background-color:#4d83e7;
   position:fixed;
   z-index: 0;
+    overflow: scroll;
+  overflow-x: hidden;
 }
 .comleftNav{
   margin-top:5rem;
