@@ -1,20 +1,19 @@
 <template>
   <div class="add">
       <div style="display:flex;justify-content:space-around;margin:1rem auto">
-        <el-input placeholder="搜索好友账号" @keyup.enter.native="mySearch()" v-model="search" style="width:90%">
+        <el-input placeholder="搜索群" @keyup.enter.native="mySearch()" v-model="search" style="width:90%">
         <i slot="prefix" class="el-input__icon el-icon-search" @click="mySearch()" style="font-size:1.5rem" ></i>
         </el-input>
         <el-button style="width:10%" type="success" @click="mySearch()">搜索</el-button>
       </div>
       <div class="exhibition">
         <div v-for="(i, j) in data.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="j" class="exhibitionDiv">
-          <div class="exhibitionDivDiv"><span>姓名:</span><span>{{i.name}}</span></div>
-          <div class="exhibitionDivDiv"><span>账号:</span><span>{{i.account}}</span></div>
-          <div class="exhibitionDivDiv"><span>账号类型:</span><span>{{i.role}}</span></div>
-          <div class="exhibitionDivDiv"><span>工作地点:</span><span>{{i.workingAddress}}</span></div>
-          <div class="exhibitionDivDiv"><span>联系电话:</span><span>{{i.telephone}}</span></div>
-          <div class="exhibitionDivDiv"><span>邮箱:</span><span>{{i.email}}</span></div>
-          <div class="exhibitionDivDiv"><el-button @click="open(i.account, i.name)" type="success" style="width:100%">加好友</el-button></div>
+          <div class="exhibitionDivDiv"><span>群名称:</span><span>{{i.groupName}}</span></div>
+          <div class="exhibitionDivDiv"><span>群账号:</span><span>{{i.groupId}}</span></div>
+          <div class="exhibitionDivDiv"><span>创建者:</span><span>{{i.ownerId}}</span></div>
+          <div class="exhibitionDivDiv"><span>群介绍:</span><span>{{i.instraction}}</span></div>
+          <div class="exhibitionDivDiv"><span>群成员:</span><span>{{i.userIds.join(',')}}</span></div>
+          <div class="exhibitionDivDiv"><el-button @click="open(i.groupId, i.groupName)" type="success" style="width:100%">加群</el-button></div>
         </div>
       </div>
       <el-pagination
@@ -58,9 +57,9 @@ export default {
       this.currentPage = currentPage
     },
     mySearch () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByValue', {'value': this.search})
+      this.$http.post(this.$domain.domain1 + 'electric-design/searchTableByValue', {'table': 'chatgroup', 'value': this.search})
       .then((res) => {
-        // console.log(res.data)
+        console.log(res.data)
         this.data = res.data
       }).catch((err) => {
         console.log(err)
@@ -75,17 +74,30 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/applyNewFriend', {
         'fromUserId': this.$cookie.get('user'),
         'fromUserName': this.$cookie.get('name'),
-        'applyType': 'normal',
-        'toUserId': this.account,
+        'applyType': 'group',
+        'toGroupId': this.account,
         'toName': this.name,
         'extraMsg': this.extraMsg
       })
       .then((res) => {
         if (res.data) {
-          this.$message({
-            type: 'success',
-            message: `申请发送成功,等待对方同意`
+          this.$http.post(this.$domain.domain1 + 'electric-design/group_publish', {
+            'fromUserId': this.$cookie.get('user'),
+            'fromUserName': this.$cookie.get('name'),
+            'toGroupId': this.account,
+            'toName': this.name,
+            'objectName': 'RC:TxtMsg',
+            'message': {content: '请求加入群:' + this.name, extra: '系统消息'}
           })
+      .then((res) => {
+        this.$message({
+          type: 'success',
+          message: `群申请发送成功,等待同意`
+        })
+        this.extraMsg = ''
+      }).catch((err) => {
+        console.log(err)
+      })
         } else {
           this.$message({
             type: 'warning',

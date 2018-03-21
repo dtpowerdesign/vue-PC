@@ -47,9 +47,14 @@ import perProjectTime from '@/components/perProject/time'
 import perProjectEvent from '@/components/perProject/event'
 import perProjectMember from '@/components/perProject/member'
 import perProjectPermiss from '@/components/perProject/permiss'
-import add from '@/components/rong/add'
-import apply from '@/components/rong/apply'
-import friendList from '@/components/rong/friendList'
+import apply from '@/components/rong/recent/apply'
+import contact from '@/components/rong/recent/contact'
+import add from '@/components/rong/friend/add'
+import createGroup from '@/components/rong/group/createGroup'
+import addGroup from '@/components/rong/group/addGroup'
+// import applyGroup from '@/components/rong/group/applyGroup'
+import friendList from '@/components/rong/friend/friendList'
+import groupList from '@/components/rong/group/groupList'
 
 Vue.use(Router)
 
@@ -124,9 +129,13 @@ export default new Router({
     path: '/chat',
     component: Chat,
     children: [
-      { path: 'add', component: add },
       { path: 'apply', component: apply },
-      { path: 'friendList', component: friendList }
+      { path: 'contact', component: contact },
+      { path: 'add', component: add },
+      { path: 'friendList', component: friendList },
+      { path: 'createGroup', component: createGroup },
+      { path: 'addGroup', component: addGroup },
+      { path: 'groupList', component: groupList }
     ]
   }, {
     path: '/changeTable/:value',

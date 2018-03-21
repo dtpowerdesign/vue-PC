@@ -18,11 +18,43 @@ export default {
     }
   },
   mounted () {
-    this.$one.$on('has', (targetId) => {
-      this.$notify.info({
-        title: `来自${targetId}`,
-        message: '有人发信息给你'
-      })
+    this.$one.$on('hasApply', (message) => {
+      if (this.$route.path !== '/chat/apply') {
+        this.$notify.info({
+          title: `申请消息`,
+          dangerouslyUseHTMLString: true,
+          message: `<p style="color:#409EFF;cursor:pointer">${message.content.content}</p>`,
+          onClick: () => { this.$router.push('/chat/apply') },
+          duration: 0,
+          position: 'top-right'
+        })
+      }
+    })
+    this.$one.$on('has', (message) => {
+      if (this.$route.path !== '/chat/contact') {
+        if (JSON.parse(message.content.extra).type === 'normal') {
+          this.$notify.info({
+            title: `聊天消息`,
+            message: `来自${JSON.parse(message.content.extra).otherName}的私聊信息`,
+            onClick: () => {
+              this.$router.push('/chat/contact')
+            },
+            duration: 0,
+            position: 'bottom-right'
+          })
+        }
+        if (JSON.parse(message.content.extra).type === 'group') {
+          this.$notify.info({
+            title: `聊天消息`,
+            message: `来自${JSON.parse(message.content.extra).otherName}的群信息`,
+            onClick: () => {
+              this.$router.push('/chat/contact')
+            },
+            duration: 0,
+            position: 'bottom-right'
+          })
+        }
+      }
     })
   },
   computed: {

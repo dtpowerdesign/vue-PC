@@ -52,7 +52,6 @@ const myRongIMClient = myRongIMLib.RongIMClient
 Vue.prototype.$RongIMLib = myRongIMLib
 Vue.prototype.$RongIMClient = myRongIMClient.setOnReceiveMessageListener
 Vue.prototype.$startInit = startInit
-Vue.prototype.$Appkey = 'pvxdm17jpibfr'
 
 
 
@@ -72,7 +71,7 @@ function registerMessage(type, propertys) {
 
 function startInit(user, config, targetId) {
   let params = {
-    appKey: 'pvxdm17jpibfr',
+    appKey: this.$appKey.appKey,
     token: config.token,
     navi: config.navi || ''
   }
@@ -196,11 +195,16 @@ function init(params, callbacks, modules) {
       // 应判断消息类型
       console.log('新消息: ' + message.targetId)
       console.log(message)
-      bus.$emit('refresh', message)
-      bus.$emit('has', message.targetId)
-        // console.log(this.$store.state.people[0])
-        // Vue.set(bus.$data.people, message.targetId, message)
-        // console.log(bus.$data.people[message.targetId])
+      if (message.content.extra === '系统消息') {
+        bus.$emit('refreshApply', message)
+        bus.$emit('hasApply', message)
+      } else {
+        bus.$emit('refresh', message)
+        bus.$emit('has', message)
+      }
+      // console.log(this.$store.state.people[0])
+      // Vue.set(bus.$data.people, message.targetId, message)
+      // console.log(bus.$data.people[message.targetId])
       callbacks.receiveNewMessage && callbacks.receiveNewMessage(message)
     }
   })

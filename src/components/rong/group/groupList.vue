@@ -1,18 +1,21 @@
 <template>
-  <div class="friendList">
-   <div class="friendListDiv" v-for="(i, j) in data" :key="j">
-          <div class="friendListDivDiv"><span>姓名:</span><span>{{i.name}}</span></div>
-          <div class="friendListDivDiv"><span>账号:</span><span>{{i.account}}</span></div>
-          <div class="friendListDivDiv"><span>账号类型:</span><span>{{i.role}}</span></div>
-          <div class="friendListDivDiv"><span>工作地点:</span><span>{{i.workingAddress}}</span></div>
-          <div class="friendListDivDiv"><span>联系电话:</span><span>{{i.telephone}}</span></div>
-          <div class="friendListDivDiv"><span>邮箱:</span><span>{{i.email}}</span></div>
-          <div class="friendListDivDiv"><el-badge value="new"><el-button @click="open(i.account, i.name)" type="success">发送信息</el-button></el-badge><el-button @click="myDelete(i.account, i.name)" type="danger">删除好友</el-button></div>   
+  <div class="groupList">
+   <div class="groupListDiv" v-for="(i, j) in data" :key="j">
+          <div class="groupListDivDiv"><span>群名称:</span><span>{{i.groupName}}</span></div>
+          <div class="groupListDivDiv"><span>群账号:</span><span>{{i.groupId}}</span></div>
+          <div class="groupListDivDiv"><span>创建者:</span><span>{{i.ownerId}}</span></div>
+          <div class="groupListDivDiv"><span>群介绍:</span><span>{{i.instraction}}</span></div>
+          <div class="groupListDivDiv"><span>群成员:</span><span>{{i.userIds.join(',')}}</span></div>
+          <div class="groupListDivDiv">
+            <el-badge value="new"><el-button @click="open(i.groupId, i.groupName)" type="success">发送信息</el-button></el-badge>
+            <el-button v-if="!(i.ownerId === $cookie.get('user'))" @click="myQuit(i.groupId, i.groupName)" type="warning">退出该群</el-button>
+            <!-- <el-button type="primary">邀请新成员</el-button> -->
+            <el-button v-if="i.ownerId === $cookie.get('user')" @click="myDismiss(i.groupId, i.groupName)" type="danger">解散该群</el-button>
+          </div>   
    </div>
    <el-dialog :title="toName" :visible.sync="dialogVisibleChat" width="60%">
      <span @click="limit+=10;getChatMsg()" style="color:#409EFF">显示更多</span>
      <div class="chatContent">
-       <!-- <div class="from">{{}}</div> -->
        <div v-for="(i, j) in ChatMsg" :key="j" style="margin-top: 2rem;">
          <div style="color:#409EFF">
            <div v-if="i.fromUserId===$cookie.get('user')" style="text-align:right">{{i.msgTime.year+1900}}/{{i.msgTime.month+1}}/{{i.msgTime.date}}/{{i.msgTime.hours}}:{{i.msgTime.minutes}}:{{i.msgTime.seconds}}</div>
@@ -22,7 +25,6 @@
            <div>{{i.fromUserName}}</div><div>:</div><p style="space-white:pre-wrap;max-width:60%;text-align:left;">{{i.message.content}}</p>
          </div>
        </div>
-       <!-- <div class="from">{{message}}</div> -->
      </div>
      <el-input v-model="message" @keyup.enter.native="send()" autofocus></el-input>
      <span slot="footer" class="dialog-footer">
@@ -51,10 +53,9 @@ export default {
     this.$one.$on('refresh', (message) => {
       console.log(message)
       if (message.targetId === this.toUserId) {
-        // this.getChatMsg()
         this.ChatMsg.push({
           'fromUserId': message.senderUserId,
-          'fromUserName': message.content.extra,
+          'fromUserName': message.content.extra.name,
           'msgTime': { date: new Date().getDate(),
             day: new Date(message.receivedTime).getDay(),
             month: new Date(message.receivedTime).getMonth(),
@@ -66,21 +67,42 @@ export default {
             content: message.content.content
           }
         })
+        this.$nextTick(() => {
+          if ($('.chatContent')) {
+            $('.chatContent').animate({
+              scrollTop: $('.chatContent')[0].scrollHeight
+            }, 1000)
+          }
+        })
       }
     })
-    // console.log(document.getElementsByClassName('chatContent'))
   },
   methods: {
     initData () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/getFriendList', {'userId': this.$cookie.get('user')})
+      this.$http.post(this.$domain.domain1 + 'electric-design/sync', {userId: this.$cookie.get('user')})
       .then((res) => {
+        if (res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '群消息同步成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '群消息同步失败'
+          })
+        }
+      }).catch((err) => { console.log(err) })
+      this.$http.post(this.$domain.domain1 + 'electric-design/getAllGroupAboutUser', {'userId': this.$cookie.get('user')})
+      .then((res) => {
+        console.log(res.data)
         this.data = res.data
       }).catch((err) => {
         console.log(err)
       })
     },
     getChatMsg () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/getLimitChatMsgOfNormal', {'userId1': this.toUserId, 'userId2': this.$cookie.get('user'), count: this.limit, start: 0})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getChatMsgOfGroup', {'groupId': this.toUserId, count: this.limit, start: 0})
       .then((res) => {
         console.log(res.data)
         this.ChatMsg = res.data
@@ -100,15 +122,16 @@ export default {
           message: '该条消息为空哦'
         })
       } else {
-        this.$http.post(this.$domain.domain1 + 'electric-design/private_publish', {
+        this.$http.post(this.$domain.domain1 + 'electric-design/group_publish', {
           'fromUserId': this.$cookie.get('user'),
           'fromUserName': this.$cookie.get('name'),
-          'toUserId': this.toUserId,
+          'toGroupId': this.toUserId,
           'toName': this.toName,
           'objectName': 'RC:TxtMsg',
-          'message': {content: this.message, extra: this.$cookie.get('name')}
+          'message': {content: this.message, extra: {'name': this.$cookie.get('name'), 'type': 'group', 'otherName': this.toName}}
         })
       .then((res) => {
+        // console.log(res.data)
         if (res.data.code === 200) {
           this.ChatMsg.push({
             'fromUserId': this.$cookie.get('user'),
@@ -132,28 +155,33 @@ export default {
             }, 1000)
           })
           this.message = ''
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `发送失败${res.data.code}`
+          })
         }
       })
       }
     },
-    myDelete (account, name) {
-      this.$confirm('此操作将永久删除该好友, 是否继续?', '提示', {
+    myQuit (account, name) {
+      this.$confirm('此操作将永久退出该群, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/delFriend', {'fromUserId': this.$cookie.get('user'), 'toUserId': account})
+        this.$http.post(this.$domain.domain1 + 'electric-design/quit', {'userIds': [this.$cookie.get('user')], 'groupId': account})
       .then((res) => {
-        if (res.data.result) {
+        if (res.data.code === 200) {
           this.$message({
             type: 'success',
-            message: `成功删除好友${name}`
+            message: `成功退出群${name}`
           })
           this.initData()
         } else {
           this.$message({
             type: 'warning',
-            message: `成功好友${name}失败,原因:${res.data.reason}`
+            message: `退出群${name}失败,原因:${res.data.code}`
           })
         }
       }).catch((err) => {
@@ -162,7 +190,37 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消'
+        })
+      })
+    },
+    myDismiss (account, name) {
+      this.$confirm('此操作将永久解散该群, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post(this.$domain.domain1 + 'electric-design/dismiss', {'userIds': [this.$cookie.get('user')], 'groupId': account})
+      .then((res) => {
+        if (res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: `成功解散群${name}`
+          })
+          this.initData()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `解散群${name}失败,原因:${res.data.code}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
         })
       })
     }
@@ -172,14 +230,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.friendList{
+.groupList{
     width: 90%;
     margin: 1rem auto;
     display: flex;
     align-items: center;
     justify-content: flex-start;
 }
-.friendListDiv{
+.groupListDiv{
     width:30%;
     margin:1rem;
     padding: 1rem;
@@ -187,18 +245,18 @@ export default {
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-.friendListDiv:hover{
+.groupListDiv:hover{
     -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-.friendListDivDiv{
-        margin: 1rem 2rem;
+.groupListDivDiv{
+    margin: 1rem 2rem;
     display: flex;
     justify-content: space-between;
 }
 .chatContent{
-  max-height: 20rem;
+  max-height: 30rem;
   overflow:scroll;
   overflow-x: hidden;
   padding:0 2rem;

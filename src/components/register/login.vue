@@ -91,7 +91,9 @@ export default {
           this.$router.push('/com/company-comAchi')
         }
         // window.startInit()
-        this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+        this.$nextTick(() => {
+          this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+        })
         // console.log($('#appKey').text())
         // console.log($('#token').text())
       }
@@ -127,7 +129,9 @@ export default {
                 this.cookie.set('token', res.data.token)
               }
               // window.startInit()
-              this.$startInit(this.$cookie.get('user'), {token: res.data.token})
+              this.$nextTick(() => {
+                this.$startInit(this.$cookie.get('user'), {token: res.data.token})
+              })
               if (res.data.role === 'puser') {
                 this.$router.push('/per/person-perAchi')
               } else {
