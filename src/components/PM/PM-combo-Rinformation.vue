@@ -42,11 +42,13 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{major}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">被邀请的人</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{info.join(',')}} </span></p>
+      <el-col :span="6" :offset="0">
+        <p class="font1" style="text-align:left;color:#409EFF"><span>联合体发起人账号:{{inviation.unionUserId}}</span></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>联合体发起人名字:{{inviation.unionUserName}}</span></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>我承担的角色:{{inviation.job}}</span></p>
       </el-col>
     </el-row>
+    <el-button type="warning" style="margin-top:5rem" @click="ignore()">忽略</el-button>
     <el-button type="danger" style="margin-top:5rem" @click="refuse()">残忍拒绝</el-button>
     <el-button type="success" style="margin-top:5rem" @click="accept()">果断加入</el-button>
   </div>  
@@ -94,6 +96,7 @@ export default {
       tableData: [],
       multipleSelection: [],
       code: '',
+      ucode: '',
       show: false,
       name: '',
       tenderCompany: '',
@@ -106,9 +109,9 @@ export default {
       category: '',
       voltage: '',
       major: '',
-      info: ['1', '2'],
       json: {},
-      jsonAll: {}
+      jsonAll: {},
+      inviation: {}
     }
   },
   created () {
@@ -116,19 +119,17 @@ export default {
       this.jsonAll = res.data
       this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
       .then((res) => {
-        // console.log(res.data)
         this.json = {}
         for (var i in res.data) {
           this.json[i] = {
             key: i,
             title: res.data[i]}
         }
-        // console.log(this.json)
       }).catch((err) => {
         console.log(err)
       })
-      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
-     {'conditions': {'invitatingAccounts': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getunionInviteProjects',
+     {'userId': this.$cookie.get('user')})
         .then((res) => {
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -145,6 +146,7 @@ export default {
                   obj[i] = el[i]
                 }
               }
+              this.$set(obj, 'ucode', el.ucode)
               this.tableData.push(obj)
             })
           }
@@ -158,6 +160,7 @@ export default {
   },
   methods: {
     detail (row) {
+      console.log(row)
       this.show = true
       this.code = row.code
       this.name = row.name
@@ -171,14 +174,20 @@ export default {
       this.voltage = row.voltage
       this.major = row.major
       this.bidType = row.bidType
-      this.info = row.invitatingAccounts ? row.invitatingAccounts.split(',') : []
-      this.infoSuccess = row.invitatedBidAccounts ? row.invitatedBidAccounts.split(',') : []
-      this.infoFail = row.invitaFaildAccounts ? row.invitaFaildAccounts.split(',') : []
+      this.ucode = row.ucode
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
-        console.log(res.data)
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
-      console.log(this.info)
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {
+        'table': 'unionapply',
+        'keys': ['code'],
+        'values': [this.ucode]
+      })
+      .then((res) => {
+        this.inviation = res.data[0]
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -222,22 +231,18 @@ export default {
       this.multipleSelection = val
     },
     accept () {
-      var temp = this.info
-      temp.splice(this.info.indexOf(this.$cookie.get('user')), 1)
-      var otherSuccess = this.infoSuccess.concat(this.$cookie.get('user'))
-      console.log(this.infoSuccess)
-      console.log(otherSuccess)
-      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': temp, 'invitatedBidAccounts': otherSuccess}})
+      this.$http.post(this.$domain.domain1 + 'electric-design/agreeToUnion', {'code': this.ucode})
       .then((res) => {
+        // console.log(res.data)
         if (res.data.result) {
           this.$message({
             type: 'success',
-            message: `成功接受邀请`
+            message: `成功接收邀请`
           })
         } else {
           this.$message({
             type: 'warning',
-            message: `同意邀请失败，原因:${res.data.reason}`
+            message: `失败原因:${res.data.reason}`
           })
         }
       }).catch((err) => {
@@ -245,11 +250,7 @@ export default {
       })
     },
     refuse () {
-      var temp = this.info
-      temp.splice(this.info.indexOf(this.$cookie.get('user')), 1)
-      var otherFail = this.infoFail.concat(this.$cookie.get('user'))
-      console.log(otherFail)
-      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': temp, 'invitaFaildAccounts': otherFail}})
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateUnionApply', {'code': this.ucode, 'ustate': 'refused'})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -259,7 +260,25 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: `拒绝失败，原因:${res.data.reason}`
+            message: `失败原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    ignore () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateUnionApply', {'code': this.ucode, 'ustate': 'ignored'})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: `成功忽略邀请`
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因:${res.data.reason}`
           })
         }
       }).catch((err) => {

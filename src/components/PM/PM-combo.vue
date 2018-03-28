@@ -6,7 +6,7 @@
       <el-tab-pane label="我的请求" name="2" ref="comboo2">
         <infor></infor>
       </el-tab-pane>
-      <el-tab-pane label="投标中" name="3"><inforing></inforing></el-tab-pane>
+      <!-- <el-tab-pane label="投标中" name="3"><inforing></inforing></el-tab-pane> -->
   </el-tabs>
   </div>
   

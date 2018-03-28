@@ -131,12 +131,11 @@ export default {
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
-        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'qualificationRequirements': this.form.aptitude,
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
         'isAcceptJointBid': this.form.isAcceptJointBid,
-        'isJointState': 'true',
         'processRequirements': stateUnits}
       this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         console.log(data)
@@ -183,7 +182,7 @@ export default {
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
-        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'qualificationRequirements': this.form.aptitude,
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,

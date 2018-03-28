@@ -68,8 +68,9 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
-          <template slot-scope="adasd">
-            <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
+          <template slot-scope="scope">
+            <!-- <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button> -->
+            <el-button size="small" type="success" @click="$router.push('/per-project/' + scope.row.code + '/pandect')">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -234,7 +235,7 @@ export default {
         cancelButtonText: '我再考虑考虑',
         type: 'warning'
       }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/bidFaild', {'belongToProjectCode': this.code})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {
@@ -244,6 +245,7 @@ export default {
             })
             this.dialogVisible = false
             this.$router.go(0)
+            this.$startInit(this.$cookie.get('user'), {token: res.data.token})
           } else {
             this.$message({
               type: 'warning',
@@ -276,6 +278,7 @@ export default {
             })
             this.dialogVisible = false
             this.$router.go(0)
+            this.$startInit(this.$cookie.get('user'), {token: res.data.token})
           } else {
             this.$message({
               type: 'warning',

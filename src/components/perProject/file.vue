@@ -76,9 +76,9 @@ export default {
   mounted () {
     this.initData()
   },
-  updated () {
-    this.initData()
-  },
+  // updated () {
+  //   this.initData()
+  // },
   methods: {
     initData () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})

@@ -1,12 +1,5 @@
 <template>
   <div class="content">
-   <!-- <ul>
-     <li v-for="(i, j) in data.slice((currentPage-1)*pagesize,currentPage*pagesize)" class="content-style" :key="j" @click="detail(i.code, i.sourceAccount)">
-       <img :src="i.mainImgPath" alt="">
-       <p class="detail1" style="margin-left:.3rem">{{i.name}}</p>
-       <div class="detail2"><span style="margin-left:.3rem">{{i.company}}</span><span>{{i.endTime}}</span></div>
-     </li>
-   </ul> --> 
    <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
    <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width:100%">
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
@@ -16,14 +9,7 @@
           </template>
         </el-table-column>
    </el-table>
-
    <el-dialog title="确定要投标?" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-     <!-- <div style="text-align:left;border-top:1px solid gray;padding:1rem" v-loading="details.loadingPeople">
-     <p style="color:#4d83e7;font-size:1.5rem">发布人信息</p>
-     <p>发布者账号:{{details.account}}</p>
-     <p>发布者姓名:{{details.sourceName}}</p>
-     <p>发布者邮箱:{{details.email}}</p>
-     </div> -->
      <div style="text-align:left;border-top:1px solid gray;padding:1rem" v-loading="details.loadingProject">
      <p style="color:#4d83e7;font-size:1.5rem">项目信息</p>
      <p>项目名称:{{details.name}}</p>
@@ -32,12 +18,11 @@
      <p>类型:{{details.category}}</p>
      <p>涉及专业:{{details.major}}</p>
      <p>是否接受联合投标:{{details.isAcceptJointBid==='true'?'是':'否'}}</p>
-     <p v-if="details.isAcceptJointBid==='true'">是否已经被联合投标:{{!(details.isJointState==='true')?'是':'否'}}</p>
      </div>
      <div> 
        <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='puser'">个人投标</el-radio>
        <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='cuser'">企业投标</el-radio>
-       <el-radio v-model="bidType" label="unit" v-if="details.isAcceptJointBid==='true'&&details.isJointState === 'true'">联合投标</el-radio>
+       <el-radio v-model="bidType" label="unit" v-if="details.isAcceptJointBid==='true'">联合投标</el-radio>
      </div>     
      <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction"></el-input>
      <el-upload multiple class="upload-demo" ref="upload" id="upload" :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
@@ -48,12 +33,6 @@
        <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">投标</el-button>
        <div slot="tip" class="el-upload__tip">点击投标时可以上传附件，不超过{{limit}}个</div>     
      </el-upload>     
-     <!-- <span slot="footer" class="dialog-footer">
-      <el-button type="danger"  @click="handleClose()">我不感兴趣</el-button>
-      <el-button type="success" @click="allyBid(details.code, details.state)" v-if="details.isAcceptJointBid==='true'&&details.isJointState === 'true'">联合投标</el-button>
-      <el-button type="primary" @click="perBid(details.code, details.state)" v-if="$cookie.get('role')==='puser'">个人投标</el-button>
-      <el-button type="primary" @click="comBid(details.code, details.state)" v-if="$cookie.get('role')==='cuser'">企业投标</el-button>
-     </span> -->
    </el-dialog>
    <div style="clear:both;"></div>
    <el-pagination  class="paging" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9, 18]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="table.length">
@@ -111,7 +90,6 @@ export default {
         this.$set(this.details, 'name', res.data.name)
         this.$set(this.details, 'state', res.data.state)
         this.$set(this.details, 'isAcceptJointBid', res.data.isAcceptJointBid)
-        this.$set(this.details, 'isJointState', res.data.isJointState)
         this.$set(this.details, 'type', res.data.type.join(','))
         this.$set(this.details, 'category', res.data.category)
         this.$set(this.details, 'major', res.data.major.join(','))
@@ -131,7 +109,7 @@ export default {
         console.log(err)
       })
     },
-    perBid (code, state) {
+    perBid (code, state, name) {
       this.dialogVisible = false
       if (state !== '投标中') {
         this.$message({
@@ -139,7 +117,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'personalBidAccounts': this.details.personalBidAccounts}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/personalBid', {'belongToProjectCode': code, 'belongToProjectName': name, 'sourceUserId': this.$cookie.get('user'), 'sourceUserName': this.$cookie.get('name'), 'sourceUserType': 'puser', 'bidType': 'personal'})
       .then((res) => {
         console.log(res.data)
         if (res.data.result === true) {
@@ -152,19 +130,25 @@ export default {
           // // $('#upload').submit()
           this.fileList = []
           this.uploadDis = false
-          this.$router.push('/per/PM-sumary/2')
+          this.$router.push('/per/PM-sumary/2B')
         } else {
           this.$message({
             type: 'warning',
             message: '您已经对此项目投标了'
           })
+          this.uploadDis = false
         }
       }).catch((err) => {
+        this.$message({
+          type: 'warning',
+          message: '您已经对此项目投标了'
+        })
+        this.uploadDis = false
         console.log(err)
       })
       }
     },
-    comBid (code, state) {
+    comBid (code, state, name) {
       this.dialogVisible = false
       if (state !== '投标中') {
         this.$message({
@@ -172,7 +156,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'companyBidAccounts': this.details.companyBidAccounts}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/personalBid', {'belongToProjectCode': code, 'belongToProjectName': name, 'sourceUserId': this.$cookie.get('user'), 'sourceUserName': this.$cookie.get('name'), 'sourceUserType': 'cuser', 'bidType': 'personal'})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -183,23 +167,25 @@ export default {
           // this.$refs.upload.submit()
           this.fileList = []
           this.uploadDis = false
-          this.$router.push('/com/CM-sumary/2')
+          this.$router.push('/com/CM-sumary/2B')
         } else {
           this.$message({
             type: 'warning',
             message: '您已经对此项目投标了'
           })
+          this.uploadDis = false
         }
       }).catch((err) => {
         this.$message({
           type: 'warning',
           message: '您已经对此项目投标了'
         })
+        this.uploadDis = false
         console.log(err)
       })
       }
     },
-    allyBid (code, state) {
+    allyBid (code, state, name) {
       this.dialogVisible = false
       if (state !== '投标中') {
         this.$message({
@@ -207,7 +193,7 @@ export default {
           message: `只有投标中的项目才可以投标哦,该项目的状态为${state}`
         })
       } else {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': code, 'data': {'state': '投标中', 'jointReleaseAccount': this.$cookie.get('user'), 'isJointState': 'true'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/unionBid', {'belongToProjectCode': code, 'belongToProjectName': name, 'sourceUserId': this.$cookie.get('user'), 'sourceUserName': this.$cookie.get('name'), 'sourceUserType': this.$cookie.get('role'), 'bidType': 'unit'})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -235,12 +221,14 @@ export default {
             type: 'warning',
             message: '您已经对此项目投标了'
           })
+          this.uploadDis = false
         }
       }).catch((err) => {
         this.$message({
           type: 'warning',
           message: '您已经对此项目投标了'
         })
+        this.uploadDis = false
         console.log(err)
       })
       }
@@ -257,11 +245,11 @@ export default {
         //   message: `投标成功`
         // })
         if (this.bidType === 'unit') {
-          this.allyBid(this.details.code, this.details.state)
+          this.allyBid(this.details.code, this.details.state, this.details.name)
         } else {
           if (this.$cookie.get('role') === 'puser') {
-            this.perBid(this.details.code, this.details.state)
-          } else { this.comBid(this.details.code, this.details.state) }
+            this.perBid(this.details.code, this.details.state, this.details.name)
+          } else { this.comBid(this.details.code, this.details.state, this.details.name) }
         }
       } else {
         this.$message({

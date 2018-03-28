@@ -42,24 +42,42 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{major}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">待确定的人</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{info.join(',')}}</span><i class="icon iconfont icon-jiahaoyou" @click="dialogVisible=true"></i></p>
-        <span style="font-size:0.8rem;float:left;clear:left;">现有成员(即已经同意邀请的人)</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoSuccess.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>
-        <span style="font-size:0.8rem;float:left;clear:left;">拒绝邀请的人</span><br>
-        <p class="font1" style="text-align:left;color:#409EFF"><span>{{infoFail.join(',')}}<i class="icon iconfont icon-gou"></i></span></p>        
-      </el-col>
     </el-row>
     <el-button @click="dialogVisible=true" type="primary">点我邀请</el-button>
-    <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="30%">
-      <el-button type="primary" @click="$router.push('/facilitator')">查找更多用户用户</el-button>
-      <el-select v-model="info" multiple allow-create filterable default-first-option placeholder="请选择">
-        <el-option v-for="(i, j) in infos" :key="j" :label="i" :value="i"></el-option>
-      </el-select>
+    <el-dialog title="添加邀请的人账号" :visible.sync="dialogVisible" width="60%">
+      <div style="border-bottom:2px solid #E6A23C;height:300px;overflow: scroll;overflow-x: hidden;">
+        <search></search>
+        <classify></classify>
+        <tag></tag>
+        <mycontent></mycontent>
+      </div>
+      <!-- <el-button type="primary" @click="$router.push('/facilitator')">查找更多用户用户</el-button> -->
+      <el-table :data="inviation" style="border-top:2px solid #F56C6C;max-height:300px;overflow: scroll;overflow-x: hidden;">
+        <el-table-column label="要邀请人的账号">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.ohterUserId"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="赋予的角色">
+          <template slot-scope="scope">
+           <el-select v-model="scope.row.job">
+             <el-option v-for="(i, j) in roles" :key="j" :label="i" :value="i"></el-option>
+           </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <el-button @click="confirm(scope.row)" type="primary" v-if="scope.row.ustate===''">邀请</el-button>
+            <el-button v-if="scope.row.ustate==='waiting'" disabled type="info">等待中</el-button>
+            <el-button v-if="scope.row.ustate==='ignored'" disabled type="info">等待中</el-button>
+            <el-button v-if="scope.row.ustate==='agreed'" disabled type="success">已同意</el-button>
+            <el-button v-if="scope.row.ustate==='refused'" disabled type="danger">已拒绝</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button @click="inviation.push({ohterUserId: '', job: '', ustate: ''})" type="success">增加一行</el-button>
       <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="confirm()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -97,9 +115,16 @@
 </template>
 
 <script>
+import search from '@/components/facilitator/search'
+import classify from '@/components/facilitator/classify'
+import tag from '@/components/facilitator/tag'
+import mycontent from '@/components/facilitator/content'
 export default {
+  components: {top, search, classify, tag, mycontent},
   data () {
     return {
+      roles: ['主持人', '制图者', '校核人', '审核人', '项目经理', '平台分析设计师', '工程代理'],
+      inviation: [],
       dialogVisible: false,
       loadingDetail: true,
       loadingTable: true,
@@ -121,10 +146,6 @@ export default {
       category: '',
       voltage: '',
       major: '',
-      info: [],
-      infoSuccess: [],
-      infoFail: [],
-      infos: ['18730273658', '111', '222', '1802528291@qq.com'],
       json: {},
       jsonAll: {},
       rows: {}
@@ -135,26 +156,22 @@ export default {
   },
   methods: {
     test (i) {
-      // alert(i)
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
       .then((res) => {
-        // console.log(res.data)
         this.json = {}
         for (var i in res.data) {
           this.json[i] = {
             key: i,
             title: res.data[i]}
         }
-        // console.log(this.json)
       }).catch((err) => {
         console.log(err)
       })
-        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
-     {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getAllUnioProjectsByAccount',
+     {'userId': this.$cookie.get('user')})
         .then((res) => {
-          // console.log(res.data)
           this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -196,21 +213,18 @@ export default {
         this.jsonAll = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
       .then((res) => {
-        // console.log(res.data)
         this.json = {}
         for (var i in res.data) {
           this.json[i] = {
             key: i,
             title: res.data[i]}
         }
-        // console.log(this.json)
       }).catch((err) => {
         console.log(err)
       })
-        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions',
-     {'conditions': {'jointReleaseAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getAllUnioProjectsByAccount',
+     {'userId': this.$cookie.get('user')})
         .then((res) => {
-          // console.log(res.data)
           this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -252,13 +266,19 @@ export default {
       this.voltage = row.voltage
       this.major = row.major
       this.bidType = row.bidType
-      this.info = row.invitatingAccounts ? row.invitatingAccounts.split(',') : []
-      this.infoSuccess = row.invitatedBidAccounts ? row.invitatedBidAccounts.split(',') : []
-      this.infoFail = row.invitaFaildAccounts ? row.invitaFaildAccounts.split(',') : []
       this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.initiator, 'key': 'account'}).then((res) => {
-        // console.log(res.data)
         this.loadingDetail = false
       }).catch((err) => { console.log(err) })
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {
+        'table': 'unionapply',
+        'keys': ['belongToProjectCode', 'unionUserId'],
+        'values': [this.code, this.$cookie.get('user')]
+      })
+      .then((res) => {
+        this.inviation = res.data
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -301,20 +321,29 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    confirm () {
-      this.dialogVisible = false
-      console.log(this.info)
-      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'invitatingAccounts': this.info}})
+    confirm (row) {
+      this.$http.post(this.$domain.domain1 + 'electric-design/applyToUnion', {
+        'belongToProjectCode': this.code,
+        'unionUserId': this.$cookie.get('user'),
+        'ohterUserId': row.ohterUserId,
+        'job': row.job
+      })
       .then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
-            message: `邀请成功`
+            message: `邀请发送成功`
           })
+          this.inviation.forEach((el, index) => {
+            if (el.belongToProjectCode === row.belongToProjectCode) {
+              el.ustate = 'waiting'
+            }
+          })
+          console.log(this.inviation)
         } else {
           this.$message({
             type: 'warning',
-            message: `邀请失败，原因:${res.data.reason}`
+            message: `邀请失败,原因:${res.data.reason}`
           })
         }
       }).catch((err) => {

@@ -12,6 +12,7 @@ import domain from './domain.js'
 import appKey from './appKey.js'
 import cookie from 'vue-cookie'
 import check from './util/check'
+import preSQL from './util/preSQL'
 import rong from 'co-rongcloud-api'
 import formDate from './util/formDate'
 import store from './vuex/rong'
@@ -20,6 +21,7 @@ import store from './vuex/rong'
 Vue.use(cookie)
 Vue.prototype.$domain = domain
 Vue.prototype.$appKey = appKey
+Vue.prototype.$preSQL = preSQL
 Vue.prototype.cookie = cookie
 Vue.prototype.$rong = rong
 Vue.prototype.$check = check

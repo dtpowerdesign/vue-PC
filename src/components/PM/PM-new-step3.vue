@@ -136,9 +136,11 @@ export default {
         })
       })
       var data = {'sourceAccount': this.cookie.get('user'),
+        'releaseUserAccount': this.cookie.get('user'),
         'dataOrProject': this.form.dataOrProject,
         'tenderCompany': this.form.company,
         'name': this.form.name,
+        'changeName': this.form.name,
         'state': this.form.state,
         'sizeCapacityNumber': this.form.sizeAndCapacitys,
         'sizeAndCapacity': this.form.unit,
@@ -158,12 +160,11 @@ export default {
         'payDiscible': this.form.payDiscible,
         'projectNowState': this.form.projectNowState,
         'hasInvoice': this.form.hasInvoice,
-        'qualificationRequirements': [this.form.aptitude],
+        'qualificationRequirements': this.form.aptitude,
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
         'isAcceptJointBid': this.form.isAcceptJointBid,
-        'isJointState': 'true',
         'processRequirements': stateUnits}
       this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         console.log(data)
@@ -193,11 +194,13 @@ export default {
         })
       })
       var data = {'sourceAccount': this.helped[0],
+        'releaseUserAccount': this.$cookie.get('user'),
         'helpedAccount': this.helped[0],
         'helpAccount': this.$cookie.get('user'),
         'dataOrProject': this.form.dataOrProject,
         'tenderCompany': this.form.company,
         'name': this.form.name,
+        'changeName': this.form.name,
         'state': '临时态',
         'sizeCapacityNumber': this.form.sizeAndCapacitys,
         'sizeAndCapacity': this.form.unit,
@@ -217,7 +220,7 @@ export default {
         'payDiscible': this.form.payDiscible,
         'projectNowState': this.form.projectNowState,
         'hasInvoice': this.form.hasInvoice,
-        'qualificationRequirements': [{'资质要求': this.form.aptitude}],
+        'qualificationRequirements': this.form.aptitude,
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,

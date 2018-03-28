@@ -22,7 +22,7 @@
           <el-table-column prop="email" label="邮箱"></el-table-column>
           <el-table-column label="求助">
             <template slot-scope="scope">
-              <el-button type="success">选我</el-button>
+              <el-button @click="skip({'account':scope.row.account, 'name':scope.row.name})" type="primary" size="small">和他聊天</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -59,6 +59,12 @@ export default {
     }
   },
   methods: {
+    skip (row) {
+      this.$router.push('/chat/contact')
+      this.$nextTick(() => {
+        this.$one.$emit('skipChat', row)
+      })
+    },
     initData () {
       var formData = {'conditions': {'jobs': {'searchMethod': 'values', 'values': ['平台项目分析师']}}}
       this.$http.post(this.$domain.domain1 + 'electric-design/getPusersByMultiConditions', formData)

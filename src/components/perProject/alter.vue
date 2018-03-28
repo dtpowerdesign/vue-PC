@@ -5,7 +5,7 @@
     <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
-        <el-form-item label="项目名称">
+        <el-form-item label="最终项目名称">
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
           </el-col>         
@@ -91,7 +91,7 @@
     </div>
     </div>    
     <div class="Project" v-else>
-    <div class="title"><span>项目基本信息</span></div>
+    <div class="title"><span>项目基本信息</span><a :href="help1" class="help" >不会填?点我</a></div>
     <div class="content">
       <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
         <el-form-item label="招标公司">
@@ -189,7 +189,7 @@
         <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
       </el-form>
     </div>
-    <div class="title"><span>项目资质要求</span></div>
+    <div class="title"><span>项目资质要求</span><a :href="help2" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form :model="form" label-width="140px" style="width:100%">
         <el-form-item label="投标个体性质">
@@ -217,7 +217,7 @@
         <el-button @click="confirm()" style="width:100%" type="success">保存修改</el-button>
       </el-form>
     </div>
-    <div class="title"><span>付款相关</span></div>
+    <div class="title"><span>付款相关</span><a :href="help3" class="help">不会填?点我</a></div>
     <div class="content">
      <el-form :model="form" label-width="180px" style="width:100%">
         <el-form-item label="付款方式/付款比例">
@@ -238,7 +238,7 @@
         </el-form-item>
       </el-form>
     </div>    
-    <div class="title">项目设计成果要求</div>
+    <div class="title">项目设计成果要求<a :href="help4" class="help">不会填?点我</a></div>
     <div class="content">
       <el-form :model="form" label-width="80px" style="width:100%">
         <el-radio v-model="radio" label="1">平台推荐</el-radio>
@@ -346,9 +346,6 @@ export default {
       projectNowStates: ['未开始', '项目建议书', '可研已定', '初设已定', '施工图已定', '竣工图已定']
     }
   },
-  updated () {
-    this.initData()
-  },
   methods: {
     addStateUnits () {
       this.form.stateUnits.push({ state: '未填', endTime: '未填', requireResult: '未填' })
@@ -357,21 +354,13 @@ export default {
       this.form.stateUnits = this.form.stateUnits.filter(o => o.state !== el.state)
     },
     initData () {
-    //   var stateUnits = []
-    //   this.form.stateUnits.forEach((el, index) => {
-    //     stateUnits.push({
-    //       'state': el.state,
-    //       'endTime': this.$formDate.formatDate(el.endTime),
-    //       'requireResult': el.requireResult
-    //     })
-    //   })
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})
       .then((res) => {
         console.log(res.data)
         this.form.company = res.data.tenderCompany
         this.form.dataOrProject = res.data.dataOrProject
-        this.form.name = res.data.name
-        this.form.categorys = res.data.category
+        this.form.name = res.data.changeName
+        this.form.categorys = Array.isArray(res.data.category) ? res.data.category[0] : res.data.category
         this.form.sizeAndCapacitys = res.data.sizeCapacityNumber
         this.form.unit = res.data.sizeAndCapacity
         this.form.character = res.data.bidType
@@ -391,7 +380,7 @@ export default {
         this.form.payDiscible = res.data.payDiscible
         this.form.projectNowState = res.data.projectNowState
         this.form.hasInvoice = res.data.hasInvoice
-        this.form.aptitude = res.data.qualificationRequirements[0]
+        this.form.aptitude = res.data.qualificationRequirements.toString()
         this.form.startTime = [].concat((res.data.startTime.year + 1900), (res.data.startTime.month + 1), res.data.startTime.date).join('/')
         this.form.endTime = [].concat((res.data.endTime.year + 1900), (res.data.endTime.month + 1), res.data.endTime.date).join('/')
         this.form.paymentMethods = res.data.payMethod.split('/')[0]
@@ -435,7 +424,7 @@ export default {
       })
       var data = {'sourceAccount': this.cookie.get('user'),
         'tenderCompany': this.form.company,
-        'name': this.form.name,
+        'changeName': this.form.name,
         'state': this.form.state,
         'sizeCapacityNumber': this.form.sizeAndCapacitys,
         'sizeAndCapacity': this.form.unit,
@@ -455,7 +444,7 @@ export default {
         'payDiscible': this.form.payDiscible,
         'projectNowState': this.form.projectNowState,
         'hasInvoice': this.form.hasInvoice,
-        'qualificationRequirements': [this.form.aptitude],
+        'qualificationRequirements': this.form.aptitude,
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'payMethod': this.form.paymentMethods + '/' + this.form.paymentScale,
@@ -523,5 +512,8 @@ export default {
   margin:3rem auto 0 auto;
   width:100%;
   display:flex;
+}
+.help{
+  margin-left:1rem;color:#409EFF
 }
 </style>

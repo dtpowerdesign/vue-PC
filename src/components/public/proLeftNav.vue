@@ -15,7 +15,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item :index="'/per-project/' + Id + '/pandect'" data-step="1" data-intro="修改项目信息" data-position="right">总览</el-menu-item>
-          <el-menu-item :index="'/per-project/' + Id + '/alter'">修改项目信息</el-menu-item>
+          <!-- <el-menu-item :index="'/per-project/' + Id + '/alter'">修改项目信息</el-menu-item> -->
           <el-menu-item :index="'/per-project/' + Id + '/detail'">详细信息</el-menu-item>
           <el-menu-item :index="'/per-project/' + Id + '/file'" data-step="2" data-intro="提资/下载" data-position="right">项目文件</el-menu-item>
           <el-menu-item :index="'/per-project/' + Id + '/time'">时间统计</el-menu-item>

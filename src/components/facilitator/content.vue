@@ -5,6 +5,11 @@
          <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/puser')">个人用户表头编辑</el-button>
       <el-table :data="tablePuser.slice((currentPagePuser-1)*pagesizePuser,currentPagePuser*pagesizePuser)" style="width:100%">
         <el-table-column v-for="(i, j) in jsonPuser" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="skip({'account':scope.row.account, 'name':scope.row.name})" type="primary" size="small">和他聊天</el-button>
+          </template>
+        </el-table-column>
      </el-table>
      <el-pagination  class="paging" @size-change="handleSizeChangePuser" @current-change="handleCurrentChangePuser" :current-page="currentPagePuser" :page-sizes="[3, 6, 9, 18]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="tablePuser.length">
      </el-pagination>
@@ -13,6 +18,11 @@
       <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/cuser')">企业用户表头编辑</el-button>
       <el-table :data="tableCuser.slice((currentPageCuser-1)*pagesizeCuser,currentPageCuser*pagesizeCuser)" style="width:100%">
         <el-table-column v-for="(i, j) in jsonCuser" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="skip({'account':scope.row.account, 'name':scope.row.name})" type="primary" size="small">和他聊天</el-button>
+          </template>
+        </el-table-column>        
      </el-table>
      <el-pagination  class="paging" @size-change="handleSizeChangeCuser" @current-change="handleCurrentChangeCuser" :current-page="currentPageCuser" :page-sizes="[3, 6, 9, 18]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="tableCuser.length">
      </el-pagination>
@@ -38,7 +48,16 @@ export default {
   },
   computed: {
     ...mapState(['data', 'tablePuser', 'tableCuser', 'jsonPuser', 'jsonCuser'])},
+  // mounted () {
+  //   console.log(this.jsonPuser)
+  // },
   methods: {
+    skip (row) {
+      this.$router.push('/chat/contact')
+      this.$nextTick(() => {
+        this.$one.$emit('skipChat', row)
+      })
+    },
     handleSizeChangePuser (size) {
       this.pagesizePuser = size
     },

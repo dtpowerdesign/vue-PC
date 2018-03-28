@@ -92,6 +92,14 @@ export default {
     }
   },
   mounted () {
+    this.$one.$on('skipChat', (row) => {
+      this.dialogVisibleChat = true
+      this.dialogVisibleChatGroup = false
+      this.toUserId = row.account
+      this.toName = row.name
+      this.limit = 3
+      this.getChatMsg()
+    })
     this.initData()
     this.$one.$on('refresh', (message) => {
       console.log(message)

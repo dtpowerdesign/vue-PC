@@ -287,7 +287,7 @@ export default {
         cancelButtonText: '我再考虑考虑',
         type: 'warning'
       }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '投标中', 'toAccounts': [], 'jointReleaseAccount': '', 'isJointState': 'false'}})
+        this.$http.post(this.$domain.domain1 + 'electric-design/bidFaild', {'belongToProjectCode': this.code})
         .then((res) => {
           console.log(res.data)
           if (res.data.result) {
@@ -297,6 +297,7 @@ export default {
             })
             this.dialogVisible = false
             this.$router.go(0)
+            this.$startInit(this.$cookie.get('user'), {token: res.data.token})
           } else {
             this.$message({
               type: 'warning',

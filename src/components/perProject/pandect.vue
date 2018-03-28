@@ -10,7 +10,7 @@
          <div class="permiss">
            <span style="font-size:1.5rem">名称变更</span><el-input v-model="changedName" style="width:50%"></el-input><el-button type="primary" @click="changeName()">保存</el-button>  
          </div>
-         <div class="permiss">
+         <!-- <div class="permiss">
            <span style="font-size:1.5rem">状态变更</span><el-select v-model="changedState" style="width:50%"><el-option v-for="(i, j) in states" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeState()">保存</el-button>
          </div>
          <div class="permiss">
@@ -21,8 +21,8 @@
          </div>
          <div class="permiss">
            <span style="font-size:1.5rem">可以联合体投标</span><el-switch v-model="changedIsJointState" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch><el-button type="primary" @click="changeIsJointState()">保存</el-button>
-         </div>
-        <el-button @click="$router.push('/per-project/' + id + '/alter')" type="success">修改更多项目信息</el-button>
+         </div> -->
+        <el-button v-if="sourceAccount===$cookie.get('user')" @click="$router.push('/per-project/' + id + '/alter')" type="success">修改更多项目信息</el-button>
        </div>
      </el-col>
      <el-col>
@@ -80,15 +80,17 @@ export default {
   mounted () {
     this.initData()
   },
-  updated () {
-    this.initData()
+  watch: {
+    id () {
+      this.initData()
+    }
   },
   methods: {
     initData () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id}).then((res) => {
         this.name = res.data.name
         this.sourceAccount = res.data.sourceAccount
-        this.changedName = res.data.name
+        this.changedName = res.data.changeName
         this.code = res.data.code
         this.state = res.data.state
         this.changedState = res.data.state
@@ -110,13 +112,13 @@ export default {
       })
     },
     changeName () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'name': this.changedName }}).then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.id, data: { 'changeName': this.changedName }}).then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
             message: `名称已经改变`
           })
-          this.$router.go(0)
+          this.initData()
         } else {
           this.$message({
             type: 'warning',

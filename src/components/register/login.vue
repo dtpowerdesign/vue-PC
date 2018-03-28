@@ -42,6 +42,8 @@ export default {
         return callback(new Error('账号不能为空'))
       } else if (!re.test(value)) {
         return callback(new Error('账号只能为手机号或者邮箱'))
+      } else if (!this.$preSQL.pre(value)) {
+        callback(new Error('非法字符串'))
       } else {
         callback()
       }
@@ -49,6 +51,8 @@ export default {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
+      } else if (!this.$preSQL.pre(value)) {
+        callback(new Error('非法字符串'))
       } else {
         callback()
       }
@@ -65,7 +69,7 @@ export default {
             { validator: validateUser, trigger: 'blur' }
         ],
         pass: [
-            { validator: validatePass, trigger: 'blur' }
+            { validator: validatePass, trigger: 'change' }
         ]}
     }
   },
