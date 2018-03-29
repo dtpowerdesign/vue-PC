@@ -7,16 +7,16 @@
     <ul class="fileUl">
       <li v-for="(k, l) in processRequirementsAll[i]" :key="l">
         <div>
-          <img :src="imgTypePath(k.dataName)" alt="">
-          {{k.dataName}}
-          <div style="display:flex;justify-content:space-around;pointer:curser;color:#409EFF;font-size:1.5rem"><span @click="preview(k.dataPath)">预览</span><span @click="download(k.dataPath)">下载</span><span @click="record(k.dataName)">历史记录</span></div>
+          <img :src="imgTypePath(k.fileName)" alt="">
+          {{k.fileName}}
+          <div style="display:flex;justify-content:space-around;pointer:curser;color:#409EFF;font-size:1.5rem"><span @click="preview(k.filePath)">预览</span><span @click="download(k.filePath)">下载</span><span @click="record(k.fileName)">历史记录</span></div>
         </div>
       </li>
     </ul>
     <div style="display:flex;justify-content:center;align-items:center;margin-top:3rem">
     <span>添加文件的备注</span>
     <el-input placeholder="添加文件的备注" v-model="note" style="width:30%" type="textarea" autosize=""></el-input>
-    <el-upload :action='$domain.domain1 + "electric-design/uploadExistProjectData"' name="project" :show-file-list="showFileList"
+    <el-upload :action='$domain.domain1 + "electric-design/uploadNewProjectData"' name="project" :show-file-list="showFileList"
     :on-success="uploadSuccess"
     :on-error="uploadError"
     :on-preview="uploadPrev"
@@ -39,8 +39,8 @@
       <el-table-column prop="note" label="备注"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="preview(scope.row.dataPath)" type="success" size="mini">预览</el-button>
-          <el-button @click="download(scope.row.dataPath)" type="success" size="mini">下载</el-button>
+          <el-button @click="preview(scope.row.filePath)" type="success" size="mini">预览</el-button>
+          <el-button @click="download(scope.row.filePath)" type="success" size="mini">下载</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,6 +88,7 @@ export default {
       this.processRequirementsAll = {}
       this.designProcess = res.data.designProcess
       this.processRequirements = res.data.processRequirements
+      this.processRequirementsName = []
       res.data.processRequirements.forEach((el, index) => {
         this.processRequirementsName.push(el.state)
       })
@@ -98,7 +99,7 @@ export default {
             'belongToProcess': {'searchMethod': 'values', 'values': [el]}
           }
         }).then((res) => {
-          // console.log(res.data)
+          console.log(res.data)
           this.$set(this.processRequirementsAll, el, res.data)
         }).catch((err) => {
           console.log(err)
@@ -163,7 +164,7 @@ export default {
             'time': [].concat(el.time.hours, el.time.minutes, el.time.seconds).join(':'),
             'people': el.sourceUserName,
             'note': el.body,
-            'dataPath': el.dataPath
+            'filePath': el.filePath
           })
         })
       }).catch((err) => {

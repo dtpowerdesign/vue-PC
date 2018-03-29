@@ -107,7 +107,7 @@
             <el-table-column label="联合投标账号" prop="srcUserAccount" min-width="20%"></el-table-column>
             <el-table-column label="联合投标姓名" prop="srcUserName" min-width="10%"></el-table-column>
             <el-table-column label="投标描述" prop="bidInstruction" min-width="20%"></el-table-column>
-            <el-table-column label="投标附件" min-width="20%">
+            <el-table-column label="投标附件" min-width="15%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
                   <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
@@ -118,7 +118,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="选取中标者" min-width="20%">
+            <el-table-column label="选取中标者" min-width="25%">
               <template slot-scope="scope">
                 <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>                
                 <el-button type="success" @click="confirmBid(scope.row)" size="small">选我</el-button>
@@ -231,6 +231,12 @@ export default {
   methods: {
     unitDetail (row) {
       this.invitatedBidAccounts = row.invitatedBidAccounts
+      this.invitatedBidAccounts.push({
+        'userId': row.srcUserAccount,
+        'userName': row.srcUserName,
+        'job': '联合体发起人',
+        'userType': row.srcUserType
+      })
     },
     biduserDetail (account, type) {
       if (type === 'puser') {

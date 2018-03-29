@@ -4,6 +4,7 @@
     <el-tabs type="border-card">
       <el-tab-pane label="提资"><upload></upload></el-tab-pane>
       <el-tab-pane label="洽谈"><chat></chat></el-tab-pane>
+      <el-tab-pane label="日程表"><schedule></schedule></el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -13,12 +14,13 @@ import store from '@/vuex/perProject'
 import {mapState} from 'vuex'
 import upload from '@/components/perProject/event-upload'
 import chat from '@/components/perProject/event-chat'
+import schedule from '@/components/perProject/event-schedule'
 export default {
   store,
   computed: {
     ...mapState(['id'])
   },
-  components: {upload, chat},
+  components: {upload, chat, schedule},
   data () {
     return {}
   },

@@ -25,7 +25,8 @@
        <el-radio v-model="bidType" label="unit" v-if="details.isAcceptJointBid==='true'">联合投标</el-radio>
      </div>     
      <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction"></el-input>
-     <el-upload multiple class="upload-demo" ref="upload" id="upload" :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
+     <el-upload multiple class="upload-demo" ref="upload" id="upload" 
+     :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
      :action='this.$domain.domain1+"electric-design/bidAndUpLoad"'
       :file-list="fileList"
      :before-upload="beforeUpload" :on-progress="progress" :on-remove="remove" :on-change="change" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  
