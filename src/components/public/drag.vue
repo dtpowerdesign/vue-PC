@@ -1,5 +1,8 @@
 <template>
    <div class="dragDiv" v-drag>
+     <!-- <el-tooltip class="item" effect="light" content="刷新" placement="right">
+     <i class="icon iconfont icon-39" style="color:#E6A23C;font-size:4rem" @click.stop="refresh()"></i>
+     </el-tooltip>      -->
      <el-tooltip class="item" effect="light" content="返回" placement="right">
      <i class="icon iconfont icon-fanhui" style="color:#E6A23C;font-size:4rem" @click.stop="$router.go(-1)"></i>
      </el-tooltip>     
@@ -18,6 +21,14 @@
 export default {
   data () {
     return {}
+  },
+  methods: {
+    // refresh () {
+    //   this.$router.go(0)
+    //   this.$nextTick(() => {
+    //     this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+    //   })
+    // }
   }
 }
 </script>

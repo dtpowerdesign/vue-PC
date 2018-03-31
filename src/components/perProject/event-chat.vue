@@ -56,7 +56,7 @@ export default {
           'eventType': {'searchMethod': 'values', 'values': ['chat']}
         }
       }).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         this.data = []
         res.data.forEach((el, index) => {
           this.data.push({

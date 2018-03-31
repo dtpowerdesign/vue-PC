@@ -189,7 +189,6 @@ export default {
             message: `已经进行发布`
           })
           this.$router.go(0)
-          this.$startInit(this.$cookie.get('user'), {token: res.data.token})
         } else {
           this.$message({
             type: 'warning',

@@ -2,9 +2,10 @@
   <div class="project-event">
     <div class="title"><span style="font-size:2rem">事件统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card">
-      <el-tab-pane label="提资"><upload></upload></el-tab-pane>
-      <el-tab-pane label="洽谈"><chat></chat></el-tab-pane>
+      <!-- <el-tab-pane label="提资"><upload></upload></el-tab-pane> -->
+      <!-- <el-tab-pane label="洽谈"><chat></chat></el-tab-pane> -->
       <el-tab-pane label="日程表"><schedule></schedule></el-tab-pane>
+      <!-- <el-tab-pane label="关于我的"><notice></notice></el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -15,12 +16,13 @@ import {mapState} from 'vuex'
 import upload from '@/components/perProject/event-upload'
 import chat from '@/components/perProject/event-chat'
 import schedule from '@/components/perProject/event-schedule'
+import notice from '@/components/perProject/event-notice'
 export default {
   store,
   computed: {
     ...mapState(['id'])
   },
-  components: {upload, chat, schedule},
+  components: {upload, chat, schedule, notice},
   data () {
     return {}
   },

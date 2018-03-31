@@ -18,6 +18,9 @@ export default {
     }
   },
   mounted () {
+    this.$nextTick(() => {
+      this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+    })
     this.$one.$on('hasApply', (message) => {
       if (this.$route.path !== '/chat/apply') {
         this.$notify.info({

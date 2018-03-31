@@ -457,7 +457,6 @@ export default {
             })
             this.dialogVisible = false
             this.$router.go(0)
-            this.$startInit(this.$cookie.get('user'), {token: res.data.token})
           } else {
             this.$message({
               type: 'warning',

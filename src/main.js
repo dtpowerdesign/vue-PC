@@ -84,6 +84,24 @@ Vue.prototype.$RongIMClient = myRongIMClient.setOnReceiveMessageListener
 Vue.prototype.$startInit = startInit
 
 
+Array.prototype.in_array = function (element) {
+
+  　　
+  for (var i = 0; i < this.length; i++) {
+
+    　　
+    if (this[i] == element) {
+
+      　　
+      return true;
+
+    }
+
+  }
+  return false;
+
+}
+
 
 // 注册自定义消息
 function registerMessage(type, propertys) {
