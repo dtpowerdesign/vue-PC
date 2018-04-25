@@ -47,7 +47,7 @@
             </el-select>
           </el-form-item>      
           <el-form-item label="我的专业">
-            <el-select style="width:100%" v-model="ruleForm.major" multiple filterable allow-create default-first-option multiple>
+            <el-select style="width:100%" v-model="ruleForm.major" multiple filterable allow-create default-first-option>
               <el-option v-for="(i, j) in major" :key="j" :value="i" :label="i"></el-option>
             </el-select>
           </el-form-item>                            

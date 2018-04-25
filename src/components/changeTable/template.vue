@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="changeTable">
       <el-transfer v-model="value1" :data="data"  @change="handleChange" :titles="['不显示的表头', '显示的表头']" :button-texts="['不显示', '显示']"></el-transfer>
       <div style="margin-top:3rem">
         <el-button @click="confirm()" style="width:100%" type="primary">确认</el-button>
@@ -84,5 +84,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.changeTable{
+  width:100%;
+}
 </style>

@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="skip">
-      <div style="margin-left:2rem" @click="$router.push('/per/PM-new/1')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
+      <div style="margin-left:2rem" @click="$router.push('/per/PM-new')"><i class="icon iconfont icon-zuo"></i><span>上一步</span></div>
       <div style="margin-right:2rem" @click="$router.push('/per/PM-new/3')"><span>下一步</span><i class="icon iconfont icon-you"></i></div>
     </div>
   </div>

@@ -22,7 +22,7 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <i class="icon iconfont icon-iconfonticonfontjixieqimo" @click="manage()" v-if="$cookie.get('user')===sourceAccount"></i>
+    <i class="icon iconfont icon-iconfonticonfontjixieqimo" @click="manage()" v-if="divideRolePer==='yes'"></i>
   </div>
 </template>
 
@@ -48,19 +48,42 @@ export default {
       },
       dialogVisible: false,
       sourceAccount: '',
-      detailMember: [{'title': '', 'key': '', 'value': []}]
+      detailMember: [{'title': '', 'key': '', 'value': []}],
+      changePNamePer: 'no',
+      divideRolePer: 'no'
     }
   },
   mounted () {
     this.initData()
+    this.initPremiss()
   },
   methods: {
+    initPremiss () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getPermessionsByMultiConditions', {
+        'conditions': {
+          'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]}
+        }
+      }).then((res) => {
+        console.log(res.data)
+        res.data.forEach((el, index) => {
+          if (el.belongToUserId === this.$cookie.get('user')) {
+            if (el.perContent.changePName === 'yes') {
+              this.changePNamePer = 'yes'
+            }
+            if (el.perContent.divideRole === 'yes') {
+              this.divideRolePer = 'yes'
+            }
+          }
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     initData () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectMember', {
         'belongToProjectCode': this.id
       })
     .then((res) => {
-      console.log(res.data)
       for (var i in this.data) {
         this.data[i].value = Array.isArray(res.data[i]) ? res.data[i] : []
       }

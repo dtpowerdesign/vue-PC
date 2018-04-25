@@ -82,10 +82,10 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/sync', {userId: this.$cookie.get('user')})
       .then((res) => {
         if (res.data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '群消息同步成功'
-          })
+          // this.$message({
+          //   type: 'success',
+          //   message: '群消息同步成功'
+          // })
         } else {
           this.$message({
             type: 'warning',

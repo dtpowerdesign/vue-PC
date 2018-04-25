@@ -34,6 +34,7 @@ export default {
       }
     })
     this.$one.$on('has', (message) => {
+      console.log('111')
       if (this.$route.path !== '/chat/contact') {
         if (JSON.parse(message.content.extra).type === 'normal') {
           this.$notify.info({

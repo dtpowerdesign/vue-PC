@@ -30,6 +30,13 @@
            <el-date-picker v-model="scope.row.reqtime"></el-date-picker>
          </template>
        </el-table-column>
+       <el-table-column label="状态" prop="eventstate">
+         <template slot-scope="scope">
+           <div v-if="scope.row.eventstate==='completed'">已经同意</div>
+           <div v-if="scope.row.eventstate==='waitsure'">待同意</div>
+           <div v-if="scope.row.eventstate==='rejected'">已经拒绝</div>
+         </template>
+       </el-table-column>
        <el-table-column label="实际完成时间" prop="realtime"></el-table-column>
        <el-table-column label="查看进度">
          <template slot-scope="scope">
@@ -61,14 +68,15 @@
        </el-table-column>
    </el-table>
    <el-button style="width:80%" type="primary" @click="add()">增加请求</el-button>
-   <el-dialog title="提示" :visible.sync="dialogVisible" width="60%" > 
+   <el-dialog title="事件日志" :visible.sync="dialogVisible" width="60%" > 
      <el-table :data="eventLog">
        <el-table-column label="来源者账号" prop="sourceUserId"></el-table-column>
        <el-table-column label="来源者姓名" prop="sourceUserName"></el-table-column>
        <el-table-column label="时间" prop="time"></el-table-column>
-       <el-table-column label="文件">
+       <el-table-column label="提资收资">
          <template slot-scope="scope">
            <div v-if="eventProposer!==scope.row.sourceUserId">
+           上传了
            <el-tooltip content="点击下载" placement="bottom" effect="light">
              <span v-for="(i, j) in scope.row.Datafiles" :key="j" style="color:#409EFF" @click="download(i.filePath)">
                 {{i.fileName}}
@@ -76,26 +84,20 @@
            </el-tooltip>
           </div>
           <div v-else>
-            提出请求{{scope.row.name}}
+            <div v-if="scope.row.logType==='rejected'">
+               收资失败原因:{{scope.row.body}}
+            </div>
+            <div v-if="scope.row.logType==='completed'">
+              收资成功
+            </div>
           </div>
          </template>
-       </el-table-column>
-       <el-table-column label="操作">
-         <template slot-scope="scope">
-         <div v-if="scope.row.logType==='waitsure'">
-           <div v-if="eventProposer===$cookie.get('user')">
-            <el-button type="primary" size="small" @click="agree(scope.row)">同意</el-button>
-            <el-button type="danger" size="small" @click="refuse(scope.row)">拒绝</el-button>
-           </div>
-           <div v-else>
-             等待同意中
-           </div>
-         </div>
-         <div v-if="scope.row.logType==='completed'">已经同意</div>
-         <div v-if="scope.row.logType==='rejected'">拒收原因{{scope.row.body}}</div>
-         </template>
-       </el-table-column>
+       </el-table-column>     
      </el-table>
+     <div v-if="eventProposer===$cookie.get('user')">
+     <el-button type="primary" size="small" @click="agree()">成功收资</el-button>
+     <el-button type="danger" size="small" @click="refuse()">拒绝收资</el-button> 
+     </div>
       <el-dialog
       width="30%"
       title="拒绝原因"
@@ -128,7 +130,7 @@ export default {
       eventLog: [],
       eventProposer: '',
       refuseReason: '',
-      eventLogCode: ''
+      eventCode: ''
     }
   },
   mounted () {
@@ -166,6 +168,7 @@ export default {
     progress (row) {
       this.dialogVisible = true
       this.eventProposer = row.sourceUserAccount
+      this.eventCode = row.code
       this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {
         'table': 'eventlog',
         'keys': ['belongToEventCode'],
@@ -181,10 +184,10 @@ export default {
         console.log(err)
       })
     },
-    agree (row) {
+    agree () {
       this.$http.post(this.$domain.domain1 + 'electric-design/acceptProvide', {
         'optAccount': this.$cookie.get('user'),
-        'code': row.code
+        'code': this.eventCode
       })
       .then((res) => {
         console.log(res.data)
@@ -193,6 +196,8 @@ export default {
             type: 'success',
             message: '操作成功'
           })
+          this.dialogVisible = false
+          this.initData()
         } else {
           this.$message({
             type: 'warning',
@@ -203,13 +208,12 @@ export default {
         console.log(err)
       })
     },
-    refuse (row) {
+    refuse () {
       this.innerVisible = true
-      this.eventLogCode = row.code
     },
     confirmRefuse () {
       this.$http.post(this.$domain.domain1 + 'electric-design/refusedProvide', {
-        'code': this.eventLogCode,
+        'code': this.eventCode,
         'optAccount': this.$cookie.get('user'),
         'oprate': 'rejected',
         'reason': this.refuseReason
@@ -220,6 +224,9 @@ export default {
             type: 'success',
             message: '操作成功'
           })
+          this.dialogVisible = false
+          this.innerVisible = false
+          this.initData()
         } else {
           this.$message({
             type: 'warning',

@@ -1,21 +1,22 @@
 <template>
   <div class="pandect"> 
-   <div class="title"><span style="font-size:1.5rem">总览</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:2rem">总览</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="content" style="overflow:hidden;height:auto">
      <el-col :span="8">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem">|{{name}}</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.8rem">|{{name}}</p>
      </el-col>
      <el-col>
-      <div style="display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap" v-if="$cookie.get('user')===sourceAccount">
+      <div style="display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap" v-if="changePNamePer==='yes'">
          <div class="permiss">
            <span style="font-size:1.5rem">名称变更</span><el-input v-model="changedName" style="width:50%"></el-input><el-button type="primary" @click="changeName()">保存</el-button>  
+         </div>
+        <div class="permiss">
+           <span style="font-size:1.5rem">阶段变更</span><el-select v-model="changedProcess" style="width:50%"><el-option v-for="(i, j) in processRequirementsName" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeProcess()">保存</el-button>
          </div>
          <!-- <div class="permiss">
            <span style="font-size:1.5rem">状态变更</span><el-select v-model="changedState" style="width:50%"><el-option v-for="(i, j) in states" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeState()">保存</el-button>
          </div>
-         <div class="permiss">
-           <span style="font-size:1.5rem">阶段变更</span><el-select v-model="changedProcess" style="width:50%"><el-option v-for="(i, j) in processRequirementsName" :key="j" :label="i" :value="i"></el-option></el-select><el-button type="primary" @click="changeProcess()">保存</el-button>
-         </div>
+ 
          <div class="permiss">
            <span style="font-size:1.5rem">接受联合体投标</span><el-switch v-model="changedIsAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch><el-button type="primary" @click="changeIsAcceptJointBid()">保存</el-button>
          </div>
@@ -55,6 +56,8 @@ export default {
   store,
   data () {
     return {
+      changePNamePer: 'no',
+      divideRolePer: 'no',
       name: '',
       states: ['发布中', '投标中', '洽谈中', '投标洽谈', '合同执行中', '合同终止'],
       sourceAccount: '',
@@ -79,6 +82,7 @@ export default {
   },
   mounted () {
     this.initData()
+    this.initPremiss()
   },
   watch: {
     id () {
@@ -86,6 +90,27 @@ export default {
     }
   },
   methods: {
+    initPremiss () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getPermessionsByMultiConditions', {
+        'conditions': {
+          'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]}
+        }
+      }).then((res) => {
+        console.log(res.data)
+        res.data.forEach((el, index) => {
+          if (el.belongToUserId === this.$cookie.get('user')) {
+            if (el.perContent.changePName === 'yes') {
+              this.changePNamePer = 'yes'
+            }
+            if (el.perContent.divideRole === 'yes') {
+              this.divideRolePer = 'yes'
+            }
+          }
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     initData () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id}).then((res) => {
         this.name = res.data.name
@@ -224,7 +249,7 @@ export default {
 .pandect-div{
 display:flex;
 justify-content:space-around;
-font-size:1.5rem;
+font-size:1.2rem;
 height:2rem;
 }
 .pandect-div>span{

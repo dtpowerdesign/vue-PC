@@ -285,6 +285,8 @@ export default {
   },
   data () {
     return {
+      changePNamePer: 'no',
+      divideRolePer: 'no',
       disabled: false,
       radio: '2',
       form: {
@@ -347,6 +349,27 @@ export default {
     }
   },
   methods: {
+    initPremiss () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getPermessionsByMultiConditions', {
+        'conditions': {
+          'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]}
+        }
+      }).then((res) => {
+        console.log(res.data)
+        res.data.forEach((el, index) => {
+          if (el.belongToUserId === this.$cookie.get('user')) {
+            if (el.perContent.changePName === 'yes') {
+              this.changePNamePer = 'yes'
+            }
+            if (el.perContent.divideRole === 'yes') {
+              this.divideRolePer = 'yes'
+            }
+          }
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     addStateUnits () {
       this.form.stateUnits.push({ state: '未填', endTime: '未填', requireResult: '未填' })
     },
@@ -468,6 +491,7 @@ export default {
   },
   mounted () {
     this.initData()
+    this.initPremiss()
   },
   watch: {
     radio () {

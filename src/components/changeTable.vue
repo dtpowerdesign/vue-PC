@@ -1,10 +1,10 @@
 <template>
   <div ref="changeTable">
    <!-- <Info></Info> -->
-   <div style="display:flex;justify-content:flex-left">
+   <!-- <div style="display:flex;justify-content:flex-left">
      <el-button @click="$router.go(-1)" type="success" style="margin-left:3rem">返回</el-button>
-   </div>
-   <el-tabs style="width:50%;margin:2rem auto;padding:1rem;border:1px solid #409EFF" :value="value">
+   </div> -->
+   <el-tabs style="width:80%;margin:2rem auto;padding:1rem;border:1px solid #409EFF" :value="value">
        <el-tab-pane label="项目表" name="project">
            <project></project>
        </el-tab-pane>

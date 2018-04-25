@@ -1,6 +1,8 @@
 <template>
   <div class="file">
-    <div class="title"><span style="font-size:2rem">项目文件</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+    <upload></upload>
+    <!-- <schedule></schedule> -->
+    <!-- <div class="title"><span style="font-size:2rem">项目文件</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <p style="font-size:1.5rem;color:#4d83e7;text-align:left">目前阶段:{{designProcess}}</p>
     <el-tabs type="border-card">
     <el-tab-pane v-for="(i, j) in processRequirementsName" :label="i" :key="j">
@@ -48,18 +50,21 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
     </span>
-  </el-dialog>
+  </el-dialog> -->
   </div>
 </template>
 
 <script>
 import store from '@/vuex/perProject'
 import {mapState} from 'vuex'
+import schedule from '@/components/perProject/event-schedule'
+import upload from '@/components/perProject/event-upload'
 export default {
   store,
   computed: {
     ...mapState(['id'])
   },
+  components: {schedule, upload},
   data () {
     return {
       dialogVisible: false,

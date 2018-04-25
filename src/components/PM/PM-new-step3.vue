@@ -126,7 +126,6 @@ export default {
   },
   methods: {
     confirm () {
-      alert(this.$formDate.formatDate(this.form.startTime))
       var stateUnits = []
       this.form.stateUnits.forEach((el, index) => {
         stateUnits.push({

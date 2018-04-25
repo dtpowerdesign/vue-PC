@@ -11,7 +11,13 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="上传日期" prop="date"></el-table-column>
         <el-table-column label="上传时间" prop="time"></el-table-column>
-        <el-table-column label="文件名称" prop="name"></el-table-column>
+        <el-table-column label="文件名称">
+          <template slot-scope="scope">
+             <span v-for="(i, j) in scope.row.dataFiles" :key="j" style="color:#409EFF" @click="download(i.filePath)">
+                {{i.fileName}}
+             </span>
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="remark"></el-table-column>
         <el-table-column label="上传者" prop="source"></el-table-column>
     </el-table>
@@ -42,7 +48,7 @@ export default {
       currentPage: 1,
       pagesize: 5,
       data: [
-          {'date': '2019-01-02', 'time': '09:10', 'name': '设计稿纸.doc', 'remark': '备注1', 'source': '帅哥'}
+          {'date': '2019-01-02', 'time': '09:10', 'dataFiles': [], 'remark': '备注1', 'source': '帅哥'}
       ]
     }
   },
@@ -54,19 +60,21 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
         'conditions': {
           'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
-          'eventType': {'searchMethod': 'values', 'values': ['provide']}
+          'eventType': {'searchMethod': 'values', 'values': ['provide', 'request']}
         }
       }).then((res) => {
+        console.log(res.data)
         this.data = []
         res.data.forEach((el, index) => {
           this.data.push({
             'date': [].concat((el.time.year + 1900), (el.time.month + 1), el.time.date).join('/'),
             'time': [].concat(el.time.hours, el.time.minutes, el.time.seconds).join(':'),
-            'name': el.dataName,
+            'dataFiles': el.dataFiles,
             'remark': el.body,
             'source': el.sourceUserName
           })
         })
+        console.log(this.data)
       }).catch((err) => {
         console.log(err)
       })
@@ -103,6 +111,9 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    download (path) {
+      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
     }
   }
 }

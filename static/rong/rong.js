@@ -10735,8 +10735,8 @@ function startInit(user, targetId) {
     getCurrentUser: function (userInfo) {
       console.log(userInfo.userId);
       userId = userInfo.userId;
-      alert("链接成功；userid=" + userInfo.userId);
-      document.titie = ("链接成功；userid=" + userInfo.userId);
+      // alert("链接成功；userid=" + userInfo.userId);
+      // document.titie = ("链接成功；userid=" + userInfo.userId);
     }
   };
   init(params, callbacks);

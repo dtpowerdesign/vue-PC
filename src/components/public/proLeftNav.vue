@@ -14,14 +14,14 @@
           <span class="fontBig">{{name}}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item :index="'/per-project/' + Id + '/pandect'" data-step="1" data-intro="修改项目信息" data-position="right">总览</el-menu-item>
+          <el-menu-item :index="'/per-project/' + Id + '/pandect'">总览</el-menu-item>
           <!-- <el-menu-item :index="'/per-project/' + Id + '/alter'">修改项目信息</el-menu-item> -->
           <el-menu-item :index="'/per-project/' + Id + '/detail'">详细信息</el-menu-item>
-          <el-menu-item :index="'/per-project/' + Id + '/file'" data-step="2" data-intro="提资/下载" data-position="right">项目文件</el-menu-item>
+          <el-menu-item :index="'/per-project/' + Id + '/file'">项目文件</el-menu-item>
           <el-menu-item :index="'/per-project/' + Id + '/time'">时间统计</el-menu-item>
           <el-menu-item :index="'/per-project/' + Id + '/event'">事件统计</el-menu-item>
-          <el-menu-item :index="'/per-project/' + Id + '/member'" data-step="3" data-intro="角色分配" data-position="right">成员信息</el-menu-item>
-          <el-menu-item :index="'/per-project/' + Id + '/permiss'">权限分配</el-menu-item>
+          <el-menu-item :index="'/per-project/' + Id + '/member'">成员信息</el-menu-item>
+          <el-menu-item :index="'/per-project/' + Id + '/permiss'" v-if="bidder===this.$cookie.get('user')">权限分配</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
@@ -34,7 +34,8 @@ export default {
   store,
   data () {
     return {
-      name: ''
+      name: '',
+      bidder: ''
     }
   },
   computed: {
@@ -44,6 +45,7 @@ export default {
   },
   mounted () {
     this.initData()
+    this.initPre()
   },
   watch: {
     Id () {
@@ -51,6 +53,20 @@ export default {
     }
   },
   methods: {
+    initPre () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues',
+       {'table': 'biders', 'keys': ['belongToProjectCode'], 'values': [this.$route.params.code]}
+       ).then((res) => {
+         console.log(res.data)
+         res.data.forEach((el, index) => {
+           if (el.bidState === 'selected') {
+             this.bidder = el.sourceUserId
+           }
+         })
+       }).catch((err) => {
+         console.log(err)
+       })
+    },
     initData () {
       this.$store.state.id = this.Id
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.Id}).then((res) => {

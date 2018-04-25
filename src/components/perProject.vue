@@ -42,7 +42,7 @@ export default {
   position:fixed;
   z-index: 0;
 }
-.leftNav{
+.proLeftNav{
   margin-top:5rem;
 }
 

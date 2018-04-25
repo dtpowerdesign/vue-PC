@@ -94,9 +94,6 @@ export default {
   mounted () {
     this.initData()
   },
-  updated () {
-    this.initData()
-  },
   methods: {
     initData () {
       this.initWeek()

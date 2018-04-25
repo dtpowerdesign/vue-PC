@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
@@ -13,7 +11,6 @@ import appKey from './appKey.js'
 import cookie from 'vue-cookie'
 import check from './util/check'
 import preSQL from './util/preSQL'
-import rong from 'co-rongcloud-api'
 import formDate from './util/formDate'
 import store from './vuex/rong'
 // var Promise = require('bluebird')
@@ -23,7 +20,6 @@ Vue.prototype.$domain = domain
 Vue.prototype.$appKey = appKey
 Vue.prototype.$preSQL = preSQL
 Vue.prototype.cookie = cookie
-Vue.prototype.$rong = rong
 Vue.prototype.$check = check
 Vue.prototype.$formDate = formDate
 Vue.config.productionTip = false
