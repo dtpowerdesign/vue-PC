@@ -1,10 +1,10 @@
 <template>
-  <div ref="changeTable">
+  <div ref="changeTable" class="changeTable">
    <!-- <Info></Info> -->
    <!-- <div style="display:flex;justify-content:flex-left">
      <el-button @click="$router.go(-1)" type="success" style="margin-left:3rem">返回</el-button>
    </div> -->
-   <el-tabs style="width:80%;margin:2rem auto;padding:1rem;border:1px solid #409EFF" :value="value">
+   <el-tabs style="width:100%;box-sizing:border-box;border:1px solid #409EFF;background-color:#f5f7fa" :value="value" tab-position="left" type="border-card">
        <el-tab-pane label="项目表" name="project">
            <project></project>
        </el-tab-pane>
@@ -43,5 +43,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.changeTable{
+  height:100%;
+}
 </style>

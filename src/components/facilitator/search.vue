@@ -4,7 +4,7 @@
     placeholder="搜索你感兴趣的用户"
     @keyup.enter.native="mySearch()"
     v-model="search">
-    <i slot="prefix" class="el-input__icon el-icon-search" @click="mySearch()" ></i>
+    <i slot="suffix" class="el-input__icon el-icon-search" @click="mySearch()" ></i>
   </el-input>
   </div>
 </template>
@@ -125,7 +125,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .search{
-    width:40%;
+    width:80%;
     text-align:center;
 }
 .el-icon-search{

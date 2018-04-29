@@ -1,6 +1,6 @@
 <template>
   <div class="PM-combo">
-    <div class="title"><span style="font-size:2rem">联合体</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+    <div class="title"><span style="font-size:1.5rem">联合体</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card" class="PM-tab" :value="value">
       <el-tab-pane label="收到请求" name="1" ref="comboo"><Rinfor></Rinfor></el-tab-pane>
       <el-tab-pane label="我的请求" name="2" ref="comboo2">

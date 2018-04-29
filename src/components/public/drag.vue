@@ -38,7 +38,7 @@ export default {
 .dragDiv{
   position:absolute;
   z-index: 9998;
-  background-image: url(/static/dragBGC.png);
+  /* background-image: url(/static/dragBGC.png); */
   background-origin: center center;
   background-size: 100% 100%;
   top:10%;
@@ -48,11 +48,14 @@ export default {
     -moz-background-size: cover; */
     background-repeat: no-repeat;
   padding:1rem;
-  -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
+  /* -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-    box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; */
 }
 .dragDiv>i{
   cursor: pointer;
+}
+.icon{
+  color:#409EFF!important;
 }
 </style>

@@ -50,12 +50,27 @@
     <el-button type="success" @click="$router.push('/per-project/' + code)" v-if="sourceAccount===$cookie.get('user')">我要修改项目信息</el-button>
     <el-button type="primary" @click="dialogVisible=true" v-if="sourceAccount===$cookie.get('user')">查看投标信息</el-button>
     <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="80%">
+          <el-dialog width="60%" title="个人用户表头编辑" :visible.sync="innerVisible" append-to-body>
+            <PchangeTable></PchangeTable>
+                <div slot="footer" class="dialog-footer">
+                   <el-button @click="innerVisible = false" style="width:100%" type="warning">关闭</el-button>
+                </div>
+          </el-dialog>
+          <el-dialog width="60%" title="企业用户表头编辑" :visible.sync="innerVisible2" append-to-body>
+            <CchangeTable></CchangeTable>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="innerVisible2 = false" style="width:100%" type="warning">关闭</el-button>
+                </div>
+          </el-dialog>          
       <el-tabs type="card">
         <el-tab-pane label="个体投标">
           <el-table :data="bid.personalBidAccounts" border>
             <el-table-column label="投标人账号" prop="srcUserAccount" min-width="10%"></el-table-column>
             <el-table-column label="投标人姓名" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标描述" prop="bidInstruction" min-width="20%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -69,7 +84,6 @@
             </el-table-column>
             <el-table-column label="操作" min-width="30%">
               <template slot-scope="scope">
-            <el-table-column label="投标人姓名" prop="srcUserName" min-width="10%"></el-table-column>
                 <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>
                 <el-button type="success" @click="confirmBid(scope.row)" size="small">选我</el-button>
                 <el-button type="info" @click="biduserDetail(scope.row.srcUserAccount,scope.row.srcUserType)" size="small">详细信息</el-button>                
@@ -81,7 +95,10 @@
           <el-table :data="bid.tenderCompanyBidAccounts" border>
             <el-table-column label="投标企业账号" prop="srcUserAccount" min-width="10%"></el-table-column>
             <el-table-column label="投标企业名称" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标描述" prop="bidInstruction" min-width="20%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -106,7 +123,10 @@
           <el-table :data="bid.jointReleaseAccounts" border>
             <el-table-column label="联合投标账号" prop="srcUserAccount" min-width="20%"></el-table-column>
             <el-table-column label="联合投标姓名" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标描述" prop="bidInstruction" min-width="20%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="15%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -144,8 +164,8 @@
       </el-tabs>
       <div style="border-top:1px solid black">
         <div style="font-size:1.5rem;font-weight:500">所选用户详情</div>
-        <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/puser')">个人用户展示项设置</el-button>
-        <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/cuser')">企业用户展示项设置</el-button>         
+        <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="innerVisible = true">个人用户展示项设置</el-button>
+        <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="innerVisible2 = true">企业用户展示项设置</el-button>         
         <el-table :data="tablePORCuser" style="width:100%">
         <el-table-column v-for="(i, j) in jsonPORCuser" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column label="操作">
@@ -190,13 +210,18 @@
 </template>
 
 <script>
+import PchangeTable from '@/components/changeTable/puser'
+import CchangeTable from '@/components/changeTable/cuser'
 export default {
+  components: {PchangeTable, CchangeTable},
   data () {
     return {
       radio: [],
       sourceAccount: '',
       bid: {},
       dialogVisible: false,
+      innerVisible: false,
+      innerVisible2: false,
       loadingDetail: true,
       loadingTable: true,
       currentPage: 1,

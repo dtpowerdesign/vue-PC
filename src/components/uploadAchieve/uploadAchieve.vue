@@ -53,7 +53,7 @@
           <el-input  v-model="form.requirement" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目要求"></el-input>
         </el-form-item>  
    </el-form>
-        <el-table :data="form.stateUnits" stripe style="margin-top:2rem">
+        <!-- <el-table :data="form.stateUnits" stripe style="margin-top:2rem">
           <el-table-column label="设计阶段">
             <template slot-scope="scope">
               <el-select v-model="scope.row.state">
@@ -61,12 +61,12 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="要求时间">
+          <el-table-column label="设计时间">
             <template slot-scope="scope">
               <el-date-picker v-model="scope.row.endTime" :disabled="disabled" type="date" placeholder="选择日期"></el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column label="要求成果">
+          <el-table-column label="设计成果">
             <template slot-scope="scope">
               <el-input type="textarea" autosize :disabled="disabled" v-model="scope.row.requireResult"></el-input>  
             </template>            
@@ -77,7 +77,7 @@
              </template>
           </el-table-column>
         </el-table>
-        <el-button type="primary" @click="addStateUnits()">增加设计阶段</el-button> 
+        <el-button type="primary" @click="addStateUnits()">增加设计阶段</el-button>  -->
         <el-button type="success" @click="confirm()">提交业绩</el-button>
   </div>
 </template>
@@ -207,7 +207,8 @@ export default {
   padding:1rem 4rem 0 4rem;
 }
 .uploadAchieve>.el-form{
-    width:80%;
+  box-sizing: border-box;
+    width:100%;
     margin:1rem auto;
     padding: 3rem;
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
@@ -216,7 +217,7 @@ export default {
 }
 .title{
     text-align: left;
-  font-size:2rem;
+  font-size:1.5rem;
   margin-bottom:2rem;
 }
 .icon{

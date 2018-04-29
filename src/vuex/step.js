@@ -24,7 +24,7 @@ const state = {
     voltagelevel3: '',
     place: '',
     major: [],
-    designState: '',
+    designState: [],
     startTime: '',
     endTime: '',
     character: '',
@@ -43,16 +43,14 @@ const state = {
     projectNowState: '',
     hasInvoice: 'no',
     stateUnits: [
-      { state: '未填', endTime: '未填', requireResult: '未填' },
-      { state: '未填', endTime: '未填', requireResult: '未填' },
-      { state: '未填', endTime: '未填', requireResult: '未填' }
+      { state: '未填', startTime: '未填', endTime: '未填', requireResult: '未填' }
     ],
   },
   qualificationRequirements: { CET: '' },
   projectCharacteristics: { difficulty: '', price: '' },
   unit: ['MW', 'Kva', 'KV', `M^2`],
   existingData: { detail: '' },
-  states: [{ 'value': '发布中', 'label': '发布完不立即招标' }, { 'value': '投标中', 'label': '发布完直接招标' }],
+  states: [{ 'value': '发布中', 'label': '暂缓发布' }, { 'value': '投标中', 'label': '立即发布' }],
   major: ['计算机', '电力', '岩土', '绘测'],
   designState: ['前期', '项目建议书', '可行性研究报告', '招投标', '初步设计', '施工图设计', '竣工图编制'],
   sizeAndCapacitys: ['MW', 'KW', 'kVA'],
@@ -110,8 +108,14 @@ const mutations = {
   init6(state) {
     state.step = 6
   },
+  initStateUnits(state) {
+    state.form.stateUnits = []
+    state.form.designState.forEach((el, index) => {
+      state.form.stateUnits.push({ state: el, startTime: '未填', endTime: '未填', requireResult: '未填' })
+    })
+  },
   addStateUnits(state) {
-    state.form.stateUnits.push({ state: '未填', endTime: '未填', requireResult: '未填' })
+    state.form.stateUnits.push({ state: '未填', startTime: '未填', endTime: '未填', requireResult: '未填' })
   },
   myDelete(state, el) {
     state.form.stateUnits = state.form.stateUnits.filter(o => o.state !== el.state)

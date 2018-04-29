@@ -2,8 +2,8 @@
   <div class="changeTable">
       <el-transfer v-model="value1" :data="data"  @change="handleChange" :titles="['不显示的表头', '显示的表头']" :button-texts="['不显示', '显示']"></el-transfer>
       <div style="margin-top:3rem">
-        <el-button @click="confirm()" style="width:100%" type="primary">确认</el-button>
-        <el-button @click="$router.go(-1)" style="width:100%;margin-left:0" type="success">返回上一级</el-button>
+        <el-button @click="confirm()" style="width:100%" type="info">确认</el-button>
+        <el-button @click="$router.go(-1)" style="width:100%;margin-left:0;margin-top:1rem" type="success" v-if="$route.path.search('changeTable')!==-1">返回上一级</el-button>
       </div>
   </div>
 </template>

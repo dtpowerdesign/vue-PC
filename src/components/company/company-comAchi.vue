@@ -1,6 +1,6 @@
 <template>
   <div class="company-register">
-   <div class="title"><span style="font-size:2rem;margin-left:1.7rem">企业业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:1.5rem;margin-left:1.7rem">企业业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="xxx">
    <myClassify v-loading="loadingClassify"></myClassify>
    <myTag></myTag>

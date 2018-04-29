@@ -1,6 +1,6 @@
 <template>
   <div class="project-time">
-    <div class="title"><span style="font-size:2rem">时间统计</span><i class="icon iconfont icon-iconfontquestion"></i><span class="date">{{year}}年{{month}}月{{day}}日</span></div>
+    <div class="title"><span style="font-size:1.5rem">时间统计</span><i class="icon iconfont icon-iconfontquestion"></i><span class="date">{{year}}年{{month}}月{{day}}日</span></div>
     <el-tabs type="border-card" style="position:relative" class="tab">
       <el-tab-pane label="周">
         <div style="display:flex;justify-content:space-between"><span style="font-size:1.5rem;color:#4d83e7">{{year}}年{{month}}月{{week}}周</span><span><i class="icon iconfont icon-shang" @click="lastWeek()"></i><i class="icon iconfont icon-xia" @click="nextWeek()"></i></span></div>

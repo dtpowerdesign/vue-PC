@@ -60,7 +60,7 @@ export default {
 
 }
 .title{
-  font-size:2rem;
+  font-size:1.5rem;
   float:left;
   margin-bottom:2rem;
 }

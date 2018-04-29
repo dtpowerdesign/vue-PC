@@ -196,6 +196,7 @@ export default {
   border-radius:.3rem .3rem 0 0;
 display: flex;
 flex-wrap: wrap;
+box-sizing: border-box;
 }
 .div1{
   height:auto;
@@ -203,10 +204,20 @@ flex-wrap: wrap;
   align-items:center;
   flex-wrap: wrap;
   margin-right: 2rem;
+    width: 100%;
+    margin-bottom: .5rem;
   }
 
 .font1{
     margin-left:1rem;
+        margin-right:1rem;
+        padding: .2rem .4rem;
+    font-size: 90%;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem;
+    width:4rem;
+    text-align: center;
 }
 .font2{
     color:#4d83e7;

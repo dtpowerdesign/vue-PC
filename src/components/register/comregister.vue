@@ -163,6 +163,23 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+      if (this.$cookie.get('user')) {
+        this.$message({
+          type: 'success',
+          message: `检测到您的账号${this.$cookie.get('user')},自动为您登陆`
+        })
+        if (this.$cookie.get('role') === 'puser') {
+          this.$router.push('/per/person-perAchi')
+        } else {
+          this.$router.push('/com/company-comAchi')
+        }
+        // window.startInit()
+        this.$nextTick(() => {
+          this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+        })
+        // console.log($('#appKey').text())
+        // console.log($('#token').text())
+      }
     },
     check () {
       this.$http.post(this.$domain.domain1 + 'electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
@@ -216,7 +233,7 @@ export default {
                   this.cookie.set('role', res.data.role, 30)
                   this.cookie.set('name', res.data.name, 30)
                   this.cookie.set('token', res.data.token, 30)
-                  window.startInit()
+                  this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
                   this.$router.push('/com/CM-new')
                 }).catch(() => {
                   this.cookie.set('user', this.Form.user, 30)
@@ -224,7 +241,7 @@ export default {
                   this.cookie.set('role', res.data.role, 30)
                   this.cookie.set('name', res.data.name, 30)
                   this.cookie.set('token', res.data.token, 30)
-                  window.startInit()
+                  this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
                   this.$router.push('/archive')
                 })
                 // this.$router.push('/login')

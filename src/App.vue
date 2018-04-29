@@ -95,6 +95,14 @@ a:hover{
 .cell{
   text-align: center;
 }
+.changeTable .el-tabs{
+  height: 100%;
+}
+
+// 表单之间下边距
+.el-form-item {
+    margin-bottom: 8px;
+}
 
 //修改MessageBox 弹框默认样式
 .el-message-box__btns{
@@ -163,11 +171,11 @@ a:hover{
 
 //穿梭框的选择框位置(头)
 .el-transfer-panel .el-transfer-panel__header .el-checkbox{
-  margin-left: -20%;
+  // margin-left: -20%;
 }
 //穿梭框的选择框位置(身)
 .el-transfer-panel__item .el-checkbox__input{
-   left: 10%;
+   
 }
 //穿梭框的宽
 .el-transfer-panel{
@@ -175,12 +183,63 @@ a:hover{
 }
 //穿梭框的高
 .el-transfer-panel__body{
-  // min-height: 10%;
+  height: 500px;
 }
 .el-transfer-panel__list{
   height: 100%;
 }
+// 穿梭框头部
+.el-transfer-panel .el-transfer-panel__header{
+  // background-color: #606266;
+}
+// 穿梭框头部的字
+.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label{
+  text-align: center;
+  // color:white;
+}
+// 穿梭框头部的 x/y
+.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label span{
+  // color:white;
+  text-align: right;
+}
+// 穿梭框身体的背景
+.el-transfer-panel__list{
+  // background-color: #409EFF;
+  text-align: left;
+}
+// 穿梭框身体字的颜色
+.el-checkbox__label span{
+  // color: white;
+}
+// tag的x号
+ .el-icon-close{
+color:white!important;
+}
 
+
+.PM-new-step2{
+.el-radio__label{
+  font-size: 1.5rem;
+}
+.el-radio__inner{
+  width:1.5rem;
+  height: 1.5rem;
+}
+}
+
+//  修改changeTable里的tabs默认样式
+.changeTable{
+.el-tabs--border-card>.el-tabs__header .el-tabs__item{
+  font-size: 1.5rem;
+}
+.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{
+  background-color: #409EFF;
+  color:white;
+}
+.el-tabs--left.el-tabs--border-card .el-tabs__item.is-left{
+  margin: -1px 0 .5rem -1px;
+}
+}
 .PM-new-step2{
 .el-date-editor.el-input, .el-date-editor.el-input__inner{
   width:100%;
@@ -196,9 +255,8 @@ a:hover{
   text-align:left;
 }
 
-.archive{
-.el-input--prefix .el-input__inner{
-    padding-left: 3rem;
+.archive, .facilitator{
+.el-input--suffix .el-input__inner{
     background-color:#DCDFE6;
 }
 }

@@ -2,11 +2,11 @@
   <div>
     <div class="content">
       <div class="content-item">
-        <el-col :span="3"><span style="font-size:1.2rem;color:red">基本信息</span></el-col>
+        <el-col :span="3"><span class="content-item-title">基本信息</span></el-col>
         <el-col :offset="2" :span="19">
           <el-row>
             <!-- <el-col :span="12"><p class="confirm-p1">所在公司:{{form.company}}</p></el-col> -->
-            <el-col :span="12"><p class="confirm-p1">招标公司:{{form.company}}</p></el-col>
+            <el-col :span="12"><p class="confirm-p1">发布公司:{{form.company}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">项目名称:{{form.name}}</p></el-col>
@@ -25,7 +25,7 @@
             <el-col :span="12"><p class="confirm-p1">结束时间:{{$formDate.formatDate(form.endTime)}}</p></el-col>
           </el-row>
           <el-row v-if="!(this.form.dataOrProject==='data')">
-            <el-col :span="12"><p class="confirm-p1">设计阶段:{{form.designState}}</p></el-col>
+            <el-col :span="12"><p class="confirm-p1">委托设计阶段:{{form.designState.join(',')}}</p></el-col>
           </el-row>
           <el-row v-if="!(this.form.dataOrProject==='data')">
             <el-col :span="24"><p class="confirm-p1">工程造价:{{form.lowPrice}}(最低){{form.highPrice}}(最高)</p></el-col>
@@ -47,7 +47,7 @@
     </div>
     <div class="content" v-if="!(this.form.dataOrProject==='data')">
       <div class="content-item">
-        <el-col :span="3"><span style="font-size:1.2rem;color:red">资质要求</span></el-col>
+        <el-col :span="3"><span class="content-item-title">资质要求</span></el-col>
         <el-col :offset="2" :span="19">
           <el-row>
             <el-col :span="24"><p class="confirm-p2">投标个体性质:{{form.character}}</p></el-col>
@@ -63,7 +63,7 @@
     </div>
     <div class="content">
       <div class="content-item">
-        <el-col :span="3"><span style="font-size:1.2rem;color:red">付款相关</span></el-col>
+        <el-col :span="3"><span class="content-item-title">付款相关</span></el-col>
         <el-col :span="19" :offset="2">
           <el-row>
             <el-col :span="24"><p class="confirm-p2">付款方式:{{form.paymentMethods}}</p></el-col>
@@ -77,11 +77,16 @@
     </div>    
     <div class="content" v-if="!(this.form.dataOrProject==='data')">
       <div class="content-item">
-        <el-col :span="3"><span style="font-size:1.2rem;color:red">设计结果</span></el-col>
+        <el-col :span="3"><span class="content-item-title">设计结果</span></el-col>
         <el-col :offset="2" :span="19">
           <el-table :data="form.stateUnits" stripe>
             <el-table-column prop="state" label="设计阶段"></el-table-column>
-            <el-table-column  label="交付时间">
+            <el-table-column  label="开始时间">
+              <template slot-scope="scope">
+                <span>{{$formDate.formatDate(scope.row.startTime)}}</span>
+              </template>
+            </el-table-column>            
+            <el-table-column  label="结束时间">
               <template slot-scope="scope">
                 <span>{{$formDate.formatDate(scope.row.endTime)}}</span>
               </template>
@@ -130,6 +135,7 @@ export default {
       this.form.stateUnits.forEach((el, index) => {
         stateUnits.push({
           'state': el.state,
+          'startTime': this.$formDate.formatDate(el.startTime),
           'endTime': this.$formDate.formatDate(el.endTime),
           'requireResult': el.requireResult
         })
@@ -150,7 +156,8 @@ export default {
         'major': this.form.major,
         'address': this.form.place,
         'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
-        'designProcess': this.form.designState,
+        'entrustProcess': this.form.designState,
+        'designProcess': this.form.designState[0],
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
@@ -188,6 +195,7 @@ export default {
       this.form.stateUnits.forEach((el, index) => {
         stateUnits.push({
           'state': el.state,
+          'startTime': this.$formDate.formatDate(el.startTime),
           'endTime': this.$formDate.formatDate(el.endTime),
           'requireResult': el.requireResult
         })
@@ -210,7 +218,8 @@ export default {
         'major': this.form.major,
         'address': this.form.place,
         'performanceRequirements': this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2,
-        'designProcess': this.form.designState,
+        'entrustProcess': this.form.designState,
+        'designProcess': this.form.designState[0],
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
         'lowestPrice': this.form.lowPrice,
         'highestPrice': this.form.highPrice,
@@ -252,7 +261,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.icon{
+  font-size: 2rem;
+}
 .skip{
+  font-size: 2rem;
   margin-top:4rem;
   display:flex;
   justify-content:space-between;
@@ -287,5 +300,12 @@ export default {
     word-wrap:break-word;  
     word-break:break-all;  
     overflow: hidden;
+}
+.content-item-title{
+  font-size: 1.5rem;
+    padding: .2rem .4rem;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem;
 }
 </style>

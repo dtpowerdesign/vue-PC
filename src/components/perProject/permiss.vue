@@ -1,6 +1,6 @@
 <template>
   <div class="permiss">
-     <div class="title"><span style="font-size:2rem">权限分配</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+     <div class="title"><span style="font-size:1.5rem">权限分配</span><i class="icon iconfont icon-iconfontquestion"></i></div>
      <el-table :data="data">
          <el-table-column label="账号">
           <template slot-scope="scope">

@@ -1,6 +1,6 @@
 <template>
   <div class="PM-new">
-   <div class="title"><span style="font-size:2rem">发布新任务</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:1.5rem">发布新任务</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="box">
      <el-steps :active="step-1" process-status="finish" finish-status="success" align-center style="margin-left:-8rem;margin-right:-8rem">
        <el-step v-for="(i, j) in stepName" :key="j" :title="i" ></el-step>

@@ -1,6 +1,6 @@
 <template>
   <div class="member">
-    <div class="title"><span style="font-size:2rem">成员信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+    <div class="title"><span style="font-size:1.5rem">成员信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <div v-for="(i, j) in data" :key="j" class="member-div">
       <span style="color:red;font-size:1.5rem">{{i.key}}:</span>
       <span v-for="(k, l) in i.value" :key="l" @click="fun(k.account)" style="color:#4d83e7;font-size:1.5rem;margin-left:1rem"><i class="icon iconfont icon-gerenziliao"></i>{{k.name}}</span>

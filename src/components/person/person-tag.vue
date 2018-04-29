@@ -1,7 +1,7 @@
 <template>
   <div class="person-tag">
-   <span style="font-size:1.5rem;line-height:2rem;color:#409EFF;margin-left:1.7rem;">已选:</span>
-   <el-tag v-for="(tag, index) in tags" :key="index" closable type="info" @close="close(tag)">
+   <span style="font-size:1.5rem;line-height:2rem;color:#409EFF;margin-left:1.3rem;">已选:</span>
+   <el-tag v-for="(tag, index) in tags" :key="index" type="danger" closable style="color:#fff" color="#909399" @close="close(tag)">
      {{tag}}
    </el-tag>
   </div>

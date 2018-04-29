@@ -3,7 +3,7 @@
   <div class="person-table">
    
       <div style="display:flex; align-items:center; justify-content: space-between;width:100%;height:4rem;margin-left:auto;margin-right:auto;background:#F9F9F9">
-        <span style="font-size:1.5rem;color:#4d83e7;margin-left:1rem">业绩统计管理表</span>
+        <span style="font-size:1.3rem;color:#4d83e7;margin-left:1rem">业绩统计管理表</span>
         <div>
             <el-button style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/achievement')">表头编辑</el-button>
             <el-button style='margin-right:20px;' type="primary" @click="$router.push('/per/uploadAchieve')">添加已有业绩</el-button>

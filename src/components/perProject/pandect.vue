@@ -1,9 +1,9 @@
 <template>
   <div class="pandect"> 
-   <div class="title"><span style="font-size:2rem">总览</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:1.5rem">总览</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="content" style="overflow:hidden;height:auto">
      <el-col :span="8">
-       <p style="text-align:left;color:#409EFF;font-size:1.8rem">|{{name}}</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.5rem">|{{name}}</p>
      </el-col>
      <el-col>
       <div style="display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap" v-if="changePNamePer==='yes'">
@@ -33,13 +33,13 @@
      </el-col>
    </div>
    <div class="content">
-     <p style="text-align:left;color:#409EFF;font-size:1.5rem">|目前阶段</p>
+     <p style="text-align:left;color:#409EFF;font-size:1.5rem">|项目进展</p>
      <el-steps :active="processRequirementsName.indexOf(designProcess)"  process-status="finish" finish-status="success" align-center style="margin-left:-4rem;width:100%">
       <el-step :title="i.state" v-for="(i, j) in processRequirements" :key="j"></el-step>
      </el-steps>
    </div>
    <div class="content">
-     <p style="text-align:left;color:#409EFF;font-size:1.5rem">|成果交付</p>
+     <p style="text-align:left;color:#409EFF;font-size:1.5rem">|成果交付情况</p>
      <el-table :data="processRequirements">
        <el-table-column prop="state" label="设计阶段"></el-table-column>
        <el-table-column prop="endTime" label="交付时间"></el-table-column>

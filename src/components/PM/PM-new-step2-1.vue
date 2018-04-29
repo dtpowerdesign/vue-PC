@@ -86,7 +86,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.icon{
+  font-size: 2rem;
+}
 .skip{
+  font-size: 2rem;
   margin-top:4rem;
   display:flex;
   justify-content:space-between;

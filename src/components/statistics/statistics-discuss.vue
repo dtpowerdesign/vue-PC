@@ -1,6 +1,6 @@
 <template>
   <div class="statistics-discuss">
-    <div class="title"><span style="font-size:2rem">洽谈统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+    <div class="title"><span style="font-size:1.5rem">洽谈统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card" v-loading="tabLoading">
       <el-tab-pane :label="i.name" v-for="(i, j) in projectList" :key="j">
         <div style="display:flex; align-items:center; justify-content: space-between;height:4rem;margin-left:auto;margin-right:auto;background:#F9F9F9">

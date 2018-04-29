@@ -1,6 +1,6 @@
 <template>
   <div class="person-register">
-   <div class="title"><span style="font-size:2rem;">个人业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:1.5rem;">个人业绩</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="xxx">
    <myClassify v-loading="loadingClassify"></myClassify>
    <myTag></myTag>
@@ -52,6 +52,6 @@ export default {
 .person-table{
   margin-top:1rem;
   background-color:white;
-  padding: 1.5rem;
+  padding:.0.5rem 1.5rem;
 }
 </style>

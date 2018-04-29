@@ -1,11 +1,11 @@
 <template>
   <div class="detail"> 
-   <div class="title"><span style="font-size:2rem">{{name}}的详细信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+   <div class="title"><span style="font-size:1.5rem">{{name}}的详细信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
    <div class="content" style="height:10rem">
      <el-col :span="4">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">基本信息</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">基本信息</p>
      </el-col>
-     <el-col :offset="2" :span="18">
+     <el-col :offset="0" :span="20">
        <div class="detail-div"><span>项目最终名称:{{changeName}}</span><span>当前阶段:{{designProcess}}</span></div>
        <div class="detail-div"><span>编号:{{code}}</span><span>电压等级:{{voltagelevel}}</span></div>
        <div class="detail-div"><span>类别:{{category}}</span><span>专业:{{major}}</span></div>
@@ -15,42 +15,42 @@
    </div>
    <div class="content" style="overflow:auto">
      <el-col :span="4">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">资质要求</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">资质要求</p>
      </el-col>
-     <el-col :offset="2" :span="18">
+     <el-col :offset="0" :span="20">
        <div class="detail-div"><span>投标个体性质:{{bidType}}</span><span>工程限价:{{lowestPrice}}-{{highestPrice}}</span></div>
        <div class="detail-div"><span>付款方式:{{payMethod}}</span><span>业绩要求:{{performanceRequirements}}</span></div>
      </el-col>
    </div>
    <div class="content" style="overflow:auto"  v-if="sourceAccount===$cookie.get('user')">
      <el-col :span="4">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">修改项目信息</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">修改项目信息</p>
      </el-col>
-     <el-col :offset="2" :span="2">
-      <el-button @click="$router.push('/per-project/' + id + '/alter')" type="success">修改项目信息</el-button>
+     <el-col :offset="0" :span="4">
+      <el-button @click="$router.push('/per-project/' + id + '/alter')" type="info">修改项目信息</el-button>
      </el-col>
    </div>   
    <div class="content" style="overflow:auto">
      <el-col :span="4">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">上传文件</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">上传文件</p>
      </el-col>
-     <el-col :offset="2" :span="2">
-      <el-button @click="$router.push('/per-project/' + id + '/file')" type="success">查看文件详情</el-button>
+     <el-col :offset="0" :span="4">
+      <el-button @click="$router.push('/per-project/' + id + '/file')" type="info">查看文件详情</el-button>
      </el-col>
    </div>
    <div class="content" style="overflow:auto">
      <el-col :span="4">
-       <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">洽谈记录</p>
+       <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">洽谈记录</p>
      </el-col>
-     <el-col :offset="2" :span="2">
-      <el-button @click="$router.push('/per-project/' + id + '/event')" type="success">查看洽谈记录详情</el-button>
+     <el-col :offset="0" :span="4">
+      <el-button @click="$router.push('/per-project/' + id + '/event')" type="info">查看洽谈记录详情</el-button>
      </el-col>
    </div>
    <div class="content">
      <el-col :span="4">
-     <p style="text-align:left;color:#409EFF;font-size:1.5rem;color:red">设计成果</p>
+     <p style="text-align:left;color:#409EFF;font-size:1.3rem;color:black">设计成果</p>
      </el-col>
-     <el-col :offset="2" :span="18">
+     <el-col :offset="0" :span="20">
      <el-table :data="processRequirements">
        <el-table-column prop="state" label="设计阶段"></el-table-column>
        <el-table-column prop="endTime" label="交付时间"></el-table-column>
@@ -110,7 +110,7 @@ export default {
         this.state = res.data.state
         this.voltagelevel = res.data.voltagelevel
         this.type = res.data.type.join(',')
-        this.category = res.data.category.join(',')
+        this.category = res.data.category
         this.major = res.data.major.join(',')
         this.processRequirements = res.data.processRequirements
         this.designProcess = res.data.designProcess
@@ -155,5 +155,9 @@ height:2rem;
 .detail-div>span{
   width:50%;
 text-align:left;
+    /* padding: .2rem .4rem;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem; */
 }
 </style>

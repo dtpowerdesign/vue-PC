@@ -3,9 +3,10 @@
    <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
    <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width:100%">
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
-        <el-table-column   label="操作" fixed="right" width="85">
+        <el-table-column   label="操作" fixed="right" width="250">
           <template slot-scope="scope">
             <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="small">我要投标</el-button>
+            <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>  
           </template>
         </el-table-column>
    </el-table>
@@ -24,15 +25,21 @@
        <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='cuser'">企业投标</el-radio>
        <el-radio v-model="bidType" label="unit" v-if="details.isAcceptJointBid==='true'">联合投标</el-radio>
      </div>     
-     <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction"></el-input>
+     <!-- <el-input type="textarea" :autosize="{ minRows: 4}" placeholder="请输入您的投标描述" v-model="bidInstruction"></el-input> -->
+     <el-input placeholder="请填写您的投标报价" v-model="bidInstruction.price"></el-input>
+     <el-input placeholder="请填写您的工期" v-model="bidInstruction.time"></el-input>
+     <el-input placeholder="请填写您的业绩" v-model="bidInstruction.performance"></el-input>
+     <el-input placeholder="请填写您的资质" v-model="bidInstruction.aptitude"></el-input>
      <el-upload multiple class="upload-demo" ref="upload" id="upload" 
      :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
      :action='this.$domain.domain1+"electric-design/bidAndUpLoad"'
       :file-list="fileList"
      :before-upload="beforeUpload" :on-progress="progress" :on-remove="remove" :on-change="change" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  
-     :limit="this.limit">
-       <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">投标</el-button>
-       <div slot="tip" class="el-upload__tip">点击投标时可以上传附件，不超过{{limit}}个</div>     
+     :limit="this.limit"
+     :auto-upload="false">
+       <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">上传文件</el-button>
+       <div slot="tip" class="el-upload__tip">点击投标时可以上传已有业绩证明文件，不超过{{limit}}个</div>    
+       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">投标</el-button> 
      </el-upload>     
    </el-dialog>
    <div style="clear:both;"></div>
@@ -52,7 +59,7 @@ export default {
       currentPage: 1,
       pagesize: 3,
       details: {'loadingPeople': true, 'loadingProject': true},
-      bidInstruction: '',
+      bidInstruction: {},
       bidType: 'personal',
       limit: 5,
       fileList: [],
@@ -62,6 +69,16 @@ export default {
   computed: {
     ...mapState(['data', 'table', 'json'])},
   methods: {
+    submitUpload () {
+      this.$refs.upload.submit()
+      if (this.bidType === 'unit') {
+        this.allyBid(this.details.code, this.details.state, this.details.name)
+      } else {
+        if (this.$cookie.get('role') === 'puser') {
+          this.perBid(this.details.code, this.details.state, this.details.name)
+        } else { this.comBid(this.details.code, this.details.state, this.details.name) }
+      }
+    },
     handleClose () {
       this.fileList = []; this.dialogVisible = false
       this.uploadDis = false
@@ -245,20 +262,14 @@ export default {
         //   type: 'success',
         //   message: `投标成功`
         // })
-        if (this.bidType === 'unit') {
-          this.allyBid(this.details.code, this.details.state, this.details.name)
-        } else {
-          if (this.$cookie.get('role') === 'puser') {
-            this.perBid(this.details.code, this.details.state, this.details.name)
-          } else { this.comBid(this.details.code, this.details.state, this.details.name) }
-        }
+
       } else {
         this.$message({
           type: 'warning',
           message: `投标失败原因${response.reason}`
         })
       }
-      this.uploadDis = true
+      // this.uploadDis = true
       // this.complete = response.data
     },
     failure (err, file, fileList) {

@@ -13,11 +13,11 @@
      <span class="font1">规模容量:</span><template v-for="i in voltage"><span class="font2" @click="add4($event)">{{i}}</span></template>
    </div>
    <div class="div1">
+     <span class="font1">线上项目:</span><span class="font2" @click="add6($event)">是</span><span class="font2" @click="add6($event)">否</span>
+   </div>   
+   <div class="div1">
      <span class="font1">涉及专业:</span><template v-for="i in domain"><span class="font2" @click="add5($event)">{{i}}</span></template>
    </div>
-   <div class="div1">
-     <span class="font1">是否为线上项目:</span><span class="font2" @click="add6($event)">yes</span><span class="font2" @click="add6($event)">no</span>
-   </div>   
   </div>
 </template>
 
@@ -123,8 +123,13 @@ export default {
     },
     add6 (e) {
       if (this.tags.length < 3) {
-        this.tags.push(e.target.innerText)
-        this.tag6.push(e.target.innerText)
+        if (e.target.innerText === '是') {
+          this.tags.push('yes')
+          this.tag6.push('yes')
+        } else {
+          this.tags.push('no')
+          this.tag6.push('no')
+        }
       } else {
         this.$message({
           message: `最多只能选${this.max}项目`,
@@ -204,6 +209,8 @@ export default {
   font-size: 1.2rem;
   flex-wrap: wrap;
   margin-right: 2rem;
+  width: 100%;
+  margin-bottom: .3rem;
   }
 .clearfix{
     clear:both;
@@ -212,12 +219,24 @@ export default {
 }
 .font1{
     margin-left:1rem;
-    /* margin-right:2rem; */
+    margin-right:1rem;
+    padding: .2rem .4rem;
+    font-size: 90%;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem;
+    /* width:8rem;
+    text-align: right; */
 }
 .font2{
-    color:#4d83e7;
     margin-left:0.5rem;
     cursor:pointer;
     margin-left: 1rem;
+    color:#409EFF;
+    /* padding: .2rem .4rem;
+    font-size: 90%;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem; */
 }
 </style>

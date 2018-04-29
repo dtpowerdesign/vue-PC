@@ -1,5 +1,5 @@
 <template>
-  <div class="archive">
+  <div class="facilitator">
    <Info></Info>
    <!-- <top></top> -->
    <search data-step="1" data-intro="在此输入相关信息进行搜索" data-position="right"></search>

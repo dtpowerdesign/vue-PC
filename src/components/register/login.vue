@@ -4,7 +4,7 @@
        <div class="top-left"><img src="../../../static/logo-buleBGC.png" alt=""><span onclick="window.location.href='http://39.106.34.156:8080/zs/home/'">{{msg}}</span><span>|</span><span @click="$router.push('/perregister')">个人注册</span><span @click="$router.push('/comregister')">企业注册</span><span @click="$router.push('/login')" style="color:yellow">登录</span></div>
       <div class="top-right"><span>设计服务</span><span>设计师</span><span>客户端下载</span><span>App</span></div>
     </div>
-    <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login">
+    <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="login" id="login">
       <el-form-item label="" prop="user" style="margin-left:-100px">
         <el-input v-model="Form.user" placeholder="输入email/手机号" @keyup.enter.native="next()">
         <i slot="prefix" class="icon iconfont icon-zhanghao"></i>
@@ -18,7 +18,7 @@
       <el-form-item style="margin-left:-100px">
         <div style="display:flex;justify-content:space-between">
           <el-checkbox v-model="checked">记住我(30天内自动登录)</el-checkbox>
-          <span style="cursor:pointer;color:gray;">忘记密码？</span>
+          <span style="cursor:pointer;color:gray;" @click="dialogVisible = true">忘记密码？</span>
         </div>
       </el-form-item>
       <el-form-item style="margin-left:-100px">
@@ -30,6 +30,24 @@
         </div>
       </el-form-item> -->
     </el-form>
+    <el-dialog title="找回密码" :visible.sync="dialogVisible" width="30%">
+      <el-form :model="Form" status-icon :rules="rules"  label-width="100px" ref="change">
+        <el-form-item label="账号" prop="user">
+          <el-input v-model="Form.user" placeholder="输入email/手机号"></el-input>
+          <el-button @click="check" style="width:100%" type="primary">发送短信/邮件</el-button>
+        </el-form-item>
+       <el-form-item label="新的密码" prop="pass">
+          <el-input v-model="Form.pass" placeholder="输入新的密码"></el-input>
+        </el-form-item>        
+        <el-form-item label="验证码">
+          <el-input v-model="Form.MSG" placeholder="输入验证码" type="text" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="change">确 定</el-button>
+      </span>
+     </el-dialog>
   </div>
 </template>
 
@@ -49,7 +67,7 @@ export default {
       }
     }
     var validatePass = (rule, value, callback) => {
-      if (value === '') {
+      if (!value) {
         callback(new Error('请输入密码'))
       } else if (!this.$preSQL.pre(value)) {
         callback(new Error('非法字符串'))
@@ -57,19 +75,36 @@ export default {
         callback()
       }
     }
+    var checkCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('验证码不能为空'))
+      } else if (value !== this.Form.returnCheck) {
+        callback(new Error('请输入与收到短信同样的的验证码'))
+      } else if (!this.$preSQL.pre(value)) {
+        callback(new Error('非法字符串'))
+      } else {
+        callback()
+      }
+    }
     return {
+      dialogVisible: false,
       msg: '',
       checked: true,
       Form: {
+        returnCheck: '',
         user: '',
-        pass: ''
+        pass: '',
+        MSG: ''
       },
       rules: {
         user: [
             { validator: validateUser, trigger: 'blur' }
         ],
         pass: [
-            { validator: validatePass, trigger: 'change' }
+            { validator: validatePass, trigger: 'blur' }
+        ],
+        check: [
+            { validator: checkCheck, trigger: 'blur' }
         ]}
     }
   },
@@ -155,6 +190,55 @@ export default {
           })
         }
       })
+    },
+    check () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/sendFindPasswordMsg', {'number': this.Form.user}).then((res) => {
+        console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '验证码发送成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `验证码发送失败,原因${res.data.reason}`
+          })
+        }
+        this.Form.returnCheck = res.data.checkMsg
+        console.log(this.Form.returnCheck)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    change () {
+      this.$refs.change.validate((valid) => {
+        if (valid) {
+          this.$http.post(this.$domain.domain1 + 'electric-design/ChangePass', {'account': this.Form.user, 'password': this.Form.pass, 'checkMsg': this.Form.MSG})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '修改密码成功'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因${res.data.reason}`
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+        } else {
+          this.$message({
+            message: '请确保所填信息符合要求',
+            type: 'warning'
+          })
+          return false
+        }
+      })
     }
   }
 }
@@ -204,7 +288,7 @@ export default {
 .top-right>span{
     margin-right:1rem;
 }
-.el-form{
+#login{
   width:21%;
   margin:10% auto 0 auto;
     padding:2.5rem 1.5rem 0.3rem 1.5rem;
@@ -213,7 +297,7 @@ export default {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   border-radius:.3rem .3rem 0 0
 }
-.el-form:hover{
+#login:hover{
   -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;

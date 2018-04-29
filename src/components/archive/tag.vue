@@ -1,7 +1,7 @@
 <template>
   <div class="tag">
    <span style="float:left;font-size:1.5rem;line-height:2rem;color:#409EFF;margin-left:2rem;">已选:</span>
-   <el-tag v-for="tag in tags" :key="tag.name" closable :type="tag.type" @close="close(tag)">
+   <el-tag v-for="tag in tags" :key="tag.name" closable :type="tag.type" @close="close(tag)" style="color:#fff" color="#909399">
      {{tag}}
    </el-tag>
   </div>

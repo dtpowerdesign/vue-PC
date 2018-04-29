@@ -50,7 +50,7 @@ export default {
   margin-top:5rem;
 }
 #right{
-  background-color:#F0F4F7;
+  /* background-color:#F0F4F7; */
   height: 100%;
 }
 </style>

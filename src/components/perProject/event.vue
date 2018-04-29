@@ -1,6 +1,6 @@
 <template>
   <div class="project-event">
-    <div class="title"><span style="font-size:2rem">事件统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
+    <div class="title"><span style="font-size:1.5rem">事件统计</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <el-tabs type="border-card">
       <!-- <el-tab-pane label="提资"><upload></upload></el-tab-pane> -->
       <!-- <el-tab-pane label="洽谈"><chat></chat></el-tab-pane> -->

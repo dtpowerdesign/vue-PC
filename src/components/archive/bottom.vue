@@ -65,12 +65,12 @@ export default {
 .bottom{
     background-color:#4d83e7;
     width:100%;
+    padding-top:2rem;
 }
 .div1{
     width:20%;
 display:flex;
 align-items:center;
-margin-top:2rem;
 margin-left:14%;
 }
 .div1>img{

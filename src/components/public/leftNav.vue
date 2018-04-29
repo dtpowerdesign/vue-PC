@@ -8,17 +8,6 @@
       text-color="#fff"
       active-background-color="#409EFF"
       :default-openeds="['person', 'PM', 'statistics']">
-      <el-submenu index="person">
-        <template slot="title">
-          <i class="icon iconfont icon-gerenziliao"></i>
-          <span class="fontBig">个人资料</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="/per/person-perAchi">个人业绩</el-menu-item>
-          <el-menu-item index="/per/uploadAchieve">上传业绩</el-menu-item>
-          <el-menu-item index="/per/person-register" data-step="2" data-intro="完善个人信息" data-position="right">注册信息</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
      <el-submenu index="PM">
         <template slot="title">
           <i class="icon iconfont icon-guanli"></i>
@@ -28,6 +17,17 @@
           <el-menu-item index="/per/PM-new" data-step="1" data-intro="我要发布新任务" data-position="right">发布新任务</el-menu-item>
           <el-menu-item index="/per/PM-sumary/2" data-step="4" data-intro="参与项目浏览" data-position="bottom">项目汇总</el-menu-item>
           <el-menu-item index="/per/PM-combo/2">联合体</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>      
+      <el-submenu index="person">
+        <template slot="title">
+          <i class="icon iconfont icon-gerenziliao"></i>
+          <span class="fontBig">个人资料</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/per/person-perAchi">个人业绩</el-menu-item>
+          <el-menu-item index="/per/uploadAchieve">上传业绩</el-menu-item>
+          <el-menu-item index="/per/person-register" data-step="2" data-intro="完善个人信息" data-position="right">注册信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
         <el-submenu index="statistics">

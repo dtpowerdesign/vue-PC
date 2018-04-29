@@ -213,10 +213,18 @@ flex-wrap: wrap;
   align-items:center;
   flex-wrap: wrap;
   margin-right: 2rem;
+    width: 100%;
+    margin-bottom: .5rem;
   }
 
 .font1{
     margin-left:1rem;
+        margin-right:1rem;
+        padding: .2rem .4rem;
+    font-size: 90%;
+    color: #fff;
+    background-color: #409EFF;
+    border-radius: .3rem;
 }
 .font2{
     color:#4d83e7;

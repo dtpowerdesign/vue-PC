@@ -146,6 +146,23 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+      if (this.$cookie.get('user')) {
+        this.$message({
+          type: 'success',
+          message: `检测到您的账号${this.$cookie.get('user')},自动为您登陆`
+        })
+        if (this.$cookie.get('role') === 'puser') {
+          this.$router.push('/per/person-perAchi')
+        } else {
+          this.$router.push('/com/company-comAchi')
+        }
+        // window.startInit()
+        this.$nextTick(() => {
+          this.$startInit(this.$cookie.get('user'), {token: this.$cookie.get('token')})
+        })
+        // console.log($('#appKey').text())
+        // console.log($('#token').text())
+      }
     },
     check () {
       this.$http.post(this.$domain.domain1 + 'electric-design/sendCheckMsgByJson', {'testNumber': this.Form.user}).then((res) => {
