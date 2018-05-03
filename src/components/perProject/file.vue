@@ -1,6 +1,7 @@
 <template>
   <div class="file">
     <upload></upload>
+    <up></up>
     <!-- <schedule></schedule> -->
     <!-- <div class="title"><span style="font-size:2rem">项目文件</span><i class="icon iconfont icon-iconfontquestion"></i></div>
     <p style="font-size:1.5rem;color:#4d83e7;text-align:left">目前阶段:{{designProcess}}</p>
@@ -59,12 +60,13 @@ import store from '@/vuex/perProject'
 import {mapState} from 'vuex'
 import schedule from '@/components/perProject/event-schedule'
 import upload from '@/components/perProject/event-upload'
+import up from '@/components/perProject/upload'
 export default {
   store,
   computed: {
     ...mapState(['id'])
   },
-  components: {schedule, upload},
+  components: {schedule, upload, up},
   data () {
     return {
       dialogVisible: false,
@@ -183,7 +185,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .file{
-  margin:3rem auto 0 auto;
+  margin:1rem auto 0 auto;
   width:90%;
 }
 .title{

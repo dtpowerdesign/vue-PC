@@ -70,6 +70,7 @@ export default {
     ...mapState(['data', 'table', 'json'])},
   methods: {
     submitUpload () {
+      console.log(this.bidInstruction)
       this.$refs.upload.submit()
       if (this.bidType === 'unit') {
         this.allyBid(this.details.code, this.details.state, this.details.name)
@@ -84,7 +85,13 @@ export default {
       this.uploadDis = false
     },
     getBidInstruction () {
-      return this.bidInstruction
+      // var json = {
+      //   'price': this.bidInstruction.price,
+      //   'time': this.bidInstruction.time,
+      //   'performance': this.bidInstruction.performance,
+      //   'aptitude': this.bidInstruction.aptitude
+      // }
+      return JSON.stringify(this.bidInstruction)
     },
     getBidType () {
       return this.bidType

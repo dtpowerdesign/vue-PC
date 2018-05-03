@@ -15,6 +15,16 @@
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
         <el-submenu index="person">
         <template slot="title">
+          <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我的项目</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item :index="'/per-project/' + i.code + '/pandect'"  v-for="(i ,j) in projectList" :key="j">{{i.name}}/{{i.state}}</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      </el-menu>
+      <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
+        <el-submenu index="person">
+        <template slot="title">
           <i class="icon iconfont icon-gerenziliao"></i><span>{{name}}</span>
         </template>
         <el-menu-item-group>
@@ -23,17 +33,7 @@
           <el-menu-item index="/login" @click="$cookie.set('user', '', -1);$cookie.set('token', '', -1);$cookie.set('role', '', -1);$cookie.set('name', '', -1);$cookie.set('pass', '', -1);$router.push('/login')">退出登录</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      </el-menu>
-      <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
-        <el-submenu index="person">
-        <template slot="title">
-          <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我的项目</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item :index="'/per-project/' + i.code + '/pandect'"  v-for="(i ,j) in projectList" :key="j">{{i.name}}</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      </el-menu>
+      </el-menu>      
     </div>
   </div>
 </template>
@@ -56,9 +56,10 @@ export default {
     initData () {
       var dataForm = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', dataForm).then((res) => {
+        console.log(res.data)
         this.projectList = []
         res.data.forEach((el, index) => {
-          this.projectList.push({name: el.name, code: el.code})
+          this.projectList.push({name: el.name, code: el.code, state: el.state})
         })
       }).catch((err) => { console.log(err) })
     }

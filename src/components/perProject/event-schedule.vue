@@ -50,16 +50,7 @@
            <el-button @click="confirm(scope.row)" v-if="!scope.row.code" type="success" size="small">提交</el-button>
          </div>
          <div v-else-if="scope.row.toUsersAccounts.in_array($cookie.get('user'))">
-          <el-upload :action='$domain.domain1 + "electric-design/uploadRequestData"' name="project" multiple :show-file-list="false"
-            :on-success="uploadSuccess"
-            :on-error="uploadError"
-            :on-preview="uploadPrev"
-            :data="{
-              'code': scope.row.code,
-              'sourceUserId': $cookie.get('user')
-              }">
-           <el-button size="small" type="primary">点击上传</el-button>
-         </el-upload>           
+           <el-button @click="uploadVisible=true;dataCode=scope.row.code">上传文件</el-button>
          </div>
          <div v-else>
            <el-button v-if="scope.row.code&&!(scope.row.sourceUserAccount===$cookie.get('user'))" disabled>无权干涉</el-button>
@@ -68,6 +59,23 @@
        </el-table-column>
    </el-table>
    <el-button style="width:80%" type="primary" @click="add()">增加请求</el-button>
+   <el-dialog width="30%" title="上传文件" :visible.sync="uploadVisible">
+          <el-select v-model="fileType" placeholder="请选择分类">
+            <el-option v-for="(i, j) in fileTypes" :key="j" :value="i" :label="i"></el-option>
+          </el-select>
+          <el-upload :action='$domain.domain1 + "electric-design/uploadRequestData"' name="project" multiple :show-file-list="false"
+            :on-success="uploadSuccess"
+            :on-error="uploadError"
+            :on-preview="uploadPrev"
+            :data="{
+              'code': dataCode,
+              'fileType': fileType,
+              'sourceUserId': $cookie.get('user')
+              }">
+           <el-button size="small" type="primary" style="width:100%">点击上传</el-button>
+         </el-upload>  
+           <el-button size="small" type="warning" @click="uploadVisible=false">退出上传</el-button>
+   </el-dialog>   
    <el-dialog title="事件日志" :visible.sync="dialogVisible" width="60%" > 
      <el-table :data="eventLog">
        <el-table-column label="来源者账号" prop="sourceUserId"></el-table-column>
@@ -79,7 +87,7 @@
            上传了
            <el-tooltip content="点击下载" placement="bottom" effect="light">
              <span v-for="(i, j) in scope.row.Datafiles" :key="j" style="color:#409EFF" @click="download(i.filePath)">
-                {{i.fileName}}
+                {{i.fileName}}/{{i.fileType}}
              </span>
            </el-tooltip>
           </div>
@@ -127,10 +135,14 @@ export default {
       toAccounts: [],
       dialogVisible: false,
       innerVisible: false,
+      uploadVisible: false,
       eventLog: [],
       eventProposer: '',
       refuseReason: '',
-      eventCode: ''
+      eventCode: '',
+      dataCode: '',
+      fileType: '其他',
+      fileTypes: ['提资单', '合同洽商单', '会议机要', '工程评审单', '校审单', '工程联络单', '其他']
     }
   },
   mounted () {

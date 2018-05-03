@@ -9,12 +9,18 @@
       </div>
     <el-table :data="data.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe fit ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="上传日期" prop="date"></el-table-column>
         <el-table-column label="上传时间" prop="time"></el-table-column>
+        <el-table-column label="文件分类" prop="fileType" :filters="[{text:'提资单',value:'提资单'}, {text:'合同洽商单',value:'合同洽商单'}, {text:'会议机要',value:'会议机要'}, {text:'工程评审单',value:'工程评审单'}, {text:'校审单',value:'校审单'}, {text:'工程联络单',value:'工程联络单'}, {text:'其他',value:'其他'}]" :filter-method="filterTag" filter-placement="bottom-end">
+          <template slot-scope="scope">
+             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+              {{scope.row.fileType}}
+             </span>
+          </template>
+        </el-table-column>        
         <el-table-column label="文件名称">
           <template slot-scope="scope">
-             <span v-for="(i, j) in scope.row.dataFiles" :key="j" style="color:#409EFF" @click="download(i.filePath)">
-                {{i.fileName}}
+             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+                {{scope.row.fileName}}
              </span>
           </template>
         </el-table-column>
@@ -60,18 +66,21 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
         'conditions': {
           'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]},
-          'eventType': {'searchMethod': 'values', 'values': ['provide', 'request']}
+          'eventType': {'searchMethod': 'values', 'values': ['provide', 'request', 'chat']}
         }
       }).then((res) => {
         console.log(res.data)
         this.data = []
         res.data.forEach((el, index) => {
-          this.data.push({
-            'date': [].concat((el.time.year + 1900), (el.time.month + 1), el.time.date).join('/'),
-            'time': [].concat(el.time.hours, el.time.minutes, el.time.seconds).join(':'),
-            'dataFiles': el.dataFiles,
-            'remark': el.body,
-            'source': el.sourceUserName
+          el.dataFiles.forEach((el2, index2) => {
+            this.data.push({
+              'time': el2.uptime,
+              'fileName': el2.fileName,
+              'fileType': el2.fileType,
+              'filePath': el2.filePath,
+              'remark': el.body,
+              'source': el.sourceUserName
+            })
           })
         })
         console.log(this.data)
@@ -114,6 +123,10 @@ export default {
     },
     download (path) {
       window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    },
+    filterTag (value, row) {
+      console.log(value)
+      return row.fileType === value
     }
   }
 }
@@ -122,7 +135,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .upload{
-    width:90%;
+    width:100%;
     margin: 0 auto;
 }
 .title{
