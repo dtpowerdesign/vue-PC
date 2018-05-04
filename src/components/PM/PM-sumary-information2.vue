@@ -65,12 +65,12 @@
       <el-tabs type="card">
         <el-tab-pane label="个体投标">
           <el-table :data="bid.personalBidAccounts" border>
-            <el-table-column label="投标人账号" prop="srcUserAccount" min-width="10%"></el-table-column>
-            <el-table-column label="投标人姓名" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="投标人账号" prop="sourceUserId" min-width="10%"></el-table-column>
+            <el-table-column label="投标人姓名" prop="sourceUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidfjxx.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -84,21 +84,21 @@
             </el-table-column>
             <el-table-column label="操作" min-width="30%">
               <template slot-scope="scope">
-                <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>
+                <el-button @click="skip({'account':scope.row.sourceUserId, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>
                 <el-button type="success" @click="confirmBid(scope.row)" size="small">选我</el-button>
-                <el-button type="info" @click="biduserDetail(scope.row.srcUserAccount,scope.row.srcUserType)" size="small">详细信息</el-button>                
+                <el-button type="info" @click="biduserDetail(scope.row.sourceUserId,scope.row.srcUserType)" size="small">详细信息</el-button>                
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="企业投标">
           <el-table :data="bid.tenderCompanyBidAccounts" border>
-            <el-table-column label="投标企业账号" prop="srcUserAccount" min-width="10%"></el-table-column>
-            <el-table-column label="投标企业名称" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="投标企业账号" prop="sourceUserId" min-width="10%"></el-table-column>
+            <el-table-column label="投标企业名称" prop="sourceUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidfjxx.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -112,21 +112,21 @@
             </el-table-column>
             <el-table-column label="选取中标者" min-width="30%">
               <template slot-scope="scope">
-                <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>                
+                <el-button @click="skip({'account':scope.row.sourceUserId, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>                
                 <el-button type="success" @click="confirmBid(scope.row)" size="small">选我</el-button>
-                <el-button type="info" @click="biduserDetail(scope.row.srcUserAccount,scope.row.srcUserType)" size="small">详细信息</el-button>                  
+                <el-button type="info" @click="biduserDetail(scope.row.sourceUserId,scope.row.srcUserType)" size="small">详细信息</el-button>                  
               </template>
             </el-table-column>
           </el-table>          
         </el-tab-pane>
         <el-tab-pane label="联合体投标" v-if="bid.isAcceptJointBid==='true'">
           <el-table :data="bid.jointReleaseAccounts" border>
-            <el-table-column label="联合投标账号" prop="srcUserAccount" min-width="20%"></el-table-column>
-            <el-table-column label="联合投标姓名" prop="srcUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标报价" prop="bidInstruction.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidInstruction.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidInstruction.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidInstruction.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="联合投标账号" prop="sourceUserId" min-width="20%"></el-table-column>
+            <el-table-column label="联合投标姓名" prop="sourceUserName" min-width="10%"></el-table-column>
+            <el-table-column label="投标报价" prop="bidfjxx.price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="15%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -140,13 +140,13 @@
             </el-table-column>
             <el-table-column label="选取中标者" min-width="25%">
               <template slot-scope="scope">
-                <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>                
+                <el-button @click="skip({'account':scope.row.sourceUserId, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>                
                 <el-button type="success" @click="confirmBid(scope.row)" size="small">选我</el-button>
                 <el-button type="info" @click="unitDetail(scope.row)" size="small">联合体成员</el-button>
               </template>
             </el-table-column>
           </el-table>     
-          <div style="border-top:1px solid black;max-height:300px">
+          <div style="border-top:1px solid black;max-height:300px;overflow-y:scroll">
             <div style="font-size:1.5rem;font-weight:500">联合体成员</div>
             <el-table :data="invitatedBidAccounts">
               <el-table-column prop="userId" label="成员账号"></el-table-column>  
@@ -255,13 +255,15 @@ export default {
   },
   methods: {
     unitDetail (row) {
+      this.invitatedBidAccounts = []
       this.invitatedBidAccounts = row.invitatedBidAccounts
-      this.invitatedBidAccounts.push({
-        'userId': row.srcUserAccount,
-        'userName': row.srcUserName,
-        'job': '联合体发起人',
-        'userType': row.srcUserType
-      })
+      // this.invitatedBidAccounts.push({
+      //   'userId': row.sourceUserId,
+      //   'userName': row.sourceUserName,
+      //   'job': '联合体发起人',
+      //   'userType': row.sourceUserType
+      // })
+      // console.log(this.invitatedBidAccounts, row.invitatedBidAccounts)
     },
     biduserDetail (account, type) {
       if (type === 'puser') {
@@ -341,6 +343,7 @@ export default {
       })
     },
     initData () {
+      this.tableData = []
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
@@ -401,20 +404,23 @@ export default {
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
       this.bid.isAcceptJointBid = row.isAcceptJointBid
-      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {'table': 'bidrecord', 'keys': ['belongToProjectCode'], 'values': [row.code]})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {'table': 'biders', 'keys': ['belongToProjectCode'], 'values': [row.code]})
       .then((res) => {
         console.log(res.data)
         this.bid.personalBidAccounts = []
         this.bid.tenderCompanyBidAccounts = []
         this.bid.jointReleaseAccounts = []
         res.data.forEach((el, index) => {
-          if (el.bidType === 'unit') {
-            this.bid.jointReleaseAccounts.push(el)
+          if (el.bidState === 'cancel') {
           } else {
-            if (el.srcUserType === 'puser') {
-              this.bid.personalBidAccounts.push(el)
+            if (el.bidType === 'unit') {
+              this.bid.jointReleaseAccounts.push(el)
             } else {
-              this.bid.tenderCompanyBidAccounts.push(el)
+              if (el.sourceUserType === 'puser') {
+                this.bid.personalBidAccounts.push(el)
+              } else {
+                this.bid.tenderCompanyBidAccounts.push(el)
+              }
             }
           }
         })
@@ -468,17 +474,17 @@ export default {
       this.multipleSelection = val
     },
     confirmBid (row) {
-      this.$confirm(`您确定让${row.srcUserName}中标吗`, '确定后无法修改', {
+      this.$confirm(`您确定让${row.sourceUserName}中标吗`, '确定后无法修改', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/selectBidUser', {'belongToProjectCode': this.code, 'sourceUserId': row.srcUserAccount, 'bidType': row.bidType})
+        this.$http.post(this.$domain.domain1 + 'electric-design/selectBidUser', {'belongToProjectCode': this.code, 'sourceUserId': row.sourceUserId, 'bidType': row.bidType})
         .then((res) => {
           if (res.data.result) {
             this.$message({
               type: 'success',
-              message: `${row.srcUserName}已经中标`
+              message: `${row.sourceUserName}已经中标`
             })
             this.dialogVisible = false
             this.$router.go(0)

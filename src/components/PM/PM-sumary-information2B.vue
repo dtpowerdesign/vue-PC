@@ -137,9 +137,10 @@
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
-        <el-table-column   label="操作" fixed="right" width="280">
+        <el-table-column   label="操作" fixed="right" width="380">
           <template slot-scope="scope">
-            <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>
+            <el-button @click="cancel(scope.row)" type="danger" size="small">撤标</el-button>
+            <el-button @click="detail(scope.row)" type="success" size="small">查看详情</el-button>
             <el-button @click="skip({'account':scope.row.sourceAccount, 'name':scope.row.sourceName})" type="primary" size="small">和招标人聊天</el-button>
           </template>
         </el-table-column>
@@ -200,6 +201,7 @@ export default {
       })
     },
     initData () {
+      this.tableData = []
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
@@ -260,24 +262,25 @@ export default {
       this.sourceAccount = row.sourceAccount
       this.bid.jointReleaseAccount = row.jointReleaseAccount
       this.bid.isAcceptJointBid = row.isAcceptJointBid
-      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {'table': 'bidrecord', 'keys': ['belongToProjectCode'], 'values': [row.code]})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getMultRecordByKeysAndValues', {'table': 'biders', 'keys': ['belongToProjectCode'], 'values': [row.code]})
       .then((res) => {
+        console.log(res.data)
         this.bid.personalBidAccounts = []
         this.bid.tenderCompanyBidAccounts = []
         this.bid.jointReleaseAccounts = []
-        res.data.forEach((el, index) => {
-          if (el.bidType === 'unit') {
-            this.bid.jointReleaseAccounts.push(el)
-            this.bid.jointReleaseAccounts[0].srcUser = this.bid.jointReleaseAccounts[0].srcUserAccount
-            this.bid.jointReleaseAccounts[0].srcUserAccount = this.bid.finalBid
-          } else {
-            if (el.srcUserType === 'puser') {
-              this.bid.personalBidAccounts.push(el)
-            } else {
-              this.bid.tenderCompanyBidAccounts.push(el)
-            }
-          }
-        })
+        // res.data.forEach((el, index) => {
+        //   if (el.bidType === 'unit') {
+        //     this.bid.jointReleaseAccounts.push(el)
+        //     this.bid.jointReleaseAccounts[0].srcUser = this.bid.jointReleaseAccounts[0].srcUserAccount
+        //     this.bid.jointReleaseAccounts[0].srcUserAccount = this.bid.finalBid
+        //   } else {
+        //     if (el.srcUserType === 'puser') {
+        //       this.bid.personalBidAccounts.push(el)
+        //     } else {
+        //       this.bid.tenderCompanyBidAccounts.push(el)
+        //     }
+        //   }
+        // })
       }).catch((err) => {
         console.log(err)
       })
@@ -361,6 +364,26 @@ export default {
     },
     download (path) {
       window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    },
+    cancel (row) {
+      this.$http.post(this.$domain.domain1 + 'electric-design/changeBidUser', {'belongToProjectCode': row.code, 'sourceUserId': this.$cookie.get('user'), data: {'bidState': 'cancel'}})
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '撤标成功'
+          })
+          this.initData()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `您不是该项目投标发起人，无权进行此操作`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

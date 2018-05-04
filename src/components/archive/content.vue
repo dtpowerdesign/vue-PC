@@ -31,7 +31,7 @@
      <el-input placeholder="请填写您的业绩" v-model="bidInstruction.performance"></el-input>
      <el-input placeholder="请填写您的资质" v-model="bidInstruction.aptitude"></el-input>
      <el-upload multiple class="upload-demo" ref="upload" id="upload" 
-     :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'srcUserAccount': $cookie.get('user'), 'srcUserName': $cookie.get('name'), 'srcUserType': $cookie.get('role'), 'bidInstruction': getBidInstruction(), 'bidType': getBidType()}" name="data"   
+     :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'sourceUserId': $cookie.get('user'), 'sourceUserName': $cookie.get('name'), 'sourceUserType': $cookie.get('role'), 'bidfjxx': getBidInstruction(), 'bidType': getBidType()}" name="data"   
      :action='this.$domain.domain1+"electric-design/bidAndUpLoad"'
       :file-list="fileList"
      :before-upload="beforeUpload" :on-progress="progress" :on-remove="remove" :on-change="change" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  
@@ -70,14 +70,35 @@ export default {
     ...mapState(['data', 'table', 'json'])},
   methods: {
     submitUpload () {
-      console.log(this.bidInstruction)
       this.$refs.upload.submit()
       if (this.bidType === 'unit') {
-        this.allyBid(this.details.code, this.details.state, this.details.name)
+        // this.allyBid(this.details.code, this.details.state, this.details.name)
+        this.fileList = []
+        this.uploadDis = false
+        if (this.$cookie.get('role') === 'puser') {
+          this.$router.push('/per/PM-combo/2')
+          this.$nextTick(function () {
+            this.$one.$emit('test', this.details.code)
+          })
+        }
+        if (this.$cookie.get('role') === 'cuser') {
+          this.$router.push('/com/CM-combo/2')
+          this.$nextTick(function () {
+            this.$one.$emit('test', this.details.code)
+          })
+        }
       } else {
         if (this.$cookie.get('role') === 'puser') {
-          this.perBid(this.details.code, this.details.state, this.details.name)
-        } else { this.comBid(this.details.code, this.details.state, this.details.name) }
+          // this.perBid(this.details.code, this.details.state, this.details.name)
+          this.fileList = []
+          this.uploadDis = false
+          this.$router.push('/per/PM-sumary/2B')
+        } else {
+          // this.comBid(this.details.code, this.details.state, this.details.name)
+          this.fileList = []
+          this.uploadDis = false
+          this.$router.push('/per/PM-sumary/2B')
+        }
       }
     },
     handleClose () {

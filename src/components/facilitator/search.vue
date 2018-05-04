@@ -83,7 +83,7 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formDataCuser = {'table': 'pusers', 'value': this.search}
+        var formDataCuser = {'table': 'cusers', 'value': this.search}
         this.$http.post(this.$domain.domain1 + 'electric-design/searchTableByValue', formDataCuser)
         .then((res) => {
           console.log(res.data)

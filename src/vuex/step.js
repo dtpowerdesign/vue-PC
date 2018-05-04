@@ -14,7 +14,7 @@ const state = {
     dataOrProject: 'project',
     company: '某某公司',
     name: '项目',
-    state: '',
+    state: '投标中',
     sizeAndCapacitys: '',
     categorys: '',
     unit: '',

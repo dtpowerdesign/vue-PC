@@ -167,7 +167,7 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        this.$http.post(this.$domain.domain1 + 'electric-design/getPusersByMultiConditions', formData)
+        this.$http.post(this.$domain.domain1 + 'electric-design/getCusersByMultiConditions', formData)
         .then((res) => {
           this.$store.state.tableCuser = []
           if (res.data !== 0) {
