@@ -7,7 +7,7 @@
     <div class="data" v-if="form.dataOrProject==='data'">
     <div class="title"><span>任务基本信息</span><a :href="help1" class="help" >不会填?点我</a></div>
     <div class="content">
-      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+      <el-form ref="form" :model="form" label-width="100px" style="width:100%"> 
         <el-form-item label="任务名称">
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
@@ -69,7 +69,7 @@
     <div class="content">
       <el-form :model="form" label-width="180px" style="width:100%">
         <el-form-item label="付款方式/付款比例">
-          <el-col :span="8" style="display:flex;justify-content:space-between">
+          <el-col :span="12" style="display:flex;justify-content:space-between">
             <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
               <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
             </el-select>
@@ -90,7 +90,7 @@
     <div v-else>
     <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
     <div class="content">
-      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+      <el-form ref="form" :model="form" label-width="100px" style="width:100%"> 
         <el-form-item label="项目名称">
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
@@ -170,11 +170,13 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="工程限价">
+        <el-form-item label="委托费限价">
           <el-col :span="9">
-          <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
+          <el-input v-model="form.lowPrice" placeholder="最低" style="width:30%;"></el-input>
+          <span>/万元</span>
           <span style="font-size:1.2rem;color:red">到</span>
-          <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
+          <el-input v-model="form.highPrice" placeholder="最高" style="width:30%;"></el-input>
+          <span>/万元</span>
           </el-col>       
           <el-col :offset="5" :span="2">目前状态</el-col>
           <el-col :span="8">
@@ -223,7 +225,7 @@
     <div class="content">
       <el-form :model="form" label-width="180px" style="width:100%">
         <el-form-item label="付款方式/付款比例">
-          <el-col :span="8" style="display:flex;justify-content:space-between">
+          <el-col :span="12" style="display:flex;justify-content:space-between">
             <el-select v-model="form.paymentMethods" placeholder="选择" style="width:40%">
               <el-option v-for="(i,j) in paymentMethods" :key="j" :value="i" :label="i"></el-option>
             </el-select>

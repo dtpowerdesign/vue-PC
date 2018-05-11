@@ -22,7 +22,7 @@
        <i class="icon iconfont icon-loufang"></i><span class="font2">{{bidType}}</span>
       </el-col>
       <el-col :span="8">
-        <span class="font1">报价</span><br>
+        <span class="font1">限价</span><br>
         <i class="icon iconfont icon-qian"></i><span class="font2">{{price}}</span>
       </el-col>
       <el-col :span="8">
@@ -94,7 +94,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
@@ -322,6 +322,7 @@ export default {
       this.multipleSelection = val
     },
     confirm (row) {
+      console.log(this.code)
       this.$http.post(this.$domain.domain1 + 'electric-design/applyToUnion', {
         'belongToProjectCode': this.code,
         'unionUserId': this.$cookie.get('user'),

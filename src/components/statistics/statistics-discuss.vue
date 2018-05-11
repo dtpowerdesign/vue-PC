@@ -10,13 +10,26 @@
             <el-button size="small" type="success">打印</el-button>
           </div>
         </div>
-        <el-table :data="i.value.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe fit ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="洽谈日期" prop="date"></el-table-column>
-          <el-table-column label="洽谈时间" prop="time"></el-table-column>
-          <el-table-column label="洽谈内容" prop="remark"></el-table-column>
-          <el-table-column label="参与者" prop="source"></el-table-column>
-        </el-table>
+    <el-table :data="i.value.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe fit ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column label="上传时间" prop="time"></el-table-column>
+        <el-table-column label="文件分类" prop="fileType">
+          <template slot-scope="scope">
+             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+              {{scope.row.fileType}}
+             </span>
+          </template>
+        </el-table-column>        
+        <el-table-column label="文件名称">
+          <template slot-scope="scope">
+             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+                {{scope.row.fileName}}
+             </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark"></el-table-column>
+        <el-table-column label="上传者" prop="source"></el-table-column>
+    </el-table>
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -55,16 +68,21 @@ export default {
           this.$http.post(this.$domain.domain1 + 'electric-design/getEventsByMultiConditions', {
             'conditions': {
               'belongToProjectCode': {'searchMethod': 'values', 'values': [el.code]},
-              'eventType': {'searchMethod': 'values', 'values': ['chat']}
+              'eventType': {'searchMethod': 'values', 'values': ['chats', 'chat']}
             }
           }).then((res) => {
+            console.log(res.data)
             var arr1 = []
             res.data.forEach((el, index) => {
-              arr1.push({
-                'date': [].concat((el.time.year + 1900), (el.time.month + 1), el.time.date).join('/'),
-                'time': [].concat(el.time.hours, el.time.minutes, el.time.seconds).join(':'),
-                'remark': el.body,
-                'source': el.toUsersNames.join(',')
+              el.dataFiles.forEach((el2, index2) => {
+                arr1.push({
+                  'time': el2.uptime,
+                  'fileName': el2.fileName,
+                  'fileType': el2.fileType,
+                  'filePath': el2.filePath,
+                  'remark': el.body,
+                  'source': el.sourceUserName
+                })
               })
             })
             this.projectList.push({name: el.name, code: el.code, value: arr1})
@@ -87,11 +105,11 @@ export default {
         this.downloadLoading = true
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel')
-          const tHeader = ['洽谈日期', '洽谈时间', '内容', '参与者']
-          const filterVal = ['date', 'time', 'remark', 'source']
+          const tHeader = ['时间', '文件类型', '文件名称', '备注', '上传者']
+          const filterVal = ['time', 'fileType', 'fileName', 'remark', 'source']
           const list = xxx
           const data = this.formatJson(filterVal, list)
-          export_json_to_excel(tHeader, data, '业绩统计管理表excel')
+          export_json_to_excel(tHeader, data, '洽谈表')
           this.downloadLoading = false
         })
       } else {
@@ -107,6 +125,9 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    download (path) {
+      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
     }
   }
 }

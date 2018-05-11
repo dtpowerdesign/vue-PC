@@ -18,7 +18,7 @@
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">规模:{{form.sizeAndCapacitys}}{{form.unit}}</p></el-col>
-            <el-col :span="12" v-if="!(this.form.dataOrProject==='data')"><p class="confirm-p1">电压等级:{{form.voltagelevel}}</p></el-col>
+            <el-col :span="12" v-if="!(this.form.dataOrProject==='data')"><p class="confirm-p1">电压等级:{{this.form.voltagelevel1 + '/' + this.form.voltagelevel2 + '/' + this.form.voltagelevel3}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="12"><p class="confirm-p1">开始时间:{{$formDate.formatDate(form.startTime)}}</p></el-col>
@@ -28,7 +28,7 @@
             <el-col :span="12"><p class="confirm-p1">委托设计阶段:{{form.designState.join(',')}}</p></el-col>
           </el-row>
           <el-row v-if="!(this.form.dataOrProject==='data')">
-            <el-col :span="24"><p class="confirm-p1">工程造价:{{form.lowPrice}}(最低){{form.highPrice}}(最高)</p></el-col>
+            <el-col :span="24"><p class="confirm-p1">委托费限价:{{form.lowPrice}}/万元(最低){{form.highPrice}}/万元(最高)</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="24"><p class="confirm-p1">是否接受联合投标:{{form.isAcceptJointBid}}</p></el-col>
@@ -50,10 +50,10 @@
         <el-col :span="3"><span class="content-item-title">资质要求</span></el-col>
         <el-col :offset="2" :span="19">
           <el-row>
-            <el-col :span="24"><p class="confirm-p2">投标个体性质:{{form.character}}</p></el-col>
+            <el-col :span="24"><p class="confirm-p2">接标个体性质:{{form.character}}</p></el-col>
           </el-row>
           <el-row>
-            <el-col :span="24"><p class="confirm-p2">业绩要求:{{form.performanceReq}}</p></el-col>
+            <el-col :span="24"><p class="confirm-p2">业绩要求:{{this.form.performanceReq1 + '/数量要求:' + this.form.performanceReq2}}</p></el-col>
           </el-row>
           <el-row>
             <el-col :span="24"><p class="confirm-p2">所需资质:{{form.aptitude}}</p></el-col>
@@ -159,8 +159,8 @@ export default {
         'entrustProcess': this.form.designState,
         'designProcess': this.form.designState[0],
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
-        'lowestPrice': this.form.lowPrice,
-        'highestPrice': this.form.highPrice,
+        'lowestPrice': this.form.lowPrice + '/万元',
+        'highestPrice': this.form.highPrice + '/万元',
         'instruction': this.form.instruction,
         'requirement': this.form.requirement,
         'payDiscible': this.form.payDiscible,
@@ -221,8 +221,8 @@ export default {
         'entrustProcess': this.form.designState,
         'designProcess': this.form.designState[0],
         'amountOfInvestment': this.form.lowPrice + '-' + this.form.highPrice,
-        'lowestPrice': this.form.lowPrice,
-        'highestPrice': this.form.highPrice,
+        'lowestPrice': this.form.lowPrice + '/万元',
+        'highestPrice': this.form.highPrice + '/万元',
         'instruction': this.form.instruction,
         'requirement': this.form.requirement,
         'payDiscible': this.form.payDiscible,

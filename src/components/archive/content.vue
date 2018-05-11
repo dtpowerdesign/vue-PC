@@ -1,12 +1,12 @@
 <template>
   <div class="content">
    <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
-   <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width:100%">
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
-        <el-table-column   label="操作" fixed="right" width="250">
+   <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)"  style="width:100%">
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"  show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column   label="操作" fixed="right" width="160">
           <template slot-scope="scope">
-            <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="small">我要投标</el-button>
-            <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="small">和他聊天</el-button>  
+            <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="mini">投标</el-button>
+            <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="mini">聊天</el-button>  
           </template>
         </el-table-column>
    </el-table>
@@ -20,6 +20,12 @@
      <p>涉及专业:{{details.major}}</p>
      <p>是否接受联合投标:{{details.isAcceptJointBid==='true'?'是':'否'}}</p>
      </div>
+     <el-table :data="details.processRequirements">
+       <el-table-column prop="state" label="设计阶段"></el-table-column>
+       <el-table-column prop="startTime" label="开始时间"></el-table-column>
+       <el-table-column prop="endTime" label="结束时间"></el-table-column>
+       <el-table-column prop="requireResult" label="成果要求"></el-table-column>
+     </el-table>
      <div> 
        <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='puser'">个人投标</el-radio>
        <el-radio v-model="bidType" label="personal" v-if="$cookie.get('role')==='cuser'">企业投标</el-radio>
@@ -30,17 +36,29 @@
      <el-input placeholder="请填写您的工期" v-model="bidInstruction.time"></el-input>
      <el-input placeholder="请填写您的业绩" v-model="bidInstruction.performance"></el-input>
      <el-input placeholder="请填写您的资质" v-model="bidInstruction.aptitude"></el-input>
-     <el-upload multiple class="upload-demo" ref="upload" id="upload" 
+     <!-- <el-upload multiple class="upload-demo" ref="upload" id="upload" 
      :data="{'belongToProjectCode': details.code, 'belongToProjectName': details.name, 'sourceUserId': $cookie.get('user'), 'sourceUserName': $cookie.get('name'), 'sourceUserType': $cookie.get('role'), 'bidfjxx': getBidInstruction(), 'bidType': getBidType()}" name="data"   
      :action='this.$domain.domain1+"electric-design/bidAndUpLoad"'
       :file-list="fileList"
      :before-upload="beforeUpload" :on-progress="progress" :on-remove="remove" :on-change="change" :on-success="success" :on-error="failure" :on-exceed="handleExceed"  
      :limit="this.limit"
-     :auto-upload="false">
-       <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">上传文件</el-button>
+     :auto-upload="false"> -->
+       <!-- <el-button slot="trigger" size="small" type="primary" :disabled="uploadDis">上传文件</el-button>
        <div slot="tip" class="el-upload__tip">点击投标时可以上传已有业绩证明文件，不超过{{limit}}个</div>    
-       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">投标</el-button> 
-     </el-upload>     
+       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">投标</el-button>  -->
+      <form :action='this.$domain.domain1+"electric-design/bidAndUpLoad"' enctype="multipart/form-data" target="" method="post" >
+            <input type="file" multiple="multiple" name="data" @change="getFile($event)" class="fileButton" />
+      <el-button @click="x($event)" type="primary">投标</el-button>
+      </form>
+     <!-- </el-upload>      -->
+     <!-- <input type="hidden" :value="details.code" name="belongToProjectCode"/>
+     <input type="hidden" :value="details.name" name="belongToProjectName"/>
+     <input type="hidden" :value="$cookie.get('user')" name="sourceUserId"/>
+     <input type="hidden" :value="$cookie.get('name')" name="sourceUserName"/>
+     <input type="hidden" :value="$cookie.get('role')" name="sourceUserType"/>
+     <input type="hidden" :value="getBidInstruction()" name="bidfjxx"/>
+     <input type="hidden" :value="getBidType()" name="bidType"/> -->
+     <!-- <input type="submit"/> -->
    </el-dialog>
    <div style="clear:both;"></div>
    <el-pagination  class="paging" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9, 18]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="table.length">
@@ -63,12 +81,83 @@ export default {
       bidType: 'personal',
       limit: 5,
       fileList: [],
-      uploadDis: false
+      uploadDis: false,
+      file: []
     }
   },
   computed: {
     ...mapState(['data', 'table', 'json'])},
   methods: {
+    x (event) {
+      event.preventDefault()
+      console.log(this.file)
+      let formData = new FormData()
+      formData.append('belongToProjectCode', this.details.code)
+      formData.append('belongToProjectName', this.details.name)
+      formData.append('sourceUserId', this.$cookie.get('user'))
+      formData.append('sourceUserName', this.$cookie.get('name'))
+      formData.append('sourceUserType', this.$cookie.get('role'))
+      formData.append('bidfjxx', this.getBidInstruction())
+      formData.append('bidType', this.getBidType())
+      for (var i of this.file) {
+        formData.append('data', i)
+      }
+      // this.file.forEach((el, index) => {
+      //   formData.append('data', el)
+      // })
+      // if (this.file.length !== 0) {
+      // }
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      this.$http.post(this.$domain.domain1 + 'electric-design/bidAndUpLoad', formData, config).then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          if (this.bidType === 'unit') {
+        // this.allyBid(this.details.code, this.details.state, this.details.name)
+            this.fileList = []
+            this.uploadDis = false
+            if (this.$cookie.get('role') === 'puser') {
+              this.$router.push('/per/PM-combo/2')
+              this.$nextTick(function () {
+                this.$one.$emit('test', this.details.code)
+              })
+            }
+            if (this.$cookie.get('role') === 'cuser') {
+              this.$router.push('/com/CM-combo/2')
+              this.$nextTick(function () {
+                this.$one.$emit('test', this.details.code)
+              })
+            }
+          } else {
+            if (this.$cookie.get('role') === 'puser') {
+          // this.perBid(this.details.code, this.details.state, this.details.name)
+              this.fileList = []
+              this.uploadDis = false
+              this.$router.push('/per/PM-sumary/2B')
+            } else {
+          // this.comBid(this.details.code, this.details.state, this.details.name)
+              this.fileList = []
+              this.uploadDis = false
+              this.$router.push('/per/PM-sumary/2B')
+            }
+          }
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '失败'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    getFile (event) {
+      this.file = event.target.files
+      console.log(this.file)
+    },
     submitUpload () {
       this.$refs.upload.submit()
       if (this.bidType === 'unit') {
@@ -139,6 +228,7 @@ export default {
         this.$set(this.details, 'type', res.data.type.join(','))
         this.$set(this.details, 'category', res.data.category)
         this.$set(this.details, 'major', res.data.major.join(','))
+        this.$set(this.details, 'processRequirements', res.data.processRequirements)
         this.$set(this.details, 'loadingProject', false)
       }).catch((err) => {
         console.log(err)
@@ -280,8 +370,9 @@ export default {
       }
     },
     beforeUpload (file) {
-      console.log('before')
-      console.log(file)
+      return true
+      // console.log('before')
+      // console.log(file)
     },
     success (response, file, fileList) {
       console.log(response)
@@ -368,5 +459,29 @@ ul{
     /* -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; */
+}
+.fileButton{
+    color: #fff!important;
+    background-color: #409EFF!important;
+    border-color: #409EFF;
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
 }
 </style>

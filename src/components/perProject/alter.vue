@@ -167,7 +167,7 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
         </el-form-item>
-       <el-form-item label="工程限价">
+       <el-form-item label="委托费限价">
           <el-col :span="9">
           <el-input v-model="form.lowPrice" placeholder="最低" style="width:40%;"></el-input>
           <span style="font-size:1.2rem;color:red">到</span>
@@ -340,7 +340,7 @@ export default {
       type: ['发电厂', '输电', '变电', '供配电', '建筑'],
       voltagelevel: ['KV', 'V'],
       voltagetype: ['直流', '交流'],
-      character: ['单位', '公司'],
+      character: ['个人', '公司'],
       performanceReq: ['同类型同规模', '同类型'],
       priceType: ['最低', '最高'],
       aptitude: ['高资质', '低资质'],

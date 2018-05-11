@@ -35,7 +35,7 @@ export default {
   },
   mounted () {
     this.value = this.$route.params.value
-    this.initData()
+    // this.initData()
   },
   methods: {
     initData () {

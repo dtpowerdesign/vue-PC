@@ -22,7 +22,7 @@
        <i class="icon iconfont icon-loufang"></i><span class="font2">{{bidType}}</span>
       </el-col>
       <el-col :span="8">
-        <span class="font1">报价</span><br>
+        <span class="font1">限价</span><br>
         <i class="icon iconfont icon-qian"></i><span class="font2">{{price}}</span>
       </el-col>
       <el-col :span="8">
@@ -136,7 +136,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" show-overflow-tooltip  :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="380">
           <template slot-scope="scope">
             <el-button @click="cancel(scope.row)" type="danger" size="small">撤标</el-button>
@@ -192,6 +192,7 @@ export default {
     }
   },
   created () {
+    this.initData()
   },
   methods: {
     skip (row) {
@@ -218,6 +219,7 @@ export default {
         var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
         this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
         .then((res) => {
+          this.tableData = []
           var array = res.data.filter((i) => i.sourceAccount !== this.$cookie.get('user'))
           if (array !== 0) {
             array.forEach((el, index) => {

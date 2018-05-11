@@ -49,6 +49,8 @@ export default {
               for (var i in this.jsonAllPuser) {
                 if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
                   obj[i] = el[i].concat().join(',')
+                } else if (i === 'role') {
+                  obj[i] = (el[i] === 'puser') ? '个人用户' : '企业用户'
                 } else {
                 // if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据' && i !== 'acceptableTravelTime') {
                 //   el[i].year = el[i].year || 0

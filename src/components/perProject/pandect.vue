@@ -42,7 +42,8 @@
      <p style="text-align:left;color:#409EFF;font-size:1.5rem">|成果交付情况</p>
      <el-table :data="processRequirements">
        <el-table-column prop="state" label="设计阶段"></el-table-column>
-       <el-table-column prop="endTime" label="交付时间"></el-table-column>
+       <el-table-column prop="startTime" label="开始时间"></el-table-column>
+       <el-table-column prop="endTime" label="结束时间"></el-table-column>
        <el-table-column prop="requireResult" label="成果要求"></el-table-column>
      </el-table>
    </div>

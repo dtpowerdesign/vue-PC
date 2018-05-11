@@ -58,7 +58,7 @@ const state = {
   type: ['发电厂', '输电', '变电', '供配电', '建筑'],
   voltagelevel: ['KV', 'V'],
   voltagetype: ['直流', '交流'],
-  character: ['单位', '公司'],
+  character: ['个人', '公司'],
   performanceReq: ['同类型同规模', '同类型'],
   priceType: ['最低', '最高'],
   aptitude: ['高资质', '低资质'],

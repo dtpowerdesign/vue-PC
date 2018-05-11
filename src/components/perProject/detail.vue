@@ -53,7 +53,8 @@
      <el-col :offset="0" :span="20">
      <el-table :data="processRequirements">
        <el-table-column prop="state" label="设计阶段"></el-table-column>
-       <el-table-column prop="endTime" label="交付时间"></el-table-column>
+       <el-table-column prop="startTime" label="开始时间"></el-table-column>
+       <el-table-column prop="endTime" label="结束时间"></el-table-column>
        <el-table-column prop="requireResult" label="成果要求"></el-table-column>
      </el-table>
      </el-col>
