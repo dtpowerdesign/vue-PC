@@ -47,7 +47,8 @@
        <div slot="tip" class="el-upload__tip">点击投标时可以上传已有业绩证明文件，不超过{{limit}}个</div>    
        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">投标</el-button>  -->
       <form :action='this.$domain.domain1+"electric-design/bidAndUpLoad"' enctype="multipart/form-data" target="" method="post" >
-            <input type="file" multiple="multiple" name="data" @change="getFile($event)" class="fileButton" />
+            <input type="file" multiple="multiple" name="data" @change="getFile($event)" id="up" style="height:0px; overflow:hidden; position:absolute;" />
+      <el-button  onclick="document.getElementById('up').click();" type="primary">选择文件</el-button>
       <el-button @click="x($event)" type="primary">投标</el-button>
       </form>
      <!-- </el-upload>      -->

@@ -55,7 +55,7 @@
   <div style="display:flex; align-items:center; justify-content: space-between; background:#F9F9F9;height:4rem">
         <span style="font-size:1.5rem;color:#4d83e7">|发布中</span>
           <div>
-            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
+            <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/ptemp')" >表头编辑</el-button>
             <el-button size="small" style='margin-right:20px;' type="success" icon="document" @click="handleDownload">导出excel</el-button>
             <el-button size="small" type="success">打印</el-button>
           </div>
@@ -120,7 +120,7 @@ export default {
       this.tableData = []
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'ptemp'})
       .then((res) => {
         // console.log(res.data)
         this.json = {}

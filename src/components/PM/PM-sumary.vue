@@ -8,7 +8,7 @@
     <el-tab-pane label="发布中" name="1"><Infor ref="Infor1"></Infor></el-tab-pane>
     <el-tab-pane label="招标中" name="2"><Infor2 ref="Infor2"></Infor2></el-tab-pane>
     <el-tab-pane label="投标中" name="2B"><Infor2B ref="Infor2B"></Infor2B></el-tab-pane>
-    <el-tab-pane label="洽谈中" name="3"><Infor3 ref="Infor3"></Infor3></el-tab-pane>
+    <!-- <el-tab-pane label="洽谈中" name="3"><Infor3 ref="Infor3"></Infor3></el-tab-pane> -->
     <el-tab-pane label="投标洽谈" name="4"><Infor4 ref="Infor4"></Infor4></el-tab-pane>
     <el-tab-pane label="合同执行中" name="5"><Infor5 ref="Infor5"></Infor5></el-tab-pane>
     <el-tab-pane label="合同终止" name="6"><Infor6 ref="Infor6"></Infor6></el-tab-pane>
