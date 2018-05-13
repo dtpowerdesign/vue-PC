@@ -20,8 +20,8 @@
        <!-- <el-tab-pane label="项目表(洽谈中)" name="pqiatan">
            <pqiatan></pqiatan>
        </el-tab-pane> -->
-       <el-tab-pane label="项目表(投标洽谈)" name="ptbqiatan">
-           <ptbqiatan></ptbqiatan>
+       <el-tab-pane label="项目表(投标洽谈)" name="pqiatan">
+           <pqiatan></pqiatan>
        </el-tab-pane>
        <el-tab-pane label="项目表(合同执行中)" name="phtzixing">
            <phtzixing></phtzixing>
