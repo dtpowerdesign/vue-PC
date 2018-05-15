@@ -125,7 +125,7 @@ export default {
       this.tableData = []
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'pqiatan'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'contracts', 'otherName': 'ptbqiatan'})
       .then((res) => {
         // console.log(res.data)
         this.json = {}
@@ -138,25 +138,28 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标洽谈']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
+        // var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标洽谈']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+        // this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
+        var formData = {'conditions': {'account': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+        this.$http.post(this.$domain.domain1 + 'electric-design/getContractsByMultiConditions', formData)
         .then((res) => {
+          console.log(res.data)
           this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {}
-              for (var i in this.json) {
-                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
-                  obj[i] = el[i].concat().join(',')
-                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
-                  el[i].year = el[i].year || 0
-                  el[i].month = el[i].month || 0
-                  el[i].date = el[i].date || 0
-                  obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
-                } else {
-                  obj[i] = el[i]
-                }
-              }
+              // for (var i in this.json) {
+              //   if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
+              //     obj[i] = el[i].concat().join(',')
+              //   } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
+              //     el[i].year = el[i].year || 0
+              //     el[i].month = el[i].month || 0
+              //     el[i].date = el[i].date || 0
+              //     obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
+              //   } else {
+              //     obj[i] = el[i]
+              //   }
+              // }
               this.tableData.push(obj)
             })
           }

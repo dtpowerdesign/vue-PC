@@ -10,8 +10,10 @@ export default {
   components: {Index},
   data () {
     return {
-      'type': 'projects',
-      'otherName': 'pqiatan'
+      // 'type': 'projects',
+      // 'otherName': 'pqiatan'
+      'type': 'contracts',
+      'otherName': 'ptbqiatan'
     }
   }
 }
