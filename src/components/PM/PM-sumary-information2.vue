@@ -67,10 +67,10 @@
           <el-table :data="bid.personalBidAccounts" border>
             <el-table-column label="投标人账号" prop="sourceUserId" min-width="10%"></el-table-column>
             <el-table-column label="投标人姓名" prop="sourceUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标限价" prop="bidfjxx.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="投标限价" prop="price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="alltime" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -95,10 +95,10 @@
           <el-table :data="bid.tenderCompanyBidAccounts" border>
             <el-table-column label="投标企业账号" prop="sourceUserId" min-width="10%"></el-table-column>
             <el-table-column label="投标企业名称" prop="sourceUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标限价" prop="bidfjxx.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="投标限价" prop="price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="alltime" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="30%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -123,10 +123,10 @@
           <el-table :data="bid.jointReleaseAccounts" border>
             <el-table-column label="联合投标账号" prop="sourceUserId" min-width="20%"></el-table-column>
             <el-table-column label="联合投标姓名" prop="sourceUserName" min-width="10%"></el-table-column>
-            <el-table-column label="投标限价" prop="bidfjxx.price" min-width="10%"></el-table-column>
-            <el-table-column label="工期" prop="bidfjxx.time" min-width="10%"></el-table-column>
-            <el-table-column label="业绩" prop="bidfjxx.performance" min-width="10%"></el-table-column>
-            <el-table-column label="资质" prop="bidfjxx.aptitude" min-width="10%"></el-table-column>
+            <el-table-column label="投标限价" prop="price" min-width="10%"></el-table-column>
+            <el-table-column label="工期" prop="alltime" min-width="10%"></el-table-column>
+            <el-table-column label="业绩" prop="performance" min-width="10%"></el-table-column>
+            <el-table-column label="资质" prop="aptitude" min-width="10%"></el-table-column>
             <el-table-column label="投标附件" min-width="15%">
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
@@ -189,7 +189,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" show-overflow-tooltip  :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="scope">
             <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>

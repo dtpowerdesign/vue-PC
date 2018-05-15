@@ -15,13 +15,23 @@
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
         <el-submenu index="person">
         <template slot="title">
-          <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我的项目</span>
+          <i class="icon iconfont icon-xiangmu" data-step="5" data-intro="参与项目详情" data-position="bottom"></i><span>我发起的项目</span>
         </template>
         <el-menu-item-group>
           <el-menu-item :index="'/per-project/' + i.code + '/pandect'"  v-for="(i ,j) in projectList" :key="j">{{i.name}}/{{i.state}}</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       </el-menu>
+      <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
+        <el-submenu index="person">
+        <template slot="title">
+          <i class="icon iconfont icon-xiangmu"></i><span>我接受的项目</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item :index="'/per-project/' + i.code + '/pandect'"  v-for="(i ,j) in projectList2" :key="j">{{i.name}}/{{i.state}}</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      </el-menu>      
       <el-menu default-active="/" router mode="horizontal" class="el-menu-vertical" menu-trigger="click" text-color="black">
         <el-submenu index="person">
         <template slot="title">
@@ -43,7 +53,8 @@ export default {
   data () {
     return {
       name: this.$cookie.get('user') ? this.$cookie.get('user') : '您还未登陆哦',
-      projectList: []
+      projectList: [],
+      projectList2: []
     }
   },
   mounted () {
@@ -54,12 +65,20 @@ export default {
       $('.Info>div>.nav').fadeToggle(1000)
     },
     initData () {
-      var dataForm = {'conditions': {'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', dataForm).then((res) => {
+      var dataForm = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectsByMultiConditions', dataForm).then((res) => {
         console.log(res.data)
         this.projectList = []
         res.data.forEach((el, index) => {
           this.projectList.push({name: el.name, code: el.code, state: el.state})
+        })
+      }).catch((err) => { console.log(err) })
+      // var dataForm2 = {'conditions': {'sourceAccount': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+      this.$http.post(this.$domain.domain1 + 'electric-design/getAcceptProjectByAccount', {'account': this.$cookie.get('user')}).then((res) => {
+        console.log(res.data)
+        this.projectList2 = []
+        res.data.forEach((el, index) => {
+          this.projectList2.push({name: el.name, code: el.code, state: el.state})
         })
       }).catch((err) => { console.log(err) })
     }

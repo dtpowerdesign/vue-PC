@@ -46,6 +46,7 @@
         <p class="font1" style="text-align:left;color:#409EFF"><span>联合体发起人账号:{{inviation.unionUserId}}</span></p>
         <p class="font1" style="text-align:left;color:#409EFF"><span>联合体发起人名字:{{inviation.unionUserName}}</span></p>
         <p class="font1" style="text-align:left;color:#409EFF"><span>我承担的角色:{{inviation.job}}</span></p>
+        <p class="font1" style="text-align:left;color:#409EFF"><span>我承担的角色:{{inviation.moneyRate}}</span></p>
       </el-col>
     </el-row>
     <el-button type="warning" style="margin-top:5rem" @click="ignore()">忽略</el-button>
@@ -64,7 +65,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" ></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>

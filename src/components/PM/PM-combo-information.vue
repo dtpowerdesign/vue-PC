@@ -61,10 +61,15 @@
         <el-table-column label="赋予的角色">
           <template slot-scope="scope">
            <el-select v-model="scope.row.job">
-             <el-option v-for="(i, j) in roles" :key="j" :label="i" :value="i"></el-option>
+             <el-option v-for="(i, j) in roles" :key="j" :label="i.value" :value="i.key"></el-option>
            </el-select>
           </template>
         </el-table-column>
+        <el-table-column label="金额分配比例(请输入小数)">
+          <template slot-scope="scope">
+           <el-input v-model="scope.row.moneyRate"></el-input>
+          </template>
+        </el-table-column>        
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-button @click="confirm(scope.row)" type="primary" v-if="scope.row.ustate===''">邀请</el-button>
@@ -94,7 +99,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'number', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
@@ -123,7 +128,7 @@ export default {
   components: {top, search, classify, tag, mycontent},
   data () {
     return {
-      roles: ['主持人', '制图者', '校核人', '审核人', '项目经理', '平台分析设计师', '工程代理'],
+      roles: [{'key': 'maste', 'value': '主持人'}, {'key': 'drawer', 'value': '制图者'}, {'key': 'checker', 'value': '校核人'}, {'key': 'auditor', 'value': '审核人'}, {'key': 'projectManager', 'value': '项目经理'}, {'key': 'projectAnalyst', 'value': '平台分析设计师'}, {'key': 'workGenerater', 'value': '工程代理'}],
       inviation: [],
       dialogVisible: false,
       loadingDetail: true,
@@ -327,7 +332,8 @@ export default {
         'belongToProjectCode': this.code,
         'unionUserId': this.$cookie.get('user'),
         'ohterUserId': row.ohterUserId,
-        'job': row.job
+        'job': row.job,
+        'moneyRate': row.moneyRate
       })
       .then((res) => {
         if (res.data.result) {

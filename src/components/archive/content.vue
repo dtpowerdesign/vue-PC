@@ -2,7 +2,7 @@
   <div class="content">
    <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
    <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)"  style="width:100%">
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"  show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"  :show-overflow-tooltip="j==='name'?false:true":fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="160">
           <template slot-scope="scope">
             <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="mini">投标</el-button>
@@ -98,7 +98,10 @@ export default {
       formData.append('sourceUserId', this.$cookie.get('user'))
       formData.append('sourceUserName', this.$cookie.get('name'))
       formData.append('sourceUserType', this.$cookie.get('role'))
-      formData.append('bidfjxx', this.getBidInstruction())
+      formData.append('price', this.getBidInstruction().price)
+      formData.append('alltime', this.getBidInstruction().time)
+      formData.append('performance', this.getBidInstruction().performance)
+      formData.append('aptitude', this.getBidInstruction().aptitude)
       formData.append('bidType', this.getBidType())
       for (var i of this.file) {
         formData.append('data', i)
@@ -202,7 +205,8 @@ export default {
       //   'performance': this.bidInstruction.performance,
       //   'aptitude': this.bidInstruction.aptitude
       // }
-      return JSON.stringify(this.bidInstruction)
+      // return JSON.stringify(this.bidInstruction)
+      return this.bidInstruction
     },
     getBidType () {
       return this.bidType

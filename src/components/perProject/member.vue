@@ -1,27 +1,28 @@
 <template>
   <div class="member">
     <div class="title"><span style="font-size:1.5rem">成员信息</span><i class="icon iconfont icon-iconfontquestion"></i></div>
-    <div v-for="(i, j) in data" :key="j" class="member-div">
-      <span style="color:red;font-size:1.5rem">{{i.key}}:</span>
-      <span v-for="(k, l) in i.value" :key="l" @click="fun(k.account)" style="color:#4d83e7;font-size:1.5rem;margin-left:1rem"><i class="icon iconfont icon-gerenziliao"></i>{{k.name}}</span>
-    </div>
-    <el-dialog title="分配角色" :visible.sync="dialogVisible" width="60%">
-      <el-table :data="detailMember" border stripe>
-        <el-table-column prop="title" label="角色" width="155"></el-table-column>
-        <el-table-column label="成员">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.value" multiple value-key="account">
-              <el-option v-for="(i, j) in persons" :key="j" :value="i" :label="i.account">账号:{{i.account}}/姓名:{{i.name}}</el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="155">
-          <template slot-scope="scope">
-            <el-button type="warning" @click="confirm(scope.row)">确认</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
+    <el-table :data="table">
+      <el-table-column prop="memberAccount" label="成员账号"></el-table-column>
+      <el-table-column prop="memberRole" label="成员角色"></el-table-column>
+      <el-table-column prop="memberName" label="成员姓名"></el-table-column>
+      <el-table-column label="成员职位">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row.memberJob">
+            <el-option v-for="(i, j) in jobs" :key="j" :label="i.value" :value="i.key"></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="金额分配比例(请输入小数)">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.moneyRate" type="number"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="alter(scope.row)" disabled="divideRolePer!=='yes'">修改</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <i class="icon iconfont icon-iconfonticonfontjixieqimo" @click="manage()" v-if="divideRolePer==='yes'"></i>
   </div>
 </template>
@@ -36,19 +37,8 @@ export default {
   },
   data () {
     return {
-      persons: [{'account': '1802528291@qq.com', 'name': '帅哥'}],
-      data: {
-        'master': {'key': '主持人', 'value': []},
-        'drawer': {'key': '制图者', 'value': []},
-        'checker': {'key': '校核人', 'value': []},
-        'auditor': {'key': '审核人', 'value': []},
-        'projectManager': {'key': '项目经理', 'value': []},
-        'platformProjectAnalyst': {'key': '平台分析设计师', 'value': []},
-        'workGenerater': {'key': '工程代理', 'value': []}
-      },
-      dialogVisible: false,
-      sourceAccount: '',
-      detailMember: [{'title': '', 'key': '', 'value': []}],
+      jobs: [{'key': 'maste', 'value': '主持人'}, {'key': 'drawer', 'value': '制图者'}, {'key': 'checker', 'value': '校核人'}, {'key': 'auditor', 'value': '审核人'}, {'key': 'projectManager', 'value': '项目经理'}, {'key': 'projectAnalyst', 'value': '平台分析设计师'}, {'key': 'workGenerater', 'value': '工程代理'}],
+      table: [],
       changePNamePer: 'no',
       divideRolePer: 'no'
     }
@@ -64,7 +54,6 @@ export default {
           'belongToProjectCode': {'searchMethod': 'values', 'values': [this.id]}
         }
       }).then((res) => {
-        console.log(res.data)
         res.data.forEach((el, index) => {
           if (el.belongToUserId === this.$cookie.get('user')) {
             if (el.perContent.changePName === 'yes') {
@@ -84,66 +73,18 @@ export default {
         'belongToProjectCode': this.id
       })
     .then((res) => {
-      for (var i in this.data) {
-        this.data[i].value = Array.isArray(res.data[i]) ? res.data[i] : []
-      }
+      console.log(res.data)
+      this.table = res.data
     }).catch((err) => {
       console.log(err)
     })
-      this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id})
+    },
+    alter (row) {
+      this.$http.post(this.$domain.domain1 + '/electric-design/changeProjectMember', row)
       .then((res) => {
-        this.sourceAccount = res.data.sourceAccount
-        this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValues1', {
-          'key': 'account',
-          'values': Array.isArray(res.data.toAccounts) ? res.data.toAccounts : [res.data.toAccounts]
-        }).then((res) => {
-          this.persons = []
-          for (var i in res.data) {
-            this.persons.push({
-              'account': res.data[i].account,
-              'name': res.data[i].name
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+        console.log(res.data)
       }).catch((err) => {
         console.log(err)
-      })
-    },
-    manage () {
-      this.dialogVisible = true
-      this.detailMember = []
-      for (var i in this.data) {
-        this.detailMember.push({
-          'key': i,
-          'title': this.data[i].key,
-          'value': this.data[i].value
-        })
-      }
-    },
-    confirm (row) {
-      console.log(row.value)
-      console.log(row.key)
-      var formData = {}
-      formData.belongToProjectCode = this.id
-      formData[row.key] = row.value
-      console.log(formData)
-      this.$http.post(this.$domain.domain1 + 'electric-design/addProjectMember', formData)
-      .then((res) => {
-        if (res.data.result) {
-          this.$message({
-            type: 'success',
-            message: `添加成功`
-          })
-          this.dialogVisible = false
-          this.initData()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: `添加失败,原因${res.data.reason}`
-          })
-        }
       })
     }
   }
