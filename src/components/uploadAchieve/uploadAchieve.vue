@@ -46,6 +46,48 @@
             <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
           </el-col>
         </el-form-item>
+        <el-form-item label="角色">
+          <el-col :span="9">
+          <el-select v-model="form.duty" style="width:100%">
+            <el-option v-for="(i, j) in jobs" :key="j" :label="i.value" :value="i.key"></el-option>
+          </el-select>
+          </el-col>          
+          <el-col :offset="5" :span="2">工程大概投资</el-col>
+          <el-col :span="8">
+            <el-input v-model="form.price"></el-input>
+          </el-col>
+        </el-form-item>        
+        <el-form-item label="规模">
+          <el-col :span="5">
+            <el-input v-model="form.sizeAndCapacitys" placeholder="请输入规模的数值" type="number"></el-input>
+          </el-col>
+          <el-col :span="4">
+            <el-select v-model="form.unit"  placeholder="请选择单位" >
+            <el-option v-for="(i,j) in unit" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">委托设计阶段</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.designState" style="width:100%" multiple filterable allow-create default-first-option>
+              <el-option v-for="(i, j) in designState" :key="j"  :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>       
+        </el-form-item>        
+        <el-form-item label="电压等级">
+          <el-col :span="9">
+            <el-select v-model="form.voltagelevel1" style="width:30%">
+              <el-option v-for="(i,j) in voltagetype" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+            <el-input v-model="form.voltagelevel2" style="width:35%" type="number"></el-input>
+            <el-select v-model="form.voltagelevel3" placeholder="请选择电压等级" style="width:30%">
+              <el-option v-for="(i,j) in voltagelevel" :key="j" :label="i" :value="i"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :offset="5" :span="2">地点</el-col>
+          <el-col :span="8">
+            <el-input v-model="form.place"></el-input>
+          </el-col>
+        </el-form-item>   
         <el-form-item label="项目描述">
           <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
         </el-form-item>        
@@ -89,6 +131,9 @@ export default {
       disabled: false,
       radio: '2',
       form: {
+        duty: '',
+        price: '',
+        place: '',
         company: '某某公司',
         name: '项目',
         sizeAndCapacitys: '',
@@ -98,7 +143,6 @@ export default {
         voltagelevel1: '',
         voltagelevel2: 100,
         voltagelevel3: '',
-        place: '',
         major: [],
         startTime: '',
         endTime: '',
@@ -106,11 +150,7 @@ export default {
         highPrice: '暂无',
         instruction: '',
         requirement: '',
-        stateUnits: [
-      { state: '未填', endTime: '未填', requireResult: '未填' },
-      { state: '未填', endTime: '未填', requireResult: '未填' },
-      { state: '未填', endTime: '未填', requireResult: '未填' }
-        ]
+        designState: []
       },
       // qualificationRequirements: { CET: '' },
       unit: ['MW', 'Kva', 'KV', `M^2`],
@@ -121,7 +161,8 @@ export default {
       type: ['发电厂', '输电', '变电', '供配电', '建筑'],
       voltagelevel: ['KV', 'V'],
       voltagetype: ['直流', '交流'],
-      character: ['单位', '公司']
+      character: ['单位', '公司'],
+      jobs: [{'key': 'master', 'value': '主持人'}, {'key': 'drawer', 'value': '制图者'}, {'key': 'checker', 'value': '校核人'}, {'key': 'auditor', 'value': '审核人'}, {'key': 'projectManager', 'value': '项目经理'}, {'key': 'projectAnalyst', 'value': '平台分析设计师'}, {'key': 'workGenerater', 'value': '工程代理'}]
     }
   },
   mounted () {
@@ -152,14 +193,6 @@ export default {
       })
     },
     confirm () {
-      var stateUnits = []
-      this.form.stateUnits.forEach((el, index) => {
-        stateUnits.push({
-          'state': el.state,
-          'endTime': this.$formDate.formatDate(el.endTime),
-          'requireResult': el.requireResult
-        })
-      })
       var data = {'sourceAccount': this.cookie.get('user'),
         'tenderCompany': this.form.company,
         'name': this.form.name,
@@ -180,7 +213,9 @@ export default {
         'startTime': this.$formDate.formatDate(this.form.startTime),
         'endTime': this.$formDate.formatDate(this.form.endTime),
         'isJointState': 'true',
-        'processRequirements': stateUnits,
+        'entrustProcess': this.form.designState,
+        'memberJob': this.form.duty,
+        'finalPrice': this.form.price,
         'isOnlineAchivment': 'no'}
       this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
         if (res.data.result) {
@@ -188,7 +223,11 @@ export default {
             message: '添加业绩成功',
             type: 'success'
           })
-          this.$router.push('/per-project/' + res.data.code + '/pandect')
+          if (this.$cookie.get('role') === 'puser') {
+            this.$router.push('/per/person-perAchi')
+          } else {
+            this.$router.push('/com/company-comAchi')
+          }
         } else {
           this.$message({
             message: `添加业绩失败,原因${res.data.reason}`,

@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div v-if="show" v-loading="loadingDetail">
+  <div v-if="show">
     <div class="title"><span>|{{name}}</span><el-button type="primary" @click="show=false">返回</el-button></div>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
@@ -42,17 +42,13 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{major}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="6" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">发布人信息</span><br>
-        <p class="font1" style="text-align:left" v-html="info"></p>
-      </el-col>
     </el-row>
-    <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem">
       <el-col :span="24" style="color:#409EFF;font-size:1.5rem">中标者:{{toAccounts.join(',')}}</el-col>
-      <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
-      <el-button type="danger" @click="bad()">我改变主意了</el-button>
-      <el-button type="success" @click="good()">签订合同</el-button>
-    </el-row>
+      <el-button type="success" @click="$router.push('/per-project/' + code)">详细项目信息</el-button>
+    <!-- <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem"> -->
+      <el-button type="primary" @click="contractA" v-if="sourceAccount===$cookie.get('user')">甲方签订</el-button>
+      <el-button type="success" @click="contractB" v-if="isUnionUser">乙方签订</el-button>
+    <!-- </el-row> -->
   </div>
   <div v-else v-loading="loadingTable">
    
@@ -68,8 +64,8 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
-          <template slot-scope="adasd">
-            <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
+          <template slot-scope="scope">
+            <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +87,6 @@ export default {
   data () {
     return {
       sourceAccount: '',
-      loadingDetail: true,
       loadingTable: true,
       currentPage: 1,
       pagesize: 5,
@@ -112,9 +107,9 @@ export default {
       category: '',
       voltage: '',
       major: '',
-      info: '',
       json: {},
-      jsonAll: {}
+      jsonAll: {},
+      isUnionUser: false
     }
   },
   created () {
@@ -123,44 +118,43 @@ export default {
   methods: {
     initData () {
       this.tableData = []
-      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfTables', {'tables': ['projects', 'contracts']}).then((res) => {
         this.jsonAll = res.data
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'contracts', 'otherName': 'ptbqiatan'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['contracts', 'projects'], 'otherName': 'ptbqiatan'})
       .then((res) => {
-        // console.log(res.data)
         this.json = {}
         for (var i in res.data) {
           this.json[i] = {
             key: i,
             title: res.data[i]}
         }
-        // console.log(this.json)
+        console.log(this.json)
       }).catch((err) => {
         console.log(err)
       })
         // var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['投标洽谈']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
         // this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
-        var formData = {'conditions': {'account': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post(this.$domain.domain1 + 'electric-design/getContractsByMultiConditions', formData)
+        var formData = {'account': this.$cookie.get('user'), 'role': this.$cookie.get('role')}
+        this.$http.post(this.$domain.domain1 + 'electric-design/getTbqtProject', formData)
         .then((res) => {
-          console.log(res.data)
           this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
               var obj = {}
-              // for (var i in this.json) {
-              //   if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
-              //     obj[i] = el[i].concat().join(',')
-              //   } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
-              //     el[i].year = el[i].year || 0
-              //     el[i].month = el[i].month || 0
-              //     el[i].date = el[i].date || 0
-              //     obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
-              //   } else {
-              //     obj[i] = el[i]
-              //   }
-              // }
+              for (var i in this.jsonAll) {
+                if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
+                  obj[i] = el[i].concat().join(',')
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
+                  el[i].year = el[i].year || 0
+                  el[i].month = el[i].month || 0
+                  el[i].date = el[i].date || 0
+                  obj[i] = [].concat((el[i].year + 1900), (el[i].month + 1), el[i].date).join('/')
+                } else {
+                  obj[i] = el[i]
+                }
+              }
               this.tableData.push(obj)
+              console.log(this.tableData)
             })
           }
           this.loadingTable = false
@@ -187,11 +181,13 @@ export default {
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
       this.toAccounts = row.toAccounts ? row.toAccounts.split(',') : []
-      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
-        console.log(res.data)
-        this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
-        this.loadingDetail = false
-      }).catch((err) => { console.log(err) })
+      this.$http.post(this.$domain.domain1 + 'electric-design/isUnionUser', {'account': this.$cookie.get('user'), 'pcode': this.code})
+      .then((res) => {
+        this.isUnionUser = res.data.result
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -234,68 +230,42 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    bad () {
-      this.$confirm(`您确定让此项目重新回到投标状态吗`, '确定后无法修改', {
-        confirmButtonText: '不用想了，就这样',
-        cancelButtonText: '我再考虑考虑',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/bidFaild', {'belongToProjectCode': this.code})
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.result) {
-            this.$message({
-              type: 'success',
-              message: '已经回到投标状态'
-            })
-            this.dialogVisible = false
-            this.$router.go(0)
-          } else {
-            this.$message({
-              type: 'warning',
-              message: `操作失败，原因${res.data.reason}`
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
+    contractA () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/jiaFangSure', {'account': this.$cookie.get('user'), 'projectcode': this.code})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '签订成功'
+          })
+          this.$router.go(0)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     },
-    good () {
-      this.$confirm(`您确定要签订合同吗`, '确定后无法修改', {
-        confirmButtonText: '不用想了，就这样',
-        cancelButtonText: '手滑了',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '合同执行中'}})
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.result) {
-            this.$message({
-              type: 'success',
-              message: '操作成功，已经进入合同执行中状态'
-            })
-            this.dialogVisible = false
-            this.$router.go(0)
-          } else {
-            this.$message({
-              type: 'warning',
-              message: `操作失败，原因${res.data.reason}`
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
+    contractB () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/yiFangSure', {'account': this.$cookie.get('user'), 'projectcode': this.code})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '签订成功'
+          })
+          this.$router.go(0)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
   }

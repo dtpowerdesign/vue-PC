@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import Index from '@/components/changeTable/template'
+import Index from '@/components/changeTable/template2'
 export default {
   components: {Index},
   data () {
     return {
-      'type': 'projects',
+      // 'type': 'projects',
       'otherName': 'phtzongzhi'
     }
   }

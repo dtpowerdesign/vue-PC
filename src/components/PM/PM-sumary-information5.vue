@@ -124,9 +124,11 @@ export default {
   methods: {
     initData () {
       this.tableData = []
-      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+      // this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfTables', {'tables': ['projects', 'contracts']}).then((res) => {
         this.jsonAll = res.data
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'phtzixing'})
+        // this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'phtzixing'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['contracts', 'projects'], 'otherName': 'ptbqiatan'})
       .then((res) => {
         // console.log(res.data)
         this.json = {}
@@ -139,8 +141,10 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['合同执行中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
-        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
+        // var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['合同执行中']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}}}
+        // this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
+        var formData = {'account': this.$cookie.get('user'), 'role': this.$cookie.get('role')}
+        this.$http.post(this.$domain.domain1 + 'electric-design/getHtzxzProject', formData)
         .then((res) => {
           this.tableData = []
           if (res.data !== 0) {

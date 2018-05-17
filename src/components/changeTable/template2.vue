@@ -13,13 +13,13 @@ export default {
   data () {
     const generateData = _ => {
       var data = []
-      this.$http.post(this.$domain.domain1 + 'electric-design/getAllkeysAndExplainOfTable', {'table': this.$parent.type})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfTables', {'tables': ['projects', 'contracts']})
       .then((res) => {
         console.log(res.data)
         for (var i in res.data) {
           data.push({
             'key': i,
-            'label': res.data[i]
+            'label': res.data[i].title
           })
         }
       })
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     initData () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': this.$parent.type, 'otherName': this.$parent.otherName})
+      this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['contracts', 'projects'], 'otherName': this.$parent.otherName})
       .then((res) => {
         console.log(res.data)
         this.value1 = []

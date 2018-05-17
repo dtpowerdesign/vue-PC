@@ -14,6 +14,16 @@
       <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe fit :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>        
+        <el-table-column  label="角色">
+          <template slot-scope="scope">
+            <p v-if="scope.row.isOnlineAchivment==='no'">
+            {{jobs[scope.row.memberJob]}}
+            </p>
+            <p v-if="scope.row.isOnlineAchivment==='yes'">
+              {{jobs[scope.row.onlineJob]}}
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <i class="icon iconfont icon-iconfonticonfontjixieqimo" @click="manage(adasd.row)"></i><i class="icon iconfont icon-cha" @click="myDelete(adasd.row)"></i>
@@ -40,6 +50,7 @@ export default {
   store,
   data () {
     return {
+      jobs: {'master': '主持人', 'drawer': '制图者', 'checker': '校核人', 'auditor': '审核人', 'value': '校核人', 'projectManager': '项目经理', 'projectAnalyst': '平台分析设计师', 'workGenerater': '工程代理'},
       downloadLoading: false,
       tableData: [],
       multipleSelection: ['1', '2'],

@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" @click="alter(scope.row)" disabled="divideRolePer!=='yes'">修改</el-button>
+          <el-button type="primary" @click="alter(scope.row)" :disabled="divideRolePer!=='yes'">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -37,7 +37,7 @@ export default {
   },
   data () {
     return {
-      jobs: [{'key': 'maste', 'value': '主持人'}, {'key': 'drawer', 'value': '制图者'}, {'key': 'checker', 'value': '校核人'}, {'key': 'auditor', 'value': '审核人'}, {'key': 'projectManager', 'value': '项目经理'}, {'key': 'projectAnalyst', 'value': '平台分析设计师'}, {'key': 'workGenerater', 'value': '工程代理'}],
+      jobs: [{'key': 'master', 'value': '主持人'}, {'key': 'drawer', 'value': '制图者'}, {'key': 'checker', 'value': '校核人'}, {'key': 'auditor', 'value': '审核人'}, {'key': 'projectManager', 'value': '项目经理'}, {'key': 'projectAnalyst', 'value': '平台分析设计师'}, {'key': 'workGenerater', 'value': '工程代理'}],
       table: [],
       changePNamePer: 'no',
       divideRolePer: 'no'

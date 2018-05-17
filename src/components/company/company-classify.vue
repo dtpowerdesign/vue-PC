@@ -155,8 +155,8 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formData = {'conditions': {'state': {'searchMethod': 'values', 'values': ['洽谈中', '投标中', '投标洽谈', '合同执行中', '合同终止']}, 'aboutUsers': {'searchMethod': 'values', 'values': [this.$cookie.get('user')]}, 'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}, 'isOnlineAchivment': {'searchMethod': 'values', 'values': this.tag6}}}
-        this.$http.post(this.$domain.domain1 + 'electric-design/getProjectAboutUser', formData)
+        var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}, 'isOnlineAchivment': {'searchMethod': 'values', 'values': this.tag6}}}
+        this.$http.post(this.$domain.domain1 + 'electric-design/getQYYJByAccount', formData)
         .then((res) => {
           this.$store.state.table = []
           if (res.data !== 0) {
