@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div v-if="show" v-loading="loadingDetail">
+  <div v-if="show">
     <div class="title"><span>|{{name}}</span><el-button type="primary" @click="show=false">返回</el-button></div>
     <el-row style="margin-top:3rem">
       <el-col :span="8">
@@ -42,17 +42,14 @@
           <el-col :span="12"><span class="font1" style="float:left;clear:left;">专业要求:{{major}}</span></el-col>
         </el-row>
       </el-col>
-      <el-col :span="6" :offset="2">
-        <span style="font-size:0.8rem;float:left;clear:left;">发布人信息</span><br>
-        <p class="font1" style="text-align:left" v-html="info"></p>
-      </el-col>
     </el-row>
-    <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem">
+    <!-- <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem"> -->
       <el-col :span="24" style="color:#409EFF;font-size:1.5rem">中标者:{{toAccounts.join(',')}}</el-col>
+      <el-input type="textarea" v-model="endReason" placeholder="终止原因"></el-input>
       <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
-      <el-button type="danger" @click="bad()">我要毁约</el-button>
-      <el-button type="success" @click="good()">合同顺利终止</el-button>
-    </el-row>
+      <el-button type="primary" @click="endContractA" v-if="sourceAccount===$cookie.get('user')">甲方终止</el-button>
+      <el-button type="success" @click="endContractB" v-if="isUnionUser">乙方终止</el-button>
+    <!-- </el-row> -->
   </div>
   <div v-else v-loading="loadingTable">
    
@@ -70,7 +67,7 @@
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="scope">
             <!-- <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button> -->
-            <el-button size="small" type="success" @click="$router.push('/per-project/' + scope.row.code + '/pandect')">查看详情</el-button>
+            <el-button size="small" type="success" @click="detail(scope.row)">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -92,7 +89,6 @@ export default {
   data () {
     return {
       sourceAccount: '',
-      loadingDetail: true,
       loadingTable: true,
       currentPage: 1,
       pagesize: 5,
@@ -113,9 +109,10 @@ export default {
       category: '',
       voltage: '',
       major: '',
-      info: '',
       json: {},
-      jsonAll: {}
+      jsonAll: {},
+      isUnionUser: false,
+      endReason: ''
     }
   },
   created () {
@@ -189,11 +186,13 @@ export default {
       this.bidType = row.bidType
       this.sourceAccount = row.sourceAccount
       this.toAccounts = row.toAccounts ? row.toAccounts.split(',') : []
-      this.$http.post(this.$domain.domain1 + 'electric-design/searchAllUsersByKeyAndValue', {'value': row.sourceAccount, 'key': 'account'}).then((res) => {
-        console.log(res.data)
-        this.info = `姓名:${res.data[0].name}<br>账号:${res.data[0].account}<br>邮箱:${res.data[0].email}`
-        this.loadingDetail = false
-      }).catch((err) => { console.log(err) })
+      this.$http.post(this.$domain.domain1 + 'electric-design/isUnionUser', {'account': this.$cookie.get('user'), 'pcode': this.code})
+      .then((res) => {
+        this.isUnionUser = res.data.result
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     handleSizeChange (size) {
       this.pagesize = size
@@ -236,68 +235,42 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    bad () {
-      this.$confirm(`您确定让此项目重新回到投标状态吗`, '确定后无法修改', {
-        confirmButtonText: '不用想了，就这样',
-        cancelButtonText: '我再考虑考虑',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/bidFaild', {'belongToProjectCode': this.code})
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.result) {
-            this.$message({
-              type: 'success',
-              message: '已经回到投标状态'
-            })
-            this.dialogVisible = false
-            this.$router.go(0)
-          } else {
-            this.$message({
-              type: 'warning',
-              message: `操作失败，原因${res.data.reason}`
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
+    endContractA () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/jiaFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '终止成功'
+          })
+          this.$router.go(0)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     },
-    good () {
-      this.$confirm(`您确定合同终止了吗`, '确定后无法修改', {
-        confirmButtonText: '不用想了，就这样',
-        cancelButtonText: '手滑了',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(this.$domain.domain1 + 'electric-design/updateProjectByProjectCode', {'code': this.code, 'data': {'state': '合同终止'}})
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.result) {
-            this.$message({
-              type: 'success',
-              message: '操作成功，已经进入合同终止状态'
-            })
-            this.dialogVisible = false
-            this.$router.go(0)
-          } else {
-            this.$message({
-              type: 'warning',
-              message: `操作失败，原因${res.data.reason}`
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
+    endContractB () {
+      this.$http.post(this.$domain.domain1 + 'electric-design/yiFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
+      .then((res) => {
+        if (res.data.result) {
+          this.$message({
+            type: 'success',
+            message: '终止成功'
+          })
+          this.$router.go(0)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `失败原因:${res.data.reason}`
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
   }

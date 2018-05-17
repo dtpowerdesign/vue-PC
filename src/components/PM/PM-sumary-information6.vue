@@ -49,7 +49,7 @@
     </el-row>
     <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem">
       <el-col :span="24" style="color:#409EFF;font-size:1.5rem">中标者:{{toAccounts.join(',')}}</el-col>
-      <el-button type="danger" @click="bad()">重新回到投标状态</el-button>
+      <!-- <el-button type="danger" @click="bad()">重新回到投标状态</el-button> -->
     </el-row>
       <el-button type="success" @click="myCredit()">评价</el-button>
     <el-dialog title="评价" :visible.sync="dialogVisibleCredit" width="80%"> 
@@ -191,6 +191,7 @@ export default {
         var formData = {'account': this.$cookie.get('user'), 'role': this.$cookie.get('role')}
         this.$http.post(this.$domain.domain1 + 'electric-design/getHtzzProject', formData)
         .then((res) => {
+          console.log(res.data)
           this.tableData = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {
@@ -198,7 +199,7 @@ export default {
               for (var i in this.jsonAll) {
                 if (Array.isArray(el[i]) && (i !== 'processRequirements')) {
                   obj[i] = el[i].concat().join(',')
-                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据') {
+                } else if (i.match(/(Time)$/) && !i.match(/^(all)/) && el[i] !== '暂无数据' && i !== 'htstarttime' && i !== 'htendTime') {
                   el[i].year = el[i].year || 0
                   el[i].month = el[i].month || 0
                   el[i].date = el[i].date || 0
@@ -347,6 +348,7 @@ export default {
           'data': {
             'belongToProjectCode': this.code,
             'sourceUserId': this.$cookie.get('user'),
+            'sourceUserName': this.$cookie.get('name'),
             'belongToUserId': row.belongToUserId,
             'belongToProcess': row.belongToProcess,
             'score': row.score,
@@ -373,6 +375,7 @@ export default {
         this.$http.post(this.$domain.domain1 + 'electric-design/addCredit', {
           'belongToProjectCode': this.code,
           'sourceUserId': this.$cookie.get('user'),
+          'sourceUserName': this.$cookie.get('name'),
           'belongToUserId': row.belongToUserId,
           'belongToProcess': row.belongToProcess,
           'score': row.score,
