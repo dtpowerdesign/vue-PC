@@ -6,7 +6,7 @@
   </div>
   <el-row>
   <el-col :span="8" :offset="2">
-  <el-form :model="Form" status-icon label-position="left":rules="rules" ref="comregister" label-width="100px">
+  <el-form :model="Form" status-icon label-position="left" :rules="rules" ref="comregister" label-width="100px">
   <el-form-item label="账号" prop="user">
     <el-input type="text" v-model="Form.user" auto-complete="off" placeholder="请填写手机号或者邮箱"></el-input>
   </el-form-item>

@@ -107,7 +107,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="i.key" :label="i.title" :show-overflow-tooltip="i.key==='name'?false:true" :width="i.key==='name'?'180':''" :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
@@ -155,7 +155,7 @@ export default {
       voltage: '',
       major: '',
       info: '',
-      json: {},
+      json: [],
       jsonAll: {},
       credit: [],
       processRequirementsName: [],
@@ -173,14 +173,14 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfTables', {'tables': ['projects', 'contracts']}).then((res) => {
         this.jsonAll = res.data
         // this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'phtzongzhi'})
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['contracts', 'projects'], 'otherName': 'ptbqiatan'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['projects', 'contracts'], 'otherName': 'phtzongzhi'})
       .then((res) => {
         // console.log(res.data)
-        this.json = {}
+        this.json = []
         for (var i in res.data) {
-          this.json[i] = {
+          this.json.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
         // console.log(this.json)
       }).catch((err) => {

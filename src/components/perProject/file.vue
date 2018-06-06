@@ -42,8 +42,8 @@
       <el-table-column prop="note" label="备注"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="preview(scope.row.filePath)" type="success" size="mini">预览</el-button>
-          <el-button @click="download(scope.row.filePath)" type="success" size="mini">下载</el-button>
+          <el-button @click="preview(scope.row.filePath, scope.row.fileName)" type="success" size="mini">预览</el-button>
+          <el-button @click="download(scope.row.filePath, scope.row.fileName)" type="success" size="mini">下载</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,8 +152,21 @@ export default {
       if (regpdf.test(data)) { return './static/pdf.jpg' }
       return './static/other.png'
     },
-    download (path) {
-      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    download (path, name) {
+      // window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+      this.$http.post(this.$domain.domain1 + 'electric-design/dowload', {'fileUrl': path}, {'responseType': 'blob'})
+      .then((res) => {
+        let url = window.URL.createObjectURL(new Blob([res.data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     preview (path) {
       window.open(this.$domain.domain1.substring(0) + path)

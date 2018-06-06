@@ -28,8 +28,8 @@
      </el-col>
      <el-col>
        <div class="pandect-div"><span>编号:{{code}}</span><span>电压等级:{{voltagelevel}}</span></div>
-       <div class="pandect-div"><span>类别:{{category}}</span><span>专业:{{major}}</span></div>
        <div class="pandect-div"><span>状态:{{state}}</span><span>类型:{{type}}</span></div>
+       <div class="pandect-div"><span>类别:{{category}}</span><span>专业:{{major}}</span></div>
      </el-col>
    </div>
    <div class="content">
@@ -251,7 +251,8 @@ export default {
 display:flex;
 justify-content:space-around;
 font-size:1.2rem;
-height:2rem;
+/* height:2rem; */
+flex-wrap:wrap;
 }
 .pandect-div>span{
   width:50%;

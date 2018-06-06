@@ -166,13 +166,13 @@ export default {
           obj.days.forEach((ell, index) => {
             if (ell.events) {
               ell.events.forEach((elll, index) => {
-                if (elll.eventCode <= 10 && elll.eventCode >= 5) {
+                if (elll.type === 'discuss') {
                   ell.eventCode = 1
                 }
-                if (elll.eventCode <= 13 && elll.eventCode >= 11) {
+                if (elll.eventCode === 'work') {
                   ell.eventCode = 2
                 }
-                if (elll.eventCode <= 4 && elll.eventCode >= 1) {
+                if (elll.eventCode === 'over') {
                   ell.eventCode = 3
                 }
               })

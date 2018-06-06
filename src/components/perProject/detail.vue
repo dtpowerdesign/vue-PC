@@ -8,9 +8,9 @@
      <el-col :offset="0" :span="20">
        <div class="detail-div"><span>项目最终名称:{{changeName}}</span><span>当前阶段:{{designProcess}}</span></div>
        <div class="detail-div"><span>编号:{{code}}</span><span>电压等级:{{voltagelevel}}</span></div>
-       <div class="detail-div"><span>类别:{{category}}</span><span>专业:{{major}}</span></div>
        <div class="detail-div"><span>状态:{{state}}</span><span>类型:{{type}}</span></div>
        <div class="detail-div"><span>开始时间:{{startTime}}</span><span>结束时间:{{endTime}}</span></div>
+       <div class="detail-div"><span>类别:{{category}}</span><span>专业:{{major}}</span></div>
      </el-col>
    </div>
    <div class="content" style="overflow:auto">
@@ -97,9 +97,6 @@ export default {
     console.log(this.$domain.domain1)
     this.initData()
   },
-  updated () {
-    this.initData()
-  },
   methods: {
     initData () {
       this.$http.post(this.$domain.domain1 + 'electric-design/getProjectByCode', {'code': this.id}).then((res) => {
@@ -151,7 +148,8 @@ export default {
 display:flex;
 justify-content:space-around;
 font-size:1.2rem;
-height:2rem;
+/* height:2rem; */
+flex-wrap: wrap;
 }
 .detail-div>span{
   width:50%;

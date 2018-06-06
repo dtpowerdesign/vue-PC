@@ -13,7 +13,7 @@
       </div>
       <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe fit :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>        
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'180':''" :fixed="j==='name'?'left':false"></el-table-column>        
         <el-table-column  label="角色">
           <template slot-scope="scope">
             <p v-if="scope.row.isOnlineAchivment==='no'">

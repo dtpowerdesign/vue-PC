@@ -173,15 +173,26 @@ export default {
         'isAcceptJointBid': this.form.isAcceptJointBid,
         'processRequirements': stateUnits}
       this.$http.post(this.$domain.domain1 + 'electric-design/addProject1', data).then((res) => {
-        console.log(data)
         console.log(res.data)
         if (res.data.result) {
           this.$message({
             message: '发布成功',
             type: 'success'
           })
-          this.$parent.$parent.$parent.$parent.initData()
-          this.$router.push('/per-project/' + res.data.code + '/pandect')
+          this.$confirm('您是否要上传工程招标附件资料?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$parent.$parent.$parent.$parent.initData()
+            this.$router.push('/per-project/' + res.data.code + '/file')
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '您已经成功发布'
+            })
+            this.$router.push('/archive')
+          })
         } else {
           this.$message({
             message: `发布失败,原因${res.data.reason}`,

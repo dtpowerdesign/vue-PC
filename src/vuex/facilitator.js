@@ -13,8 +13,8 @@ const state = {
   tag5: [],
   data: [],
   length: 1,
-  jsonPuser: {},
-  jsonCuser: {},
+  jsonPuser: [],
+  jsonCuser: [],
   tablePuser: [],
   tableCuser: []
 }

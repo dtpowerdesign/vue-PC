@@ -37,7 +37,7 @@ export default {
       uploadVisibleSelf: false,
       body: '',
       fileType: '其他',
-      fileTypes: ['提资单', '合同洽商单', '会议机要', '工程评审单', '校审单', '工程联络单', '其他']
+      fileTypes: ['合同', '提资单', '合同洽商单', '会议机要', '工程评审单', '校审单', '工程联络单', '其他']
     }
   },
   methods: {

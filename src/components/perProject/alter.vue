@@ -4,7 +4,7 @@
     <div class="data" v-if="form.dataOrProject==='data'">
     <div class="title"><span>任务基本信息</span><a :href="help1" class="help">不会填?点我</a></div>
     <div class="content">
-      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+      <el-form ref="form" :model="form" label-width="150px" style="width:100%"> 
         <el-form-item label="最终项目名称">
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
@@ -27,7 +27,7 @@
         </el-form-item>
         <el-form-item label="即时发布">
           <el-col :span="9">
-            <el-select v-model="form.state"  placeholder="请选择" style="width:100%">
+            <el-select v-model="form.state"  placeholder="请选择" style="width:100%" :disabled="(form.state!=='发布中')&&(form.state!=='投标中')">
             <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
           </el-select>
           </el-col>
@@ -87,7 +87,7 @@
     <div class="Project" v-else>
     <div class="title"><span>项目基本信息</span><a :href="help1" class="help" >不会填?点我</a></div>
     <div class="content">
-      <el-form ref="form" :model="form" label-width="80px" style="width:100%"> 
+      <el-form ref="form" :model="form" label-width="120px" style="width:100%"> 
         <el-form-item label="发布公司">
           <el-col :span="9">
             <el-input v-model="form.company"></el-input>
@@ -97,7 +97,7 @@
            <el-switch v-model="form.isAcceptJointBid" active-text="是" inactive-text="否" inactive-value="false" active-value="true"></el-switch>
           </el-col>          
         </el-form-item>
-        <el-form-item label="项目名称">
+        <el-form-item label="最终项目名称">
           <el-col :span="9">
             <el-input v-model="form.name"></el-input>
           </el-col>
@@ -110,7 +110,7 @@
         </el-form-item>
         <el-form-item label="目标状态">
           <el-col :span="4">
-            <el-select v-model="form.state"  placeholder="请选择目标状态" >
+            <el-select v-model="form.state"  placeholder="请选择目标状态" :disabled="(form.state!=='发布中')&&(form.state!=='投标中')">
             <el-option v-for="(i,j) in states" :key="j" :label="i.label" :value="i.value"></el-option>
           </el-select>
           </el-col>
@@ -173,6 +173,12 @@
           <span style="font-size:1.2rem;color:red">到</span>
           <el-input v-model="form.highPrice" placeholder="最高" style="width:40%;"></el-input>
           </el-col>
+          <el-col :offset="5" :span="2">目前状态</el-col>
+          <el-col :span="8">
+            <el-select v-model="form.projectNowState" style="width:100%">
+              <el-option v-for="(i, j) in projectNowStates"  :key="j" :value="i" :label="i"></el-option>
+            </el-select>
+          </el-col>    
        </el-form-item>        
         <el-form-item label="项目描述">
           <el-input  v-model="form.instruction" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入项目描述"></el-input>
@@ -332,7 +338,7 @@ export default {
       projectCharacteristics: { difficulty: '', price: '' },
       unit: ['MW', 'Kva', 'KV', `M^2`],
       existingData: { detail: '' },
-      states: [{ 'value': '发布中', 'label': '发布完不立即招标' }, { 'value': '投标中', 'label': '发布完直接招标' }],
+      states: [{ 'value': '发布中', 'label': '暂缓招标' }, { 'value': '投标中', 'label': '立即招标' }],
       major: ['计算机', '电力', '岩土', '绘测'],
       designState: ['前期', '项目建议书', '可行性研究报告', '招投标', '初步设计', '施工图设计', '竣工图编制'],
       sizeAndCapacitys: ['MW', 'KW', 'kVA'],

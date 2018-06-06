@@ -86,7 +86,7 @@
            <div v-if="eventProposer!==scope.row.sourceUserId">
            上传了
            <el-tooltip content="点击下载" placement="bottom" effect="light">
-             <span v-for="(i, j) in scope.row.Datafiles" :key="j" style="color:#409EFF" @click="download(i.filePath)">
+             <span v-for="(i, j) in scope.row.Datafiles" :key="j" style="color:#409EFF" @click="download(i.filePath, i.fileName)">
                 {{i.fileName}}/{{i.fileType}}
              </span>
            </el-tooltip>
@@ -142,7 +142,7 @@ export default {
       eventCode: '',
       dataCode: '',
       fileType: '其他',
-      fileTypes: ['提资单', '合同洽商单', '会议机要', '工程评审单', '校审单', '工程联络单', '其他']
+      fileTypes: ['合同', '提资单', '合同洽商单', '会议机要', '工程评审单', '校审单', '工程联络单', '其他']
     }
   },
   mounted () {
@@ -345,8 +345,20 @@ export default {
     uploadPrev (file) {
       console.log(file.response)
     },
-    download (path) {
-      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    download (path, name) {
+      this.$http.post(this.$domain.domain1 + 'electric-design/dowload', {'fileUrl': path}, {'responseType': 'blob'})
+      .then((res) => {
+        let url = window.URL.createObjectURL(new Blob([res.data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

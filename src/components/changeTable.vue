@@ -5,9 +5,9 @@
      <el-button @click="$router.go(-1)" type="success" style="margin-left:3rem">返回</el-button>
    </div> -->
    <el-tabs style="width:100%;box-sizing:border-box;border:1px solid #409EFF;background-color:#f5f7fa" :value="value" tab-position="left" type="border-card">
-       <el-tab-pane label="项目表" name="project">
+       <!-- <el-tab-pane label="项目表" name="project">
            <project></project>
-       </el-tab-pane>
+       </el-tab-pane> -->
        <el-tab-pane label="项目表(临时态)" name="ptemp">
            <ptemp></ptemp>
        </el-tab-pane>

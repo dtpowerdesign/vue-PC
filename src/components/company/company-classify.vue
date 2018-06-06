@@ -155,9 +155,10 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-        var formData = {'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}, 'isOnlineAchivment': {'searchMethod': 'values', 'values': this.tag6}}}
+        var formData = {'account': this.$cookie.get('user'), 'conditions': {'category': {'searchMethod': 'values', 'values': this.tag1}, 'type': {'searchMethod': 'values', 'values': this.tag2}, 'designProcess': {'searchMethod': 'values', 'values': this.tag3}, 'sizeAndCapacity': {'searchMethod': 'values', 'values': this.tag4}, 'major': {'searchMethod': 'values', 'values': this.tag5}, 'isOnlineAchivment': {'searchMethod': 'values', 'values': this.tag6}}}
         this.$http.post(this.$domain.domain1 + 'electric-design/getQYYJByAccount', formData)
         .then((res) => {
+          console.log(res.data)
           this.$store.state.table = []
           if (res.data !== 0) {
             res.data.forEach((el, index) => {

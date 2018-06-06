@@ -12,14 +12,14 @@
         <el-table-column label="上传时间" prop="time"></el-table-column>
         <el-table-column label="文件分类" prop="fileType" :filters="[{text:'提资单',value:'提资单'}, {text:'合同洽商单',value:'合同洽商单'}, {text:'会议机要',value:'会议机要'}, {text:'工程评审单',value:'工程评审单'}, {text:'校审单',value:'校审单'}, {text:'工程联络单',value:'工程联络单'}, {text:'其他',value:'其他'}]" :filter-method="filterTag" filter-placement="bottom-end">
           <template slot-scope="scope">
-             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+             <span style="color:#409EFF" @click="download(scope.row.filePath, scope.row.fileName)">
               {{scope.row.fileType}}
              </span>
           </template>
         </el-table-column>        
         <el-table-column label="文件名称">
           <template slot-scope="scope">
-             <span style="color:#409EFF" @click="download(scope.row.filePath)">
+             <span style="color:#409EFF" @click="download(scope.row.filePath, scope.row.fileName)">
                 {{scope.row.fileName}}
              </span>
           </template>
@@ -121,8 +121,21 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    download (path) {
-      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    download (path, name) {
+      // window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+      this.$http.post(this.$domain.domain1 + 'electric-design/dowload', {'fileUrl': path}, {'responseType': 'blob'})
+      .then((res) => {
+        let url = window.URL.createObjectURL(new Blob([res.data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     filterTag (value, row) {
       console.log(value)

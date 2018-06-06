@@ -1,24 +1,27 @@
 <template>
   <div class="content">
-   <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/project')" >表头编辑</el-button>
-   <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)"  style="width:100%">
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title"  :show-overflow-tooltip="j==='name'?false:true":fixed="j==='name'?'left':false"></el-table-column>
-        <el-table-column   label="操作" fixed="right" width="160">
+   <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/ptoubiao')" >表头编辑</el-button>
+   <el-table :data="table.slice((currentPage-1)*pagesize,currentPage*pagesize)"  style="width:100%" max-height="500">
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="i.key" :label="i.title"  :show-overflow-tooltip="i.key==='name'?false:true" :fixed="i.key==='name'?'left':false" :width="i.key==='name'?'180':''"></el-table-column>
+        <el-table-column   label="操作" fixed="right" width="80">
           <template slot-scope="scope">
-            <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="mini">投标</el-button>
-            <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="primary" size="mini">聊天</el-button>  
+            <el-button @click="detail(scope.row.code, scope.row.sourceAccount)" type="primary" size="mini" style="width:100%" :disabled="scope.row.sourceAccount===$cookie.get('user')">投标</el-button>
+            <el-button @click="skip({'account':scope.row.srcUserAccount, 'name':scope.row.sourceName})" type="success" size="mini" style="width:100%;margin-left:0">聊天</el-button>  
           </template>
         </el-table-column>
    </el-table>
-   <el-dialog title="确定要投标?" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+   <el-dialog title="确定要投标?" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
      <div style="text-align:left;border-top:1px solid gray;padding:1rem" v-loading="details.loadingProject">
      <p style="color:#4d83e7;font-size:1.5rem">项目信息</p>
      <p>项目名称:{{details.name}}</p>
-     <p>状态:{{details.state}}</p>
+     <p>状态:{{details.state==='投标中'?'招标中':details.state}}</p>
      <p>类别:{{details.type}}</p>
      <p>类型:{{details.category}}</p>
      <p>涉及专业:{{details.major}}</p>
-     <p>是否接受联合投标:{{details.isAcceptJointBid==='true'?'是':'否'}}</p>
+     <p>付款比例:{{details.payMethod}}</p>
+     <p>委托费限价:{{details.lowestPrice}}-{{details.highestPrice}}</p>
+     <p>所需资质:{{details.qualificationRequirements}}</p>
+     <!-- <p>付款比例:{{details.isAcceptJointBid==='true'?'是':'否'}}</p> -->
      </div>
      <el-table :data="details.processRequirements">
        <el-table-column prop="state" label="设计阶段"></el-table-column>
@@ -47,9 +50,11 @@
        <div slot="tip" class="el-upload__tip">点击投标时可以上传已有业绩证明文件，不超过{{limit}}个</div>    
        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">投标</el-button>  -->
       <form :action='this.$domain.domain1+"electric-design/bidAndUpLoad"' enctype="multipart/form-data" target="" method="post" >
-            <input type="file" multiple="multiple" name="data" @change="getFile($event)" id="up" style="height:0px; overflow:hidden; position:absolute;" />
+      <input type="file" multiple="multiple" name="data" @change="getFile($event)" id="up" style="height:0px; overflow:hidden; position:absolute;" />
       <el-button  onclick="document.getElementById('up').click();" type="primary">选择文件</el-button>
       <el-button @click="x($event)" type="primary">投标</el-button>
+      <p style="color:red">将资质及相关证明打包成zip或者rar格式上传</p>
+      <p v-for="(i, j) in file" :key="j">{{i.name}}</p>
       </form>
      <!-- </el-upload>      -->
      <!-- <input type="hidden" :value="details.code" name="belongToProjectCode"/>
@@ -78,7 +83,7 @@ export default {
       currentPage: 1,
       pagesize: 3,
       details: {'loadingPeople': true, 'loadingProject': true},
-      bidInstruction: {},
+      bidInstruction: {'price': '', 'time': '', 'performance': '', 'aptitude': ''},
       bidType: 'personal',
       limit: 5,
       fileList: [],
@@ -89,74 +94,87 @@ export default {
   computed: {
     ...mapState(['data', 'table', 'json'])},
   methods: {
+    skip (row) {
+      this.$router.push('/chat/contact')
+      this.$nextTick(() => {
+        this.$one.$emit('skipChat', row)
+      })
+    },
     x (event) {
-      event.preventDefault()
-      console.log(this.file)
-      let formData = new FormData()
-      formData.append('belongToProjectCode', this.details.code)
-      formData.append('belongToProjectName', this.details.name)
-      formData.append('sourceUserId', this.$cookie.get('user'))
-      formData.append('sourceUserName', this.$cookie.get('name'))
-      formData.append('sourceUserType', this.$cookie.get('role'))
-      formData.append('price', this.getBidInstruction().price)
-      formData.append('alltime', this.getBidInstruction().time)
-      formData.append('performance', this.getBidInstruction().performance)
-      formData.append('aptitude', this.getBidInstruction().aptitude)
-      formData.append('bidType', this.getBidType())
-      for (var i of this.file) {
-        formData.append('data', i)
-      }
+      if ((this.bidInstruction.price === '') || (this.bidInstruction.time === '') || (this.bidInstruction.performance === '') || (this.bidInstruction.aptitude === '')) {
+        this.$message({
+          type: 'warning',
+          message: '请先全部填写信息才能投标'
+        })
+      } else {
+        event.preventDefault()
+        console.log(this.file)
+        let formData = new FormData()
+        formData.append('belongToProjectCode', this.details.code)
+        formData.append('belongToProjectName', this.details.name)
+        formData.append('sourceUserId', this.$cookie.get('user'))
+        formData.append('sourceUserName', this.$cookie.get('name'))
+        formData.append('sourceUserType', this.$cookie.get('role'))
+        formData.append('price', this.getBidInstruction().price)
+        formData.append('alltime', this.getBidInstruction().time)
+        formData.append('performance', this.getBidInstruction().performance)
+        formData.append('aptitude', this.getBidInstruction().aptitude)
+        formData.append('bidType', this.getBidType())
+        for (var i of this.file) {
+          formData.append('data', i)
+        }
       // this.file.forEach((el, index) => {
       //   formData.append('data', el)
       // })
       // if (this.file.length !== 0) {
       // }
-      let config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      }
-      this.$http.post(this.$domain.domain1 + 'electric-design/bidAndUpLoad', formData, config).then((res) => {
-        console.log(res)
-        if (res.status === 200) {
-          if (this.bidType === 'unit') {
+        this.$http.post(this.$domain.domain1 + 'electric-design/bidAndUpLoad', formData, config).then((res) => {
+          console.log(res)
+          if (res.status === 200) {
+            if (this.bidType === 'unit') {
         // this.allyBid(this.details.code, this.details.state, this.details.name)
-            this.fileList = []
-            this.uploadDis = false
-            if (this.$cookie.get('role') === 'puser') {
-              this.$router.push('/per/PM-combo/2')
-              this.$nextTick(function () {
-                this.$one.$emit('test', this.details.code)
-              })
-            }
-            if (this.$cookie.get('role') === 'cuser') {
-              this.$router.push('/com/CM-combo/2')
-              this.$nextTick(function () {
-                this.$one.$emit('test', this.details.code)
-              })
+              this.fileList = []
+              this.uploadDis = false
+              if (this.$cookie.get('role') === 'puser') {
+                this.$router.push('/per/PM-combo/2')
+                this.$nextTick(function () {
+                  this.$one.$emit('test', this.details.code)
+                })
+              }
+              if (this.$cookie.get('role') === 'cuser') {
+                this.$router.push('/com/CM-combo/2')
+                this.$nextTick(function () {
+                  this.$one.$emit('test', this.details.code)
+                })
+              }
+            } else {
+              if (this.$cookie.get('role') === 'puser') {
+          // this.perBid(this.details.code, this.details.state, this.details.name)
+                this.fileList = []
+                this.uploadDis = false
+                this.$router.push('/per/PM-sumary/2B')
+              } else {
+          // this.comBid(this.details.code, this.details.state, this.details.name)
+                this.fileList = []
+                this.uploadDis = false
+                this.$router.push('/per/PM-sumary/2B')
+              }
             }
           } else {
-            if (this.$cookie.get('role') === 'puser') {
-          // this.perBid(this.details.code, this.details.state, this.details.name)
-              this.fileList = []
-              this.uploadDis = false
-              this.$router.push('/per/PM-sumary/2B')
-            } else {
-          // this.comBid(this.details.code, this.details.state, this.details.name)
-              this.fileList = []
-              this.uploadDis = false
-              this.$router.push('/per/PM-sumary/2B')
-            }
+            this.$message({
+              type: 'warning',
+              message: '失败'
+            })
           }
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '失败'
-          })
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
     },
     getFile (event) {
       this.file = event.target.files
@@ -234,6 +252,10 @@ export default {
         this.$set(this.details, 'category', res.data.category)
         this.$set(this.details, 'major', res.data.major.join(','))
         this.$set(this.details, 'processRequirements', res.data.processRequirements)
+        this.$set(this.details, 'lowestPrice', res.data.lowestPrice)
+        this.$set(this.details, 'highestPrice', res.data.highestPrice)
+        this.$set(this.details, 'payMethod', res.data.payMethod)
+        this.$set(this.details, 'qualificationRequirements', res.data.qualificationRequirements)
         this.$set(this.details, 'loadingProject', false)
       }).catch((err) => {
         console.log(err)

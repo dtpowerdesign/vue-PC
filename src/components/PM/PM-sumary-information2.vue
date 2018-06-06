@@ -47,7 +47,7 @@
         <p class="font1" style="text-align:left" v-html="info"></p>
       </el-col>
     </el-row>
-    <el-button type="success" @click="$router.push('/per-project/' + code)" v-if="sourceAccount===$cookie.get('user')">我要修改项目信息</el-button>
+    <el-button type="success" @click="$router.push('/per-project/' + code + '/pandect')">项目信息</el-button>
     <el-button type="primary" @click="dialogVisible=true" v-if="sourceAccount===$cookie.get('user')">查看投标信息</el-button>
     <el-dialog title="投标人信息" :visible.sync="dialogVisible" width="80%">
           <el-dialog width="60%" title="个人用户表头编辑" :visible.sync="innerVisible" append-to-body>
@@ -75,7 +75,7 @@
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
                   <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
-                    <a href="#" @click="download(i.urlPath)">  
+                    <a href="#" @click="download(i.urlPath, i.dataName)">  
                       {{i.dataName}}
                     </a>
                   </el-tooltip>
@@ -103,7 +103,7 @@
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
                   <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
-                    <a href="#" @click="download(i.urlPath)">  
+                    <a href="#" @click="download(i.urlPath, i.dataName)">  
                       {{i.dataName}}
                     </a>
                   </el-tooltip>
@@ -131,7 +131,7 @@
               <template slot-scope="scope">
                 <span v-for="(i, j) in scope.row.upDatas" :key="j">
                   <el-tooltip class="item" effect="dark" content="点击下载" placement="top-start">
-                    <a href="#" @click="download(i.urlPath)">  
+                    <a href="#" @click="download(i.urlPath, i.dataName)">  
                       {{i.dataName}}
                     </a>
                   </el-tooltip>
@@ -189,7 +189,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="i.key" :label="i.title" :show-overflow-tooltip="i.key==='name'?false:true" :width="i.key==='name'?'180':''" :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="scope">
             <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>
@@ -243,7 +243,7 @@ export default {
       voltage: '',
       major: '',
       info: '',
-      json: {},
+      json: [],
       jsonAll: {},
       jsonAllPORCuser: {},
       jsonPORCuser: {},
@@ -349,11 +349,12 @@ export default {
         this.jsonAll = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'ptoubiao'})
       .then((res) => {
-        this.json = {}
+        // console.log(res.data)
+        this.json = []
         for (var i in res.data) {
-          this.json[i] = {
+          this.json.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
         // console.log(this.json)
       }).catch((err) => {
@@ -483,6 +484,7 @@ export default {
       }).then(() => {
         this.$http.post(this.$domain.domain1 + 'electric-design/selectBidUser', {'belongToProjectCode': this.code, 'sourceUserId': row.sourceUserId, 'bidType': row.bidType})
         .then((res) => {
+          console.log(res.data)
           if (res.data.result) {
             this.$message({
               type: 'success',
@@ -506,8 +508,21 @@ export default {
         })
       })
     },
-    download (path) {
-      window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+    download (path, name) {
+      // window.open(this.$domain.domain1 + 'electric-design/dowloads?fileUrl=' + path)
+      this.$http.post(this.$domain.domain1 + 'electric-design/dowload', {'fileUrl': path}, {'responseType': 'blob'})
+      .then((res) => {
+        let url = window.URL.createObjectURL(new Blob([res.data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

@@ -29,11 +29,11 @@ export default {
         this.jsonAllPuser = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'pusers', 'otherName': 'puserHeade'})
       .then((res) => {
-        this.$store.state.jsonPuser = {}
+        this.$store.state.jsonPuser = []
         for (var i in res.data) {
-          this.$store.state.jsonPuser[i] = {
+          this.$store.state.jsonPuser.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
       }).catch((err) => {
         console.log(err)
@@ -76,11 +76,11 @@ export default {
         this.jsonAllCuser = res.data
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'cusers', 'otherName': 'cuserHeade'})
       .then((res) => {
-        this.$store.state.jsonCuser = {}
+        this.$store.state.jsonCuser = []
         for (var i in res.data) {
-          this.$store.state.jsonCuser[i] = {
+          this.$store.state.jsonCuser.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
       }).catch((err) => {
         console.log(err)

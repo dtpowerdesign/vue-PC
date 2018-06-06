@@ -13,7 +13,7 @@ const state = {
   tag5: [],
   data: [],
   length: 1,
-  json: {},
+  json: [],
   table: []
 }
 

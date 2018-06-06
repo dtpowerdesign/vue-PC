@@ -4,7 +4,7 @@
     <el-tab-pane label="个人用户">
          <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/puser')">个人用户表头编辑</el-button>
       <el-table :data="tablePuser.slice((currentPagePuser-1)*pagesizePuser,currentPagePuser*pagesizePuser)" style="width:100%">
-        <el-table-column v-for="(i, j) in jsonPuser" :key="j" :prop="j" :label="i.title" show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in jsonPuser" :key="j" :prop="i.key" :label="i.title" show-overflow-tooltip :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="skip({'account':scope.row.account, 'name':scope.row.name})" type="primary" size="small">和他聊天</el-button>
@@ -17,7 +17,7 @@
     <el-tab-pane label="企业用户">
       <el-button size="small" style='margin-right:20px;' type="warning" icon="document" @click="$router.push('/changeTable/cuser')">企业用户表头编辑</el-button>
       <el-table :data="tableCuser.slice((currentPageCuser-1)*pagesizeCuser,currentPageCuser*pagesizeCuser)" style="width:100%">
-        <el-table-column v-for="(i, j) in jsonCuser" :key="j" :prop="j" :label="i.title" show-overflow-tooltip :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in jsonCuser" :key="j" :prop="i.key" :label="i.title" show-overflow-tooltip :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="skip({'account':scope.row.account, 'name':scope.row.name})" type="primary" size="small">和他聊天</el-button>

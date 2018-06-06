@@ -47,7 +47,7 @@
         <p class="font1" style="text-align:left" v-html="info"></p>
       </el-col>
     </el-row>
-    <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
+    <el-button type="success" @click="$router.push('/per-project/' + code + '/alter')">我要修改项目信息</el-button>
     <el-button type="primary" @click="confirm()" v-if="sourceAccount===$cookie.get('user')">确定无误，我要发布</el-button>
   </div>
   <div v-else v-loading="loadingTable">
@@ -62,7 +62,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="i.key" :label="i.title" :show-overflow-tooltip="i.key==='name'?false:true" :width="i.key==='name'?'180':''" :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="adasd">
             <el-button @click="detail(adasd.row)" type="primary" size="small">查看详情</el-button>
@@ -108,7 +108,7 @@ export default {
       voltage: '',
       major: '',
       info: '',
-      json: {},
+      json: [],
       jsonAll: {}
     }
   },
@@ -123,11 +123,11 @@ export default {
         this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'ptemp'})
       .then((res) => {
         // console.log(res.data)
-        this.json = {}
+        this.json = []
         for (var i in res.data) {
-          this.json[i] = {
+          this.json.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
         // console.log(this.json)
       }).catch((err) => {

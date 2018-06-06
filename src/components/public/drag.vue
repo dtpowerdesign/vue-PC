@@ -1,18 +1,19 @@
 <template>
    <div class="dragDiv" v-drag>
-     <!-- <el-tooltip class="item" effect="light" content="刷新" placement="right">
-     <i class="icon iconfont icon-39" style="color:#E6A23C;font-size:4rem" @click.stop="refresh()"></i>
-     </el-tooltip>      -->
+     <el-tooltip class="item" effect="light" content="同步" placement="right">
+     <i class="icon iconfont icon-39" style="color:#E6A23C;font-size:3rem" @click.stop="$router.go(0)"></i>
+     </el-tooltip>     
+     <br/>
      <el-tooltip class="item" effect="light" content="返回" placement="right">
-     <i class="icon iconfont icon-fanhui" style="color:#E6A23C;font-size:4rem" @click.stop="$router.go(-1)"></i>
+     <i class="icon iconfont icon-fanhui" style="color:#E6A23C;font-size:3rem" @click.stop="$router.go(-1)"></i>
      </el-tooltip>     
      <br/>
      <el-tooltip class="item" effect="light" content="及时聊天" placement="right">
-     <i class="icon iconfont icon-conversation_icon" style="color:#E6A23C;font-size:4rem" @click.stop="$router.push('/chat/contact')"></i>
+     <i class="icon iconfont icon-conversation_icon" style="color:#E6A23C;font-size:3rem" @click.stop="$router.push('/chat/contact')"></i>
      </el-tooltip>
      <br/>
      <el-tooltip class="item" effect="light" content="设置" placement="right">
-     <i class="icon iconfont icon-iconfonticonfontjixieqimo" style="color:#E6A23C;font-size:4rem" @click.stop="$router.push('/changeTable/project')"></i>
+     <i class="icon iconfont icon-iconfonticonfontjixieqimo" style="color:#E6A23C;font-size:3rem" @click.stop="$router.push('/changeTable/project')"></i>
      </el-tooltip>
    </div>
 </template>

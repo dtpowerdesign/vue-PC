@@ -128,13 +128,13 @@ export default {
       this.$parent.loadingContent = true
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfProject').then((res) => {
         this.jsonAll = res.data
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'project'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'ptoubiao'})
       .then((res) => {
-        this.$store.state.json = {}
+        this.$store.state.json = []
         for (var i in res.data) {
-          this.$store.state.json[i] = {
+          this.$store.state.json.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
       }).catch((err) => {
         console.log(err)

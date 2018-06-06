@@ -10,7 +10,7 @@
        	<router-view></router-view>
      </el-col>
    </el-row>
-   <!-- <Drag></Drag> -->
+   <Drag></Drag>
   </div>
 </template>
 

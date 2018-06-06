@@ -46,7 +46,7 @@
     <!-- <el-row v-if="sourceAccount===$cookie.get('user')" style="margin-top:2rem"> -->
       <el-col :span="24" style="color:#409EFF;font-size:1.5rem">中标者:{{toAccounts.join(',')}}</el-col>
       <el-input type="textarea" v-model="endReason" placeholder="终止原因"></el-input>
-      <el-button type="success" @click="$router.push('/per-project/' + code)">我要修改项目信息</el-button>
+      <el-button type="success" @click="$router.push('/per-project/' + code + '/pandect')">项目信息</el-button>
       <el-button type="primary" @click="endContractA" v-if="sourceAccount===$cookie.get('user')">甲方终止</el-button>
       <el-button type="success" @click="endContractB" v-if="isUnionUser">乙方终止</el-button>
     <!-- </el-row> -->
@@ -63,7 +63,7 @@
       </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe :default-sort = "{prop: 'code', order: 'descending'}" ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange" v-loading="downloadLoading">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-for="(i, j) in json" :key="j" :prop="j" :label="i.title" :show-overflow-tooltip="j==='name'?false:true" :width="j==='name'?'300':''" :fixed="j==='name'?'left':false"></el-table-column>
+        <el-table-column v-for="(i, j) in json" :key="j" :prop="i.key" :label="i.title" :show-overflow-tooltip="i.key==='name'?false:true" :width="i.key==='name'?'180':''" :fixed="i.key==='name'?'left':false"></el-table-column>
         <el-table-column   label="操作" fixed="right" width="85">
           <template slot-scope="scope">
             <!-- <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button> -->
@@ -109,7 +109,7 @@ export default {
       category: '',
       voltage: '',
       major: '',
-      json: {},
+      json: [],
       jsonAll: {},
       isUnionUser: false,
       endReason: ''
@@ -125,14 +125,14 @@ export default {
       this.$http.post(this.$domain.domain1 + 'electric-design/getDataFormatOfTables', {'tables': ['projects', 'contracts']}).then((res) => {
         this.jsonAll = res.data
         // this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplain', {'belongToUser': this.$cookie.get('user'), 'table': 'projects', 'otherName': 'phtzixing'})
-        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['contracts', 'projects'], 'otherName': 'ptbqiatan'})
+        this.$http.post(this.$domain.domain1 + 'electric-design/getShowKeyAndExplainOfTables', {'belongToUser': this.$cookie.get('user'), 'tables': ['projects', 'contracts'], 'otherName': 'phtzixing'})
       .then((res) => {
         // console.log(res.data)
-        this.json = {}
+        this.json = []
         for (var i in res.data) {
-          this.json[i] = {
+          this.json.push({
             key: i,
-            title: res.data[i]}
+            title: res.data[i]})
         }
         // console.log(this.json)
       }).catch((err) => {
@@ -236,7 +236,12 @@ export default {
       this.multipleSelection = val
     },
     endContractA () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/jiaFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
+      this.$confirm('您确认要终止合同吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post(this.$domain.domain1 + 'electric-design/jiaFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
       .then((res) => {
         if (res.data.result) {
           this.$message({
@@ -253,16 +258,27 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     },
     endContractB () {
-      this.$http.post(this.$domain.domain1 + 'electric-design/yiFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
+      this.$confirm('您确认要终止合同吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post(this.$domain.domain1 + 'electric-design/yiFangEndSure', {'account': this.$cookie.get('user'), 'projectcode': this.code, 'endReason': this.endReason})
       .then((res) => {
         if (res.data.result) {
           this.$message({
             type: 'success',
             message: '终止成功'
           })
-          this.$router.go(0)
+          this.$router.push('/per/PM-sumary/5')
         } else {
           this.$message({
             type: 'warning',
@@ -271,6 +287,12 @@ export default {
         }
       }).catch((err) => {
         console.log(err)
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
       })
     }
   }
