@@ -61,8 +61,8 @@
         </ul>
         <ul class="lines">
           <li style="color:#69a1fe;font-size:.8rem">——洽谈日期</li>
-          <li style="color:#39c45d;font-size:.8rem">——开工日期</li>
-          <li style="color:#e75e3a;font-size:.8rem">——截止日期</li>
+          <li style="color:#39c45d;font-size:.8rem">——提资日期</li>
+          <li style="color:#e75e3a;font-size:.8rem">——收资日期</li>
         </ul>
       </el-tab-pane>
     </el-tabs>
@@ -150,7 +150,19 @@ export default {
           for (let i = 0; i <= 23; i++) {
             if (el.hours[i].events) {
               el.hours[i].events.forEach((a) => {
-                obj.content.push(a.name)
+                if (a.eventType === 'provide') {
+                  obj.content.push('提资')
+                }
+                if (a.eventType === 'chat') {
+                  obj.content.push('洽谈')
+                }
+                if (a.eventType === 'chats') {
+                  obj.content.push('洽谈')
+                }
+                if (a.eventType === 'request') {
+                  obj.content.push('收资')
+                }
+                // obj.content.push(a.name)
               })
             }
           }
@@ -170,13 +182,16 @@ export default {
           obj.days.forEach((ell, index) => {
             if (ell.events) {
               ell.events.forEach((elll, index) => {
-                if (elll.type === 'discuss') {
+                if (elll.eventType === 'chat') {
                   ell.eventCode = 1
                 }
-                if (elll.eventCode === 'work') {
+                if (elll.eventType === 'chats') {
+                  ell.eventCode = 1
+                }
+                if (elll.eventType === 'provide') {
                   ell.eventCode = 2
                 }
-                if (elll.eventCode === 'over') {
+                if (elll.eventType === 'request') {
                   ell.eventCode = 3
                 }
               })
